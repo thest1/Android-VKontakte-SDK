@@ -1,0 +1,37 @@
+package com.perm.utils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Utils {
+    
+    public static String extractPattern(String string, String pattern){
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(string);
+        if (!m.find())
+            return null;
+        return m.toMatchResult().group(1);
+    }
+    
+    public static String convertStreamToString(InputStream is) throws IOException {
+        InputStreamReader r = new InputStreamReader(is);
+        StringWriter sw = new StringWriter();
+        char[] buffer = new char[1024];
+        try {
+            for (int n; (n = r.read(buffer)) != -1;)
+                sw.write(buffer, 0, n);
+        }
+        finally{
+            try {
+                is.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return sw.toString();
+    }
+}
