@@ -549,14 +549,13 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=messages.getHistory
-    public ArrayList<Message> getMessagesHistory(long uid, long chat_id, long me, long time_offset, int count) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Message> getMessagesHistory(long uid, long chat_id, long me, Long offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getHistory");
         if(chat_id<=0)
             params.put("uid",uid);
         else
             params.put("chat_id",chat_id);
-        if (time_offset!=0)
-            params.put("time_offset", time_offset);
+        params.put("offset", offset);
         if (count != 0)
             params.put("count", count);
         JSONObject root = sendRequest(params);
