@@ -1689,6 +1689,7 @@ public class Api {
         return Group.parseGroups(array);
     }
 
+    //no documentation
     public String joinGroup(long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("groups.join");
         params.put("gid", gid);
@@ -1699,6 +1700,7 @@ public class Api {
         return null;
     }
     
+    //no documentation
     public String leaveGroup(long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("groups.leave");
         params.put("gid", gid);
@@ -1707,5 +1709,21 @@ public class Api {
         if (response_code != null)
             return String.valueOf(response_code);
         return null;
+    }
+    
+    //no documentation
+    public ArrayList<Group> searchGroup(String q, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("groups.search");
+        params.put("q", q);
+        params.put("count", count);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        JSONArray array=root.optJSONArray("response");
+        ArrayList<Group> groups = new ArrayList<Group>();  
+        //if there are no groups "response" will not be array
+        if (array==null)
+            return groups;
+        groups = Group.parseGroups(array);
+        return groups;
     }
 }
