@@ -77,27 +77,34 @@ public class Api {
     }
 
     private String sendRequestInternal(String url) throws IOException, MalformedURLException, WrongResponseCodeException {
-        HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
-        connection.setConnectTimeout(30000);
-        connection.setReadTimeout(30000);
-        connection.setUseCaches(false);
-        connection.setDoOutput(false);
-        connection.setDoInput(true);
-        if(enable_compression)
-            connection.setRequestProperty("Accept-Encoding", "gzip");
-        int code=connection.getResponseCode();
-        Log.i(TAG, "code="+code);
-        //It may happen due to keep-alive problem http://stackoverflow.com/questions/1440957/httpurlconnection-getresponsecode-returns-1-on-second-invocation
-        if (code==-1)
-            throw new WrongResponseCodeException("Network error");
-        //может стоит проверить на код 200
-        //on error can also read error stream from connection.
-        InputStream is = new BufferedInputStream(connection.getInputStream(), 8192);
-        String enc=connection.getHeaderField("Content-Encoding");
-        if(enc!=null && enc.equalsIgnoreCase("gzip"))
-            is = new GZIPInputStream(is);
-        String response=Utils.convertStreamToString(is);
-        return response;
+        HttpURLConnection connection=null;
+        try{
+            connection = (HttpURLConnection)new URL(url).openConnection();
+            connection.setConnectTimeout(30000);
+            connection.setReadTimeout(30000);
+            connection.setUseCaches(false);
+            connection.setDoOutput(false);
+            connection.setDoInput(true);
+            if(enable_compression)
+                connection.setRequestProperty("Accept-Encoding", "gzip");
+            int code=connection.getResponseCode();
+            Log.i(TAG, "code="+code);
+            //It may happen due to keep-alive problem http://stackoverflow.com/questions/1440957/httpurlconnection-getresponsecode-returns-1-on-second-invocation
+            if (code==-1)
+                throw new WrongResponseCodeException("Network error");
+            //может стоит проверить на код 200
+            //on error can also read error stream from connection.
+            InputStream is = new BufferedInputStream(connection.getInputStream(), 8192);
+            String enc=connection.getHeaderField("Content-Encoding");
+            if(enc!=null && enc.equalsIgnoreCase("gzip"))
+                is = new GZIPInputStream(is);
+            String response=Utils.convertStreamToString(is);
+            return response;
+        }
+        finally{
+            if(connection!=null)
+                connection.disconnect();
+        }
     }
     
     private long getDefaultStartTime() {
