@@ -968,7 +968,7 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=wall.post
-    public long createWallPost(long owner_id, String text, ArrayList<String> attachments, String export, boolean only_friends, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createWallPost(long owner_id, String text, ArrayList<String> attachments, String export, boolean only_friends, boolean from_group, boolean signed, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.post");
         params.put("owner_id", owner_id);
         if(attachments !=null && attachments.size() > 0) {
@@ -984,6 +984,8 @@ public class Api {
             params.put("from_group","1");
         if (only_friends)
             params.put("friends_only","1");
+        if (signed)
+            params.put("signed","1");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
@@ -1696,7 +1698,7 @@ public class Api {
             return String.valueOf(response_code);
         return null;
     }
-
+    
     public String leaveGroup(long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("groups.leave");
         params.put("gid", gid);
