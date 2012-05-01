@@ -13,7 +13,7 @@ public class Group {
     public Boolean is_closed;
     public Boolean is_member;
     
-    //СЌС‚Рѕ РЅРѕРІС‹Рµ РїРѕР»СЏ, РєРѕС‚РѕСЂС‹С… Сѓ РЅР°СЃ РїРѕРєР° РЅРµС‚ РІ Р±Р°Р·Рµ
+    //это новые поля, которых у нас пока нет в базе
     //public String screen_name;
     //public Boolean is_admin;
     public String photo_medium;//100*100
@@ -33,7 +33,7 @@ public class Group {
         if(is_member != null)
             g.is_member = is_member.equals("1");
         
-        //СЌС‚Рѕ РЅРѕРІС‹Рµ РїРѕР»СЏ, РєРѕС‚РѕСЂС‹С… Сѓ РЅР°СЃ РїРѕРєР° РЅРµС‚ РІ Р±Р°Р·Рµ
+        //это новые поля, которых у нас пока нет в базе
         //g.screen_name=o.optString("screen_name");
         //String is_admin=o.optString("is_admin");
         //if(is_admin!=null)
@@ -46,7 +46,7 @@ public class Group {
     public static ArrayList<Group> parseGroups(JSONArray jgroups) throws JSONException {
         ArrayList<Group> groups=new ArrayList<Group>();
         for(int i = 0; i < jgroups.length(); i++) {
-            //РґР»СЏ РјРµС‚РѕРґР° groups.get РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚ - РєРѕР»РёС‡РµСЃС‚РІРѕ
+            //для метода groups.get первый элемент - количество
             if(!(jgroups.get(i) instanceof JSONObject))
                 continue;
             JSONObject jgroup = (JSONObject)jgroups.get(i);
