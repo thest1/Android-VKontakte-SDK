@@ -34,6 +34,16 @@ public class User {
     public Integer relation;
     public String friends_list_ids = null;
     public long last_seen;
+    public int albums_count;
+    public int videos_count;
+    public int audios_count;
+    public int notes_count;
+    public int friends_count;
+    public int user_photos_count;
+    public int user_videos_count;
+    //public int followers_count;
+    //public int subscriptions_count;
+    //public int online_friends_count;
     
     public static User parse(JSONObject o) throws JSONException {
         User u = new User();
@@ -105,6 +115,21 @@ public class User {
             JSONObject object = o.optJSONObject("last_seen");
             if (object != null)
                 u.last_seen = object.optLong("time");
+        }
+        if(!o.isNull("counters")) {
+            JSONObject object = o.optJSONObject("counters");
+            if (object != null) {
+                u.albums_count = object.optInt("albums");
+                u.videos_count = object.optInt("videos");
+                u.audios_count = object.optInt("audios");
+                u.notes_count = object.optInt("notes");
+                u.friends_count = object.optInt("friends");
+                u.user_photos_count = object.optInt("user_photos");
+                u.user_videos_count = object.optInt("user_videos");
+                //u.online_friends_count = object.optInt("online_friends");
+                //u.followers_count = object.optInt("followers");
+                //u.subscriptions_count = object.optInt("subscriptions");
+            }
         }
         return u;
     }
