@@ -11,6 +11,7 @@ public class Group {
     public String name;
     public String photo;//50*50
     public Boolean is_closed;
+    public Boolean is_member;
     
     //это новые поля, которых у нас пока нет в базе
     //public String screen_name;
@@ -25,9 +26,12 @@ public class Group {
         g.photo = o.getString("photo");
         g.photo_medium = o.optString("photo_medium");
         g.photo_big = o.optString("photo_big");
-        String is_closed=o.optString("is_closed");
-        if(is_closed!=null)
-            g.is_closed=is_closed.equals("1");
+        String is_closed = o.optString("is_closed");
+        if(is_closed != null)
+            g.is_closed = is_closed.equals("1");
+        String is_member = o.optString("is_member");
+        if(is_member != null)
+            g.is_member = is_closed.equals("1");
         
         //это новые поля, которых у нас пока нет в базе
         //g.screen_name=o.optString("screen_name");
