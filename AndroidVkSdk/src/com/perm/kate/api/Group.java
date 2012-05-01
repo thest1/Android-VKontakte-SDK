@@ -31,7 +31,7 @@ public class Group {
             g.is_closed = is_closed.equals("1");
         String is_member = o.optString("is_member");
         if(is_member != null)
-            g.is_member = is_closed.equals("1");
+            g.is_member = is_member.equals("1");
         
         //это новые поля, которых у нас пока нет в базе
         //g.screen_name=o.optString("screen_name");
