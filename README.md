@@ -36,7 +36,7 @@
 7. Теперь можно выполнять запросы к серверу, например так:
 
     ``` java
-    api.createWallPost(user_id, text, null, null, false, false, null, null);
+    api.createWallPost(user_id, text, null, null, false, false, false, null, null);
     ```
 
 ## Проекты использующие ВКонтакте Android SDK
