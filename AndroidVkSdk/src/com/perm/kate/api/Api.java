@@ -599,7 +599,7 @@ public class Api {
     }
 
     //http://vkontakte.ru/developers.php?o=-1&p=messages.send
-    public String sendMessage(Long uid, long chat_id, String message, String title, String type, ArrayList<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public String sendMessage(Long uid, long chat_id, String message, String title, String type, ArrayList<String> attachments, String lat, String lon, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.send");
         if(chat_id<=0)
             params.put("uid", uid);
@@ -607,13 +607,10 @@ public class Api {
             params.put("chat_id", chat_id);
         params.put("message", message);
         params.put("title", title);
-        params.put("type", type);
-        if(attachments !=null && attachments.size() > 0) {
-            String attachments_params = attachments.get(0);
-            for (int i=1;i<attachments.size();i++)
-                attachments_params = attachments_params + "," + attachments.get(i);
-            params.put("attachment", attachments_params);
-        }
+        params.put("type", type); 
+        params.put("attachment", arrayToString(attachments));
+        params.put("lat", lat);
+        params.put("long", lon);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         Object message_id = root.opt("response");

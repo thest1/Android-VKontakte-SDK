@@ -13,7 +13,7 @@ public class Params {
     }
 
     public void put(String param_name, String param_value) {
-        if(param_value==null)
+        if(param_value==null || param_value.length()==0)
             return;
         args.put(param_name, param_value);
     }
