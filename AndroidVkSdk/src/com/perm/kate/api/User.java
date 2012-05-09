@@ -143,7 +143,7 @@ public class User {
         try{
             m.sex = Integer.parseInt(jprofile.optString("sex"));
         }catch(NumberFormatException ex){
-            //РµСЃР»Рё С‚Р°Рј РјСѓСЃРѕСЂ, С‚Рѕ РјС‹ СЌС‚Рѕ РїСЂРѕРїСѓСЃРєР°РµРј
+            //если там мусор, то мы это пропускаем
             ex.printStackTrace();
         }
         return m;

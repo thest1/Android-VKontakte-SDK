@@ -44,7 +44,7 @@ public class WallMessage {
         wm.copy_owner_id = o.optLong("copy_owner_id");
         JSONArray attachments=o.optJSONArray("attachments");
         JSONObject geo_json=o.optJSONObject("geo");
-        //РІР»Р°РґРµР»СЊС†РµРј РѕРїСЂРѕСЃР° СЏРІР»СЏРµС‚СЃСЏ to_id. Р”Р°Р¶Рµ РµСЃР»Рё РґРѕР±Р°РІРёС‚СЊ РѕРїСЂРѕСЃ РІ РіСЂСѓРїРїСѓ РѕС‚ СЃРІРѕРµРіРѕ РёРјРµРЅРё, С‚Рѕ from_id Р±СѓРґСѓ СЏ, РЅРѕ РѕРїСЂРѕСЃ РІСЃС‘-СЂР°РІРЅРѕ Р±СѓРґРµС‚ РїСЂРёРЅР°РґР»РµР¶Р°С‚СЊ РіСЂСѓРїРїРµ.
+        //владельцем опроса является to_id. Даже если добавить опрос в группу от своего имени, то from_id буду я, но опрос всё-равно будет принадлежать группе.
         wm.attachments=Attachment.parseAttachments(attachments, wm.to_id, wm.copy_owner_id, geo_json);
         if (o.has("comments")){
             JSONObject jcomments = o.getJSONObject("comments");

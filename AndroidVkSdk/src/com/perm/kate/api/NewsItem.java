@@ -9,7 +9,7 @@ import org.json.JSONObject;
 public class NewsItem {
     public String type;
     public long source_id;
-    public long from_id;//РєРѕРіРґР° РїРѕСЃС‚ РїСЂРёС…РѕРґРёС‚ РІ РєРѕРјРјРµРЅС‚Р°СЂРёСЏС…, С‚Рѕ РІ source_id С‚Р°Рј СЃС‚РµРЅР°, Р° РІ from_id Р°РІС‚РѕСЂ СЃРѕРѕР±С‰РµРЅРёСЏ.
+    public long from_id;//когда пост приходит в комментариях, то в source_id там стена, а в from_id автор сообщения.
     public long date;
     public long post_id;
     public long copy_owner_id;
@@ -49,7 +49,7 @@ public class NewsItem {
         newsitem.attachments=Attachment.parseAttachments(attachments, newsitem.source_id, newsitem.copy_owner_id, geo_json);
         if (jitem.has(NewsJTags.COMMENTS)){
             JSONObject jcomments = jitem.getJSONObject(NewsJTags.COMMENTS);
-            newsitem.comment_count = jcomments.optInt("count", 0);//РѕРґРЅР°Р¶РґС‹ Р±С‹Р»Р° СЃС‚СЂРѕРєР° null
+            newsitem.comment_count = jcomments.optInt("count", 0);//однажды была строка null
             newsitem.comment_can_post = jcomments.getInt("can_post")==1;
             JSONArray x=jcomments.optJSONArray("list");
             if(x!=null)
@@ -78,7 +78,7 @@ public class NewsItem {
                 newsitem.photos.add(photo);
             }
         }
-        //РІ newsfeed.getComments С„РѕС‚РєР° РїСЂСЏРјРѕ РІ РЅРѕРІРѕСЃС‚Рё
+        //в newsfeed.getComments фотка прямо в новости
         if (newsitem.type.equals("photo") && is_comments){
             newsitem.photos = new ArrayList<Photo>();
             Photo photo = Photo.parse(jitem);
