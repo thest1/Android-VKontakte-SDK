@@ -989,12 +989,7 @@ public class Api {
     public long createWallPost(long owner_id, String text, ArrayList<String> attachments, String export, boolean only_friends, boolean from_group, boolean signed, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.post");
         params.put("owner_id", owner_id);
-        if(attachments !=null && attachments.size() > 0) {
-            String attachments_params = attachments.get(0);
-            for (int i=1;i<attachments.size();i++)
-                attachments_params = attachments_params + "," + attachments.get(i);
-            params.put("attachments", attachments_params);
-        }
+        params.put("attachments", arrayToString(attachments));
         params.put("message", text);
         if(export!=null && export.length()!=0)
             params.put("services",export);
