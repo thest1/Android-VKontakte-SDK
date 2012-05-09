@@ -986,10 +986,12 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=wall.post
-    public long createWallPost(long owner_id, String text, ArrayList<String> attachments, String export, boolean only_friends, boolean from_group, boolean signed, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createWallPost(long owner_id, String text, ArrayList<String> attachments, String export, boolean only_friends, boolean from_group, boolean signed, String lat, String lon, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.post");
         params.put("owner_id", owner_id);
         params.put("attachments", arrayToString(attachments));
+        params.put("lat", lat);
+        params.put("long", lon);
         params.put("message", text);
         if(export!=null && export.length()!=0)
             params.put("services",export);

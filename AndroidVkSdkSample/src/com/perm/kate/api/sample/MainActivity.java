@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
             public void run(){
                 try {
                     String text=messageEditText.getText().toString();
-                    api.createWallPost(account.user_id, text, null, null, false, false, false, null, null);
+                    api.createWallPost(account.user_id, text, null, null, false, false, false, null, null, null, null);
                     //Показать сообщение в UI потоке 
                     runOnUiThread(successRunnable);
                 } catch (Exception e) {
