@@ -45,8 +45,8 @@ public class NewsItem {
         newsitem.text = Api.unescape(jitem.optString("text"));
         newsitem.copy_owner_id = jitem.optLong("copy_owner_id");
         JSONArray attachments=jitem.optJSONArray("attachments");
-        if(attachments!=null)
-            newsitem.attachments=Attachment.parseAttachments(attachments, newsitem.source_id, newsitem.copy_owner_id);
+        JSONObject geo_json=jitem.optJSONObject("geo");
+        newsitem.attachments=Attachment.parseAttachments(attachments, newsitem.source_id, newsitem.copy_owner_id, geo_json);
         if (jitem.has(NewsJTags.COMMENTS)){
             JSONObject jcomments = jitem.getJSONObject(NewsJTags.COMMENTS);
             newsitem.comment_count = jcomments.optInt("count", 0);//однажды была строка null

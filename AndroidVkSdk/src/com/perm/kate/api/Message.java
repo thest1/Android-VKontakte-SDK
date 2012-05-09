@@ -43,8 +43,8 @@ public class Message {
             m.chat_id=o.getLong("chat_id");
 
         JSONArray attachments=o.optJSONArray("attachments");
-        if(attachments!=null)
-            m.attachments=Attachment.parseAttachments(attachments, 0, 0);
+        JSONObject geo_json=o.optJSONObject("geo");
+        m.attachments=Attachment.parseAttachments(attachments, 0, 0, geo_json);
         return m;
     }
 
