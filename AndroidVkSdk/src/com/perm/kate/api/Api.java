@@ -1705,9 +1705,10 @@ public class Api {
     }
 
     //no documentation
-    public String joinGroup(long gid) throws MalformedURLException, IOException, JSONException, KException {
+    public String joinGroup(long gid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("groups.join");
         params.put("gid", gid);
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
