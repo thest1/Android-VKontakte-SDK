@@ -1,9 +1,11 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Video {
+public class Video implements Serializable{
+    private static final long serialVersionUID = 1L;
     public long vid;
     public long owner_id;
     public String title;

@@ -33,10 +33,10 @@ public class Auth {
         //+65536  offline
         //+131072 Доступ к документам пользователя.
         //+262144 Доступ к группам пользователя.
-        int settings=1+2+4+8+16+32+64+128+1024+2048+4096+8192+65536+131072+262144;
-        //не хватает права notifications
+        //+524288 Доступ к оповещениям об ответах пользователю.
+        int settings=1+2+4+8+16+32+64+128+1024+2048+4096+8192+65536+131072+262144+524288;
         return Integer.toString(settings);
-        //return "friends,photos,audio,video,docs,notes,pages,wall,groups,messages,offline";
+        //return "friends,photos,audio,video,docs,notes,pages,wall,groups,messages,offline,notifications";
     }
     
     public static String[] parseRedirectUrl(String url) throws Exception {

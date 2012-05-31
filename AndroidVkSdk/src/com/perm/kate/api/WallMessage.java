@@ -1,12 +1,14 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WallMessage {
+public class WallMessage implements Serializable {
+    private static final long serialVersionUID = 1L;
     public long from_id;
     public long to_id;
     public long date; 
@@ -32,7 +34,7 @@ public class WallMessage {
         wm.from_id = o.getLong("from_id");
         wm.to_id = o.getLong("to_id");
         wm.date = o.getLong("date");
-        wm.online = o.getString("online");
+        wm.online = o.optString("online");
         wm.text = Api.unescape(o.getString("text"));
         if (o.has("likes")){
             JSONObject jlikes = o.getJSONObject(NewsJTags.LIKES);
@@ -51,6 +53,22 @@ public class WallMessage {
             wm.comment_count = jcomments.getInt("count");
             wm.comment_can_post = jcomments.getInt("can_post")==1;
         }
+        return wm;
+    }
+    
+    public static WallMessage parseForNotifications(JSONObject o) throws JSONException {
+        WallMessage wm = new WallMessage();
+        wm.id = o.getLong("id");
+        wm.from_id = Long.parseLong(o.getString("owner_id"));
+        wm.text = Api.unescape(o.getString("text"));
+        //likes is there but I don't parse it because I don't need it
+        //if (o.has("likes")){
+        //    JSONObject jlikes = o.getJSONObject(NewsJTags.LIKES);
+        //    wm.like_count = jlikes.getInt("count");
+        //    wm.user_like = jlikes.getInt("user_likes")==1;
+        //    wm.can_like = jlikes.getInt("can_like")==1;
+        //    wm.like_can_publish = jlikes.getInt("can_publish")==1;
+        //}
         return wm;
     }
 }

@@ -1,11 +1,13 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Attachment {
+public class Attachment implements Serializable {
+    private static final long serialVersionUID = 1L;
     public String type; //photo,posted_photo,video,audio,link,note,app,poll,doc
     public Photo photo; 
     //public Photo posted_photo; 

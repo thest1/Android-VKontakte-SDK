@@ -1,12 +1,15 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Group {
+public class Group implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     public long gid;
     public String name;
     public String photo;//50*50

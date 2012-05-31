@@ -1,11 +1,15 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 //Fields are optional. Should be null if not populated
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
     public long uid;
     public String first_name;
     public String last_name;
@@ -147,5 +151,22 @@ public class User {
             ex.printStackTrace();
         }
         return m;
+    }
+    
+    public static ArrayList<User> parseUsers(JSONArray array) throws JSONException {
+        ArrayList<User> users=new ArrayList<User>();
+        //it may be null if no users returned
+        //no users may be returned if we request users that are already removed
+        if(array==null)
+            return users;
+        int category_count=array.length();
+        for(int i=0; i<category_count; ++i){
+            if(array.get(i)==null || ((array.get(i) instanceof JSONObject)==false))
+                continue;
+            JSONObject o = (JSONObject)array.get(i);
+            User u = User.parse(o);
+            users.add(u);
+        }
+        return users;
     }
 }

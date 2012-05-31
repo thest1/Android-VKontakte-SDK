@@ -1,9 +1,11 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GroupTopic {
+public class GroupTopic implements Serializable {
+    private static final long serialVersionUID = 1L;
     public long tid;
     public long gid;
     public String title;
@@ -26,6 +28,21 @@ public class GroupTopic {
         topic.is_closed = Integer.parseInt(o.getString("is_closed"));
         topic.is_fixed = Integer.parseInt(o.getString("is_fixed"));
         topic.comments = Integer.parseInt(o.getString("comments"));
+        return topic;
+    }
+    
+    public static GroupTopic parseForNotifications(JSONObject o) throws NumberFormatException, JSONException {
+        GroupTopic topic = new GroupTopic();
+        topic.tid = o.getLong("id");
+        topic.title = Api.unescape(o.getString("title"));
+        topic.gid = -o.getLong("owner_id");
+        //topic.created = Long.parseLong(o.getString("created"));
+        //topic.created_by = Long.parseLong(o.getString("created_by"));
+        //topic.updated = Long.parseLong(o.getString("updated"));
+        //topic.updated_by = Long.parseLong(o.getString("updated_by"));
+        //topic.is_closed = Integer.parseInt(o.getString("is_closed"));
+        //topic.is_fixed = Integer.parseInt(o.getString("is_fixed"));
+        //topic.comments = Integer.parseInt(o.getString("comments"));
         return topic;
     }
 }

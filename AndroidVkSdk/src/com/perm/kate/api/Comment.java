@@ -1,9 +1,11 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Comment {
+public class Comment implements Serializable {
+    private static final long serialVersionUID = 1L;
     public long cid;
     public long from_id;
     public long date;
@@ -71,6 +73,20 @@ public class Comment {
         comment.from_id = o.getLong("from_id");
         comment.date = o.getLong("date");
         comment.message = Api.unescape(o.getString("message"));
+        return comment;
+    }
+    
+    public static Comment parseNotificationComment(JSONObject o) throws NumberFormatException, JSONException{
+        Comment comment = new Comment();
+        comment.cid = Long.parseLong(o.getString("id"));
+        comment.from_id = Long.parseLong(o.getString("owner_id"));
+        comment.date = Long.parseLong(o.getString("date"));
+        comment.message = Api.unescape(o.getString("text"));
+        if (o.has("likes")){
+            JSONObject jlikes = o.getJSONObject("likes");
+            comment.like_count = jlikes.getInt("count");
+            comment.user_like = jlikes.getInt("user_likes")==1;
+        }
         return comment;
     }
 }

@@ -197,24 +197,7 @@ public class Api {
         params.put("name_case",name_case);
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
-        return parseUsers(array);
-    }
-
-    private ArrayList<User> parseUsers(JSONArray array) throws JSONException {
-        ArrayList<User> users=new ArrayList<User>();
-        //it may be null if no users returned
-        //no users may be returned if we request users that are already removed
-        if(array==null)
-            return users;
-        int category_count=array.length();
-        for(int i=0; i<category_count; ++i){
-            if(array.get(i)==null || ((array.get(i) instanceof JSONObject)==false))
-                continue;
-            JSONObject o = (JSONObject)array.get(i);
-            User u = User.parse(o);
-            users.add(u);
-        }
-        return users;
+        return User.parseUsers(array);
     }
 
     /*** methods for friends ***/
@@ -1282,7 +1265,7 @@ public class Api {
         params.put("fields", fields);
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
-        return parseUsers(array);
+        return User.parseUsers(array);
     }
 
     //http://vkontakte.ru/developers.php?o=-1&p=video.delete
@@ -1770,6 +1753,31 @@ public class Api {
     public String unregisterDevice(String token) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("account.unregisterDevice");
         params.put("token", token);
+        JSONObject root = sendRequest(params);
+        return root.getString("response");
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=notifications.get
+    public Notifications getNotifications(String filters, Long start_time, Long end_time, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("notifications.get");
+        if (filters != null)
+            params.put("filters", filters);
+        if (start_time != null)
+            params.put("start_time", start_time);
+        if (end_time != null)
+            params.put("end_time", end_time);
+        if (offset != null)
+            params.put("offset", offset);
+        if (count != null && count > 0)
+            params.put("count", count);
+        JSONObject root = sendRequest(params);
+        JSONObject response = root.optJSONObject("response");
+        return Notifications.parse(response);
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=notifications.markAsViewed
+    public String resetUnreadNotifications() throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("notifications.markAsViewed");
         JSONObject root = sendRequest(params);
         return root.getString("response");
     }
