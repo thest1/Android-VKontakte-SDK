@@ -12,6 +12,7 @@ public class Comment implements Serializable {
     public String message;
     public long reply_to_uid;
     public long reply_to_cid;
+    public WallMessage post;//parent post, used only for notifications type "reply_comment"
 
     //likes
     public int like_count;
@@ -76,7 +77,7 @@ public class Comment implements Serializable {
         return comment;
     }
     
-    public static Comment parseNotificationComment(JSONObject o) throws NumberFormatException, JSONException{
+    public static Comment parseNotificationComment(JSONObject o, boolean parse_post) throws NumberFormatException, JSONException{
         Comment comment = new Comment();
         comment.cid = Long.parseLong(o.getString("id"));
         comment.from_id = Long.parseLong(o.getString("owner_id"));
@@ -86,6 +87,10 @@ public class Comment implements Serializable {
             JSONObject jlikes = o.getJSONObject("likes");
             comment.like_count = jlikes.getInt("count");
             comment.user_like = jlikes.getInt("user_likes")==1;
+        }
+        if(parse_post){
+            JSONObject post_json=o.getJSONObject("post");
+            comment.post=WallMessage.parse(post_json);
         }
         return comment;
     }

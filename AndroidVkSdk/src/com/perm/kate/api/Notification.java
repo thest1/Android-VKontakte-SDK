@@ -59,7 +59,7 @@ public class Notification implements Serializable {
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
                 if (jparent != null && jfeedback != null) {
                     n.parent = WallMessage.parse(jparent);
-                    n.feedback = Comment.parseNotificationComment(jfeedback); 
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false); 
                 }
             } else if (n.type.equals(WALL)) {
                 JSONObject jfeedback = o.optJSONObject("feedback");//post
@@ -70,35 +70,35 @@ public class Notification implements Serializable {
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
                 if (jparent != null && jfeedback != null) {
                     n.parent = WallMessage.parse(jparent);
-                    n.feedback = Comment.parseNotificationComment(jfeedback); 
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false); 
                 }
             } else if (n.type.equals(COMMENT_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //photo
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
                 if (jparent != null && jfeedback != null) {
                     n.parent = Photo.parse(jparent);
-                    n.feedback = Comment.parseNotificationComment(jfeedback);
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
                 }
             } else if (n.type.equals(COMMENT_VIDEO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //video
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
                 if (jparent != null && jfeedback != null) {
                     n.parent = Video.parse(jparent);
-                    n.feedback = Comment.parseNotificationComment(jfeedback);
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
                 }
             } else if (n.type.equals(REPLY_COMMENT)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
                 if (jparent != null && jfeedback != null) {
-                    n.parent = Comment.parseNotificationComment(jparent);
-                    n.feedback = Comment.parseNotificationComment(jfeedback);
+                    n.parent = Comment.parseNotificationComment(jparent, true);
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
                 }
             } else if (n.type.equals(REPLY_TOPIC)) {
                 JSONObject jparent = o.optJSONObject("parent"); //topic
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
                 if (jparent != null && jfeedback != null) {
                     n.parent = GroupTopic.parseForNotifications(jparent);
-                    n.feedback = Comment.parseNotificationComment(jfeedback);
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
                 }
             } else if (n.type.equals(LIKE_POST)) {
                 JSONObject jparent = o.optJSONObject("parent"); //post
@@ -111,7 +111,7 @@ public class Notification implements Serializable {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONArray jfeedback = o.optJSONArray("feedback");//profiles
                 if (jparent != null && jfeedback != null) {
-                    n.parent = Comment.parseNotificationComment(jparent);
+                    n.parent = Comment.parseNotificationComment(jparent, false);
                     n.feedback = getProfiles(jfeedback);
                 }
             } else if (n.type.equals(LIKE_PHOTO)) {
