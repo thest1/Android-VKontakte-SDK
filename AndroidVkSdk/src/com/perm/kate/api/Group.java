@@ -27,7 +27,7 @@ public class Group implements Serializable {
         Group g=new Group();
         g.gid = o.getLong("gid");
         g.name = Api.unescape(o.getString("name"));
-        g.photo = o.getString("photo");
+        g.photo = o.optString("photo");
         g.photo_medium = o.optString("photo_medium");
         g.photo_big = o.optString("photo_big");
         String is_closed = o.optString("is_closed");
