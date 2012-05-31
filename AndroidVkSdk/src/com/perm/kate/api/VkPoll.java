@@ -1,12 +1,14 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class VkPoll {
+public class VkPoll implements Serializable {
+    private static final long serialVersionUID = 1L;
     public long id;
     public String question;
     public long owner_id;

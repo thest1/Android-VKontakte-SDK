@@ -1,9 +1,11 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Document {
+public class Document implements Serializable {
+    private static final long serialVersionUID = 1L;
     public String title;
     public String url;
     public long size;

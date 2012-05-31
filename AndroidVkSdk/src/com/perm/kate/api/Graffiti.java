@@ -1,9 +1,11 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Graffiti {
+public class Graffiti implements Serializable {
+    private static final long serialVersionUID = 1L;
     public long id; 
     public long owner_id; 
     public String src; //200*100 http://cs10730.vkontakte.ru/u110317842/s_5a43e302.png

@@ -1,8 +1,10 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import org.json.JSONObject;
 
-public class Geo {
+public class Geo implements Serializable {
+    private static final long serialVersionUID = 1L;
     public String type;
     public String lat;
     public String lon;
