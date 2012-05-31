@@ -834,7 +834,18 @@ public class Api {
         }
         return notes;
     }
-    
+
+    //http://vk.com/developers.php?oid=-1&p=notes.delete
+    public String deleteNote(Long nid) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("notes.delete");
+        params.put("nid", nid);
+        JSONObject root = sendRequest(params);
+        Object response_code = root.opt("response");
+        if (response_code != null)
+            return String.valueOf(response_code);
+        return null;
+    }
+
     //http://vkontakte.ru/developers.php?o=-1&p=photos.getUploadServer
     public String photosGetUploadServer(long album_id, Long group_id) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.getUploadServer");
