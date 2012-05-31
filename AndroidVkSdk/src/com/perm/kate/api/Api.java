@@ -1683,7 +1683,7 @@ public class Api {
     /*** end topics region ***/
     
     //http://vk.com/developers.php?oid=-1&p=groups.getById
-    public ArrayList<Group> getGroups(ArrayList<Long> uids, String domain) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Group> getGroups(ArrayList<Long> uids, String domain, String fields) throws MalformedURLException, IOException, JSONException, KException{
         if (uids == null && domain == null)
             return null;
         if (uids.size() == 0 && domain == null)
@@ -1695,7 +1695,7 @@ public class Api {
         else
             str_uids = domain;
         params.put("gids", str_uids);
-        params.put("fields", "description"); //fields=place,wiki_page,city,country,description,start_date,finish_date,site
+        params.put("fields", fields); //Possible values: place,wiki_page,city,country,description,start_date,finish_date,site
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         return Group.parseGroups(array);
