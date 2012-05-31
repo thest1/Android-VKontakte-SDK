@@ -15,6 +15,7 @@ public class Photo implements Serializable {
     public String src_big;
     public String src_xbig;
     public String src_xxbig;
+    public String src_xxxbig;
     public String phototext;
     public long created;
     public Integer like_count;
@@ -30,6 +31,7 @@ public class Photo implements Serializable {
         p.src_big = o.getString("src_big");
         p.src_xbig = o.optString("src_xbig");
         p.src_xxbig = o.optString("src_xxbig");
+        p.src_xxxbig = o.optString("src_xxxbig");
         p.phototext = Api.unescape(o.optString("text"));
         p.created = o.optLong("created");
         
