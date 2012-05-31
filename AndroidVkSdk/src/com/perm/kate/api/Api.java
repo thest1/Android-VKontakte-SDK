@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.zip.GZIPInputStream;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -129,7 +130,7 @@ public class Api {
 
     /*** API methods ***/
     //http://vkontakte.ru/developers.php?o=-1&p=getCities
-    public ArrayList<City> getCities(ArrayList<Long> cids) throws MalformedURLException, IOException, JSONException, KException {
+    public ArrayList<City> getCities(Collection<Long> cids) throws MalformedURLException, IOException, JSONException, KException {
         if (cids == null || cids.size() == 0)
             return null;
         Params params = new Params("getCities");
@@ -147,7 +148,7 @@ public class Api {
         return cities;
     }
 
-    <T> String arrayToString(ArrayList<T> items) {
+    <T> String arrayToString(Collection<T> items) {
         if(items==null)
             return null;
         String str_cids = "";
@@ -160,7 +161,7 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=getCountries
-    public ArrayList<Country> getCountries(ArrayList<Long> cids) throws MalformedURLException, IOException, JSONException, KException {
+    public ArrayList<Country> getCountries(Collection<Long> cids) throws MalformedURLException, IOException, JSONException, KException {
         if (cids == null || cids.size() == 0)
             return null;
         Params params = new Params("getCountries");
@@ -180,7 +181,7 @@ public class Api {
 
     //*** methods for users ***//
     //http://vkontakte.ru/developers.php?o=-1&p=getProfiles
-    public ArrayList<User> getProfiles(ArrayList<Long> uids, ArrayList<String> domains, String fields, String name_case) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<User> getProfiles(Collection<Long> uids, Collection<String> domains, String fields, String name_case) throws MalformedURLException, IOException, JSONException, KException{
         if (uids == null && domains == null)
             return null;
         if ((uids != null && uids.size() == 0) || (domains != null && domains.size() == 0))
@@ -582,7 +583,7 @@ public class Api {
     }
 
     //http://vkontakte.ru/developers.php?o=-1&p=messages.send
-    public String sendMessage(Long uid, long chat_id, String message, String title, String type, ArrayList<String> attachments, String lat, String lon, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public String sendMessage(Long uid, long chat_id, String message, String title, String type, Collection<String> attachments, String lat, String lon, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.send");
         if(chat_id<=0)
             params.put("uid", uid);
@@ -703,7 +704,7 @@ public class Api {
 
     /*** for audio ***/
     //http://vkontakte.ru/developers.php?o=-1&p=audio.get
-    public ArrayList<Audio> getAudio(Long uid, Long gid, ArrayList<Long> aids) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Audio> getAudio(Long uid, Long gid, Collection<Long> aids) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.get");
         params.put("uid", uid);
         params.put("gid", gid);
@@ -798,7 +799,7 @@ public class Api {
     
     /*** for notes ***/
     //http://vkontakte.ru/developers.php?o=-1&p=notes.get
-    public ArrayList<Note> getNotes(Long uid, ArrayList<Long> nids, String sort, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
+    public ArrayList<Note> getNotes(Long uid, Collection<Long> nids, String sort, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("notes.get");
         params.put("uid", uid);
         params.put("nids", arrayToString(nids));
@@ -980,7 +981,7 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=wall.post
-    public long createWallPost(long owner_id, String text, ArrayList<String> attachments, String export, boolean only_friends, boolean from_group, boolean signed, String lat, String lon, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createWallPost(long owner_id, String text, Collection<String> attachments, String export, boolean only_friends, boolean from_group, boolean signed, String lat, String lon, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.post");
         params.put("owner_id", owner_id);
         params.put("attachments", arrayToString(attachments));
@@ -1683,7 +1684,7 @@ public class Api {
     /*** end topics region ***/
     
     //http://vk.com/developers.php?oid=-1&p=groups.getById
-    public ArrayList<Group> getGroups(ArrayList<Long> uids, String domain, String fields) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Group> getGroups(Collection<Long> uids, String domain, String fields) throws MalformedURLException, IOException, JSONException, KException{
         if (uids == null && domain == null)
             return null;
         if (uids.size() == 0 && domain == null)
