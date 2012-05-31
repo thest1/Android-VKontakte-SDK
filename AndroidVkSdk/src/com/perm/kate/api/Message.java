@@ -29,7 +29,7 @@ public class Message {
             Long from_id = o.getLong("from_id");
             m.is_out=!(from_id==history_uid);
         }else{
-            //тут не очень, потому что при получении списка диалогов если есть моё сообщение, которое я написал в беседу, то в нём uid будет мой. Хотя в других случайх uid всегда собеседника.
+            //С‚СѓС‚ РЅРµ РѕС‡РµРЅСЊ, РїРѕС‚РѕРјСѓ С‡С‚Рѕ РїСЂРё РїРѕР»СѓС‡РµРЅРёРё СЃРїРёСЃРєР° РґРёР°Р»РѕРіРѕРІ РµСЃР»Рё РµСЃС‚СЊ РјРѕС‘ СЃРѕРѕР±С‰РµРЅРёРµ, РєРѕС‚РѕСЂРѕРµ СЏ РЅР°РїРёСЃР°Р» РІ Р±РµСЃРµРґСѓ, С‚Рѕ РІ РЅС‘Рј uid Р±СѓРґРµС‚ РјРѕР№. РҐРѕС‚СЏ РІ РґСЂСѓРіРёС… СЃР»СѓС‡Р°Р№С… uid РІСЃРµРіРґР° СЃРѕР±РµСЃРµРґРЅРёРєР°.
             m.uid = o.getLong("uid");
             m.is_out = o.getInt("out")==1;
         }
@@ -48,17 +48,17 @@ public class Message {
         return m;
     }
 
-    public static int UNREAD = 1;	 	//сообщение не прочитано 
-    public static int OUTBOX = 2;	 	//исходящее сообщение 
-    public static int REPLIED = 4;	 	//на сообщение был создан ответ 
-    public static int IMPORTANT = 8; 	//помеченное сообщение 
-    public static int CHAT = 16;    	//сообщение отправлено через диалог
-    public static int FRIENDS = 32;		//сообщение отправлено другом 
-    public static int SPAM = 64;		//сообщение помечено как "Спам"
-    public static int DELETED = 128;	//сообщение удалено (в корзине)
-    public static int FIXED = 256; 		//сообщение проверено пользователем на спам 
-    public static int MEDIA = 512;		//сообщение содержит медиаконтент
-    public static int BESEDA = 8192;    //беседа
+    public static int UNREAD = 1;	 	//СЃРѕРѕР±С‰РµРЅРёРµ РЅРµ РїСЂРѕС‡РёС‚Р°РЅРѕ 
+    public static int OUTBOX = 2;	 	//РёСЃС…РѕРґСЏС‰РµРµ СЃРѕРѕР±С‰РµРЅРёРµ 
+    public static int REPLIED = 4;	 	//РЅР° СЃРѕРѕР±С‰РµРЅРёРµ Р±С‹Р» СЃРѕР·РґР°РЅ РѕС‚РІРµС‚ 
+    public static int IMPORTANT = 8; 	//РїРѕРјРµС‡РµРЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ 
+    public static int CHAT = 16;    	//СЃРѕРѕР±С‰РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ С‡РµСЂРµР· РґРёР°Р»РѕРі
+    public static int FRIENDS = 32;		//СЃРѕРѕР±С‰РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ РґСЂСѓРіРѕРј 
+    public static int SPAM = 64;		//СЃРѕРѕР±С‰РµРЅРёРµ РїРѕРјРµС‡РµРЅРѕ РєР°Рє "РЎРїР°Рј"
+    public static int DELETED = 128;	//СЃРѕРѕР±С‰РµРЅРёРµ СѓРґР°Р»РµРЅРѕ (РІ РєРѕСЂР·РёРЅРµ)
+    public static int FIXED = 256; 		//СЃРѕРѕР±С‰РµРЅРёРµ РїСЂРѕРІРµСЂРµРЅРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј РЅР° СЃРїР°Рј 
+    public static int MEDIA = 512;		//СЃРѕРѕР±С‰РµРЅРёРµ СЃРѕРґРµСЂР¶РёС‚ РјРµРґРёР°РєРѕРЅС‚РµРЅС‚
+    public static int BESEDA = 8192;    //Р±РµСЃРµРґР°
 
     public static Message parse(JSONArray a) throws JSONException {
         Message m = new Message();

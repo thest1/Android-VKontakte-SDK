@@ -147,7 +147,7 @@ public class User implements Serializable {
         try{
             m.sex = Integer.parseInt(jprofile.optString("sex"));
         }catch(NumberFormatException ex){
-            //если там мусор, то мы это пропускаем
+            //РµСЃР»Рё С‚Р°Рј РјСѓСЃРѕСЂ, С‚Рѕ РјС‹ СЌС‚Рѕ РїСЂРѕРїСѓСЃРєР°РµРј
             ex.printStackTrace();
         }
         return m;

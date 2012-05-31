@@ -62,7 +62,7 @@ public class Attachment implements Serializable {
             }
         }
         
-        //Geo тоже добавляем в attacmnets если он есть
+        //Geo С‚РѕР¶Рµ РґРѕР±Р°РІР»СЏРµРј РІ attacmnets РµСЃР»Рё РѕРЅ РµСЃС‚СЊ
         if(geo_json!=null){
             Attachment a=new Attachment();
             a.type="geo";

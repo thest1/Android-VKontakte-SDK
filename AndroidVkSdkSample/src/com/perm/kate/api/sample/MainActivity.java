@@ -29,10 +29,10 @@ public class MainActivity extends Activity {
         
         setupUI();
         
-        //Восстановление сохранённой сессии
+        //Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ СЃРѕС…СЂР°РЅС‘РЅРЅРѕР№ СЃРµСЃСЃРёРё
         account.restore(this);
         
-        //Если сессия есть создаём API для обращения к серверу
+        //Р•СЃР»Рё СЃРµСЃСЃРёСЏ РµСЃС‚СЊ СЃРѕР·РґР°С‘Рј API РґР»СЏ РѕР±СЂР°С‰РµРЅРёСЏ Рє СЃРµСЂРІРµСЂСѓ
         if(account.access_token!=null)
             api=new Api(account.access_token, Constants.API_ID);
         
@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_LOGIN) {
             if (resultCode == RESULT_OK) {
-                //авторизовались успешно 
+                //Р°РІС‚РѕСЂРёР·РѕРІР°Р»РёСЃСЊ СѓСЃРїРµС€РЅРѕ 
                 account.access_token=data.getStringExtra("token");
                 account.user_id=data.getLongExtra("user_id", 0);
                 account.save(MainActivity.this);
@@ -91,14 +91,14 @@ public class MainActivity extends Activity {
     }
     
     private void postToWall() {
-        //Общение с сервером в отдельном потоке чтобы не блокировать UI поток
+        //РћР±С‰РµРЅРёРµ СЃ СЃРµСЂРІРµСЂРѕРј РІ РѕС‚РґРµР»СЊРЅРѕРј РїРѕС‚РѕРєРµ С‡С‚РѕР±С‹ РЅРµ Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ UI РїРѕС‚РѕРє
         new Thread(){
             @Override
             public void run(){
                 try {
                     String text=messageEditText.getText().toString();
                     api.createWallPost(account.user_id, text, null, null, false, false, false, null, null, null, null);
-                    //Показать сообщение в UI потоке 
+                    //РџРѕРєР°Р·Р°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РІ UI РїРѕС‚РѕРєРµ 
                     runOnUiThread(successRunnable);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -110,7 +110,7 @@ public class MainActivity extends Activity {
     Runnable successRunnable=new Runnable(){
         @Override
         public void run() {
-            Toast.makeText(getApplicationContext(), "Запись успешно добавлена", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Р—Р°РїРёСЃСЊ СѓСЃРїРµС€РЅРѕ РґРѕР±Р°РІР»РµРЅР°", Toast.LENGTH_LONG).show();
         }
     };
     

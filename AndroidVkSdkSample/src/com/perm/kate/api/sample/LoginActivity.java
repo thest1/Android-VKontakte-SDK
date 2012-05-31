@@ -26,7 +26,7 @@ public class LoginActivity extends Activity {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.clearCache(true);
         
-        //Чтобы получать уведомления об окончании загрузки страницы
+        //Р§С‚РѕР±С‹ РїРѕР»СѓС‡Р°С‚СЊ СѓРІРµРґРѕРјР»РµРЅРёСЏ РѕР± РѕРєРѕРЅС‡Р°РЅРёРё Р·Р°РіСЂСѓР·РєРё СЃС‚СЂР°РЅРёС†С‹
         webview.setWebViewClient(new FacebookWebViewClient());
                 
         //otherwise CookieManager will fall with java.lang.IllegalStateException: CookieSyncManager::createInstance() needs to be called before CookieSyncManager::getInstance()

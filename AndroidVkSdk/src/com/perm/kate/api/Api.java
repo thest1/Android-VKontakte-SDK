@@ -93,7 +93,7 @@ public class Api {
             //It may happen due to keep-alive problem http://stackoverflow.com/questions/1440957/httpurlconnection-getresponsecode-returns-1-on-second-invocation
             if (code==-1)
                 throw new WrongResponseCodeException("Network error");
-            //может стоит проверить на код 200
+            //РјРѕР¶РµС‚ СЃС‚РѕРёС‚ РїСЂРѕРІРµСЂРёС‚СЊ РЅР° РєРѕРґ 200
             //on error can also read error stream from connection.
             InputStream is = new BufferedInputStream(connection.getInputStream(), 8192);
             String enc=connection.getHeaderField("Content-Encoding");
@@ -211,7 +211,7 @@ public class Api {
         params.put("uid",user_id);
         params.put("lid", lid);
         
-        //сортировка по популярности не даёт запросить друзей из списка
+        //СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РїРѕРїСѓР»СЏСЂРЅРѕСЃС‚Рё РЅРµ РґР°С‘С‚ Р·Р°РїСЂРѕСЃРёС‚СЊ РґСЂСѓР·РµР№ РёР· СЃРїРёСЃРєР°
         if(lid==null)
             params.put("order","hints");
         
@@ -461,8 +461,8 @@ public class Api {
         ArrayList<Comment> commnets = new ArrayList<Comment>();
         @SuppressWarnings("unused")
         JSONObject root = sendRequest(params);
-        //здесь ещё приходит pid - photo_id
-        //вынести парсящий код чтобы не было дублирования
+        //Р·РґРµСЃСЊ РµС‰С‘ РїСЂРёС…РѕРґРёС‚ pid - photo_id
+        //РІС‹РЅРµСЃС‚Рё РїР°СЂСЃСЏС‰РёР№ РєРѕРґ С‡С‚РѕР±С‹ РЅРµ Р±С‹Р»Рѕ РґСѓР±Р»РёСЂРѕРІР°РЅРёСЏ
         //JSONArray array = root.getJSONArray("response");
         //int category_count = array.length();
         //for(int i = 0; i<category_count; ++i) {           
@@ -693,7 +693,7 @@ public class Api {
         return Newsfeed.parse(root, false);
     }
 
-    //Новости-Комментарии. Описания нет.
+    //РќРѕРІРѕСЃС‚Рё-РљРѕРјРјРµРЅС‚Р°СЂРёРё. РћРїРёСЃР°РЅРёСЏ РЅРµС‚.
     public Newsfeed getNewsComments() throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("newsfeed.getComments");
         params.put("last_comments","1");
@@ -1011,8 +1011,8 @@ public class Api {
         /*
         if (sort != null)
             params.put("sort", sort);
-            //asc - хронологический
-            //desc - антихронологический
+            //asc - С…СЂРѕРЅРѕР»РѕРіРёС‡РµСЃРєРёР№
+            //desc - Р°РЅС‚РёС…СЂРѕРЅРѕР»РѕРіРёС‡РµСЃРєРёР№
         */
         if (offset > 0)
             params.put("offset", offset);
@@ -1251,7 +1251,7 @@ public class Api {
             }
         }
         
-        //TODO Это вроде лишнее. В результатах поиска не хватает только link, но ведь он составляется из owner_id+video_id
+        //TODO Р­С‚Рѕ РІСЂРѕРґРµ Р»РёС€РЅРµРµ. Р’ СЂРµР·СѓР»СЊС‚Р°С‚Р°С… РїРѕРёСЃРєР° РЅРµ С…РІР°С‚Р°РµС‚ С‚РѕР»СЊРєРѕ link, РЅРѕ РІРµРґСЊ РѕРЅ СЃРѕСЃС‚Р°РІР»СЏРµС‚СЃСЏ РёР· owner_id+video_id
         String video_ids = "";
         for (Video v:videoss) {
             video_ids = video_ids + String.valueOf(v.owner_id) + "_" + String.valueOf(v.vid) + ","; 
@@ -1319,7 +1319,7 @@ public class Api {
         return new Object[]{key, server, ts};
     }
     
-    //не документирован
+    //РЅРµ РґРѕРєСѓРјРµРЅС‚РёСЂРѕРІР°РЅ
     public void setOnline() throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("activity.online");
         sendRequest(params);

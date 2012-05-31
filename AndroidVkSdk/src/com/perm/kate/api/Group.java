@@ -16,7 +16,7 @@ public class Group implements Serializable {
     public Boolean is_closed;
     public Boolean is_member;
     
-    //это новые поля, которых у нас пока нет в базе
+    //СЌС‚Рѕ РЅРѕРІС‹Рµ РїРѕР»СЏ, РєРѕС‚РѕСЂС‹С… Сѓ РЅР°СЃ РїРѕРєР° РЅРµС‚ РІ Р±Р°Р·Рµ
     //public String screen_name;
     //public Boolean is_admin;
     public String photo_medium;//100*100
@@ -40,7 +40,7 @@ public class Group implements Serializable {
         if (description_text != null)
             g.description = Api.unescape(description_text);
         
-        //это новые поля, которых у нас пока нет в базе
+        //СЌС‚Рѕ РЅРѕРІС‹Рµ РїРѕР»СЏ, РєРѕС‚РѕСЂС‹С… Сѓ РЅР°СЃ РїРѕРєР° РЅРµС‚ РІ Р±Р°Р·Рµ
         //g.screen_name=o.optString("screen_name");
         //String is_admin=o.optString("is_admin");
         //if(is_admin!=null)
@@ -53,7 +53,7 @@ public class Group implements Serializable {
     public static ArrayList<Group> parseGroups(JSONArray jgroups) throws JSONException {
         ArrayList<Group> groups=new ArrayList<Group>();
         for(int i = 0; i < jgroups.length(); i++) {
-            //для метода groups.get первый элемент - количество
+            //РґР»СЏ РјРµС‚РѕРґР° groups.get РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚ - РєРѕР»РёС‡РµСЃС‚РІРѕ
             if(!(jgroups.get(i) instanceof JSONObject))
                 continue;
             JSONObject jgroup = (JSONObject)jgroups.get(i);
