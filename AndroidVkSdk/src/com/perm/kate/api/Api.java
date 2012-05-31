@@ -1249,6 +1249,8 @@ public class Api {
                 videoss.add(video);
             }
         }
+        
+        //TODO Ёто вроде лишнее. ¬ результатах поиска не хватает только link, но ведь он составл€етс€ из owner_id+video_id
         String video_ids = "";
         for (Video v:videoss) {
             video_ids = video_ids + String.valueOf(v.owner_id) + "_" + String.valueOf(v.vid) + ","; 
