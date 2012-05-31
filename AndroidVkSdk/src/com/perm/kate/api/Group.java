@@ -21,6 +21,7 @@ public class Group implements Serializable {
     //public Boolean is_admin;
     public String photo_medium;//100*100
     public String photo_big;//200*200
+    public String description;
 
     public static Group parse(JSONObject o) throws JSONException{
         Group g=new Group();
@@ -35,6 +36,9 @@ public class Group implements Serializable {
         String is_member = o.optString("is_member");
         if(is_member != null)
             g.is_member = is_member.equals("1");
+        String description_text = o.optString("description");
+        if (description_text != null)
+            g.description = Api.unescape(description_text);
         
         //это новые поля, которых у нас пока нет в базе
         //g.screen_name=o.optString("screen_name");
