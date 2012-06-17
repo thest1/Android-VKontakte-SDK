@@ -713,6 +713,15 @@ public class Api {
         JSONArray array = root.optJSONArray("response");
         return parseAudioList(array, 0);
     }
+
+    public String getLyrics(Long id) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("audio.getLyrics");
+        params.put("lyrics_id", id);
+        JSONObject root = sendRequest(params);
+        JSONObject response = root.optJSONObject("response");
+
+        return response.optString("text");
+    }
     
     /*** for video ***/
     //http://vkontakte.ru/developers.php?o=-1&p=video.get //width = 130,160,320
