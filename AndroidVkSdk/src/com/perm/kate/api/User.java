@@ -16,6 +16,7 @@ public class User implements Serializable {
     public String nickname;
     public Integer sex=null;
     public Boolean online=null;
+    public Boolean online_mobile=null;
     public String birthdate; //bdate
     public String photo;//the same as photo_rec
     public String photo_big;
@@ -63,6 +64,8 @@ public class User implements Serializable {
             u.domain = o.optString("domain");
         if(!o.isNull("online"))
             u.online = o.optInt("online")==1;
+        if(!o.isNull("online_mobile"))
+            u.online_mobile = o.optInt("online_mobile")==1;
         if(!o.isNull("sex"))
             u.sex = Integer.parseInt(o.optString("sex"));
         if(!o.isNull("bdate"))
