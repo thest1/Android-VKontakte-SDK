@@ -1963,4 +1963,14 @@ public class Api {
         return root.optInt("response");
     }
     /*** end chat methods ***/
+    
+    //http://vk.com/pages?oid=-1&p=friends.getSuggestions
+    public ArrayList<User> getSuggestions(String filter, String fields) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("friends.getSuggestions");
+        params.put("filter", filter);   //mutual, contacts, mutual_contacts
+        params.put("fields", fields);
+        JSONObject root = sendRequest(params);
+        JSONArray array=root.optJSONArray("response");
+        return User.parseUsers(array);
+    }
 }
