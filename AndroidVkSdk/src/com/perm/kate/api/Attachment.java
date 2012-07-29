@@ -46,7 +46,7 @@ public class Attachment implements Serializable {
                 if(attachment.type.equals("note"))
                     attachment.note=Note.parse(json_attachment.getJSONObject("note"), false);
                 if(attachment.type.equals("video"))
-                    attachment.video=Video.parse(json_attachment.getJSONObject("video"));
+                    attachment.video=Video.parseForAttachments(json_attachment.getJSONObject("video"));
                 if(attachment.type.equals("poll")){
                     attachment.poll=VkPoll.parse(json_attachment.getJSONObject("poll"));
                     if(attachment.poll.owner_id==0){
@@ -62,7 +62,7 @@ public class Attachment implements Serializable {
             }
         }
         
-        //Geo С‚РѕР¶Рµ РґРѕР±Р°РІР»СЏРµРј РІ attacmnets РµСЃР»Рё РѕРЅ РµСЃС‚СЊ
+        //Geo тоже добавляем в attacmnets если он есть
         if(geo_json!=null){
             Attachment a=new Attachment();
             a.type="geo";
