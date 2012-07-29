@@ -557,10 +557,10 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=messages.getDialogs
-    public ArrayList<Message> getMessagesDialogs(long time_offset, int count) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Message> getMessagesDialogs(long offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getDialogs");
-        if (time_offset!=0)
-            params.put("time_offset", time_offset);
+        if (offset!=0)
+            params.put("offset", offset);
         if (count != 0)
             params.put("count", count);
         params.put("preview_length","0");
