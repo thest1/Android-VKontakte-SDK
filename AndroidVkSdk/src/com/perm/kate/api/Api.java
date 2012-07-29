@@ -1794,4 +1794,14 @@ public class Api {
         JSONObject root = sendRequest(params);
         return root.getString("response");
     }
+    
+    //http://vk.com/developers.php?oid=-1&p=messages.getById
+    public ArrayList<Message> getMessagesById(ArrayList<Long> message_ids) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("messages.getById");
+        params.put("mids", arrayToString(message_ids));
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
+        return messages;
+    }
 }
