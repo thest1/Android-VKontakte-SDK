@@ -125,7 +125,9 @@ public class Api {
     }
 
     public static String unescape(String text){
-        return Html.fromHtml(text).toString();
+        return text.replace("&amp;", "&").replace("&quot;", "\"").replace("<br>", "\n").replace("&gt;", ">").replace("&lt;", "<")
+        .replace("&#39;", "'").replace("<br/>", "\n").replace("&ndash;","-").replace("&#33;", "!").trim();
+        //возможно тут могут быть любые коды после &#, например были: 092 - backslash \
     }
 
     /*** API methods ***/
