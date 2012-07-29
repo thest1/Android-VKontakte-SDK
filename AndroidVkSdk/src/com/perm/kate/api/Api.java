@@ -192,7 +192,7 @@ public class Api {
         if (domains != null && domains.size() > 0)
             params.put("domains",arrayToString(domains));
         if (fields == null)
-            params.put("fields","uid,first_name,last_name,nickname,domain,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,has_mobile,rate,contacts,education,online");
+            params.put("fields","uid,first_name,last_name,nickname,domain,sex,bdate,city,country,timezone,photo,photo_medium_rec,photo_big,has_mobile,rate,contacts,education,online");
         else
             params.put("fields",fields);
         params.put("name_case",name_case);
@@ -713,7 +713,7 @@ public class Api {
         JSONArray array = root.optJSONArray("response");
         return parseAudioList(array, 0);
     }
-
+    
     public String getLyrics(Long id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.getLyrics");
         params.put("lyrics_id", id);

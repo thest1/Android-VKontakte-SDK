@@ -19,7 +19,8 @@ public class User implements Serializable {
     public String birthdate; //bdate
     public String photo;//the same as photo_rec
     public String photo_big;
-    public String photo_medium; 
+    public String photo_medium;
+    public String photo_medium_rec;
     public Integer city=null;
     public Integer country=null;
     public Integer timezone=null;
@@ -78,6 +79,8 @@ public class User implements Serializable {
             u.photo = o.optString("photo");
         if(!o.isNull("photo_medium"))
             u.photo_medium = o.optString("photo_medium");
+        if(!o.isNull("photo_medium_rec"))
+            u.photo_medium_rec = o.optString("photo_medium_rec");
         if(!o.isNull("photo_big"))
             u.photo_big = o.optString("photo_big");
         if(!o.isNull("has_mobile"))
