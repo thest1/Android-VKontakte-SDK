@@ -1804,4 +1804,11 @@ public class Api {
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
         return messages;
     }
+    
+    public Counters getCounters() throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("getCounters");
+        JSONObject root = sendRequest(params);
+        JSONObject response=root.optJSONObject("response");
+        return Counters.parse(response);
+    }
 }
