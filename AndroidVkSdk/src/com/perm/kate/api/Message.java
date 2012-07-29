@@ -17,6 +17,7 @@ public class Message {
     public boolean is_out;
     public ArrayList<Attachment> attachments=new ArrayList<Attachment>();
     public Long chat_id;
+    public ArrayList<Long> chat_members;
 
     public static Message parse(JSONObject o, boolean from_history, long history_uid, boolean from_chat, long me) throws NumberFormatException, JSONException{
         Message m = new Message();
@@ -41,6 +42,15 @@ public class Message {
         m.read_state = o.getString("read_state");
         if(o.has("chat_id"))
             m.chat_id=o.getLong("chat_id");
+        
+        //for dialog list
+        String tmp = o.optString("chat_active");
+        if(tmp!=null && tmp.length()!=0){
+            m.chat_members=new ArrayList<Long>();
+            String[] ids=tmp.split(",");
+            for(String id:ids)
+                m.chat_members.add(Long.parseLong(id));
+        }
 
         JSONArray attachments=o.optJSONArray("attachments");
         JSONObject geo_json=o.optJSONObject("geo");
