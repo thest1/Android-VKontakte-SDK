@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class Attachment implements Serializable {
     private static final long serialVersionUID = 1L;
-    public String type; //photo,posted_photo,video,audio,link,note,app,poll,doc
+    public String type; //photo,posted_photo,video,audio,link,note,app,poll,doc,geo,message
     public Photo photo; 
     //public Photo posted_photo; 
     public Video video; 
@@ -20,6 +20,7 @@ public class Attachment implements Serializable {
     public VkPoll poll;
     public Geo geo;
     public Document document;
+    public Message message;
 
     public static ArrayList<Attachment> parseAttachments(JSONArray attachments, long from_id, long copy_owner_id, JSONObject geo_json) throws JSONException {
         ArrayList<Attachment> attachments_arr=new ArrayList<Attachment>();

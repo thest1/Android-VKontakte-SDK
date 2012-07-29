@@ -32,13 +32,13 @@ public class Message {
         }else{
             //тут не очень, потому что при получении списка диалогов если есть моё сообщение, которое я написал в беседу, то в нём uid будет мой. Хотя в других случайх uid всегда собеседника.
             m.uid = o.getLong("uid");
-            m.is_out = o.getInt("out")==1;
+            m.is_out = o.optInt("out")==1;
         }
-        m.mid = o.getString("mid");
+        m.mid = o.optString("mid");
         m.date = o.getString("date");
         m.title = Api.unescape(o.optString("title"));
         m.body = Api.unescape(o.getString("body"));
-        m.read_state = o.getString("read_state");
+        m.read_state = o.optString("read_state");
         if(o.has("chat_id"))
             m.chat_id=o.getLong("chat_id");
         
@@ -54,6 +54,20 @@ public class Message {
         JSONArray attachments=o.optJSONArray("attachments");
         JSONObject geo_json=o.optJSONObject("geo");
         m.attachments=Attachment.parseAttachments(attachments, 0, 0, geo_json);
+        
+        //parse fwd_messages and add them to attachments
+        JSONArray fwd_messages=o.optJSONArray("fwd_messages");
+        if(fwd_messages!=null){
+            for(int i=0;i<fwd_messages.length();++i){
+                JSONObject fwd_message_json=fwd_messages.getJSONObject(i);
+                Message fwd_message=Message.parse(fwd_message_json, false, 0, false, 0);
+                Attachment att=new Attachment();
+                att.type="message";
+                att.message=fwd_message;
+                m.attachments.add(att);
+            }
+        }
+        
         return m;
     }
 

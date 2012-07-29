@@ -3,6 +3,7 @@ package com.perm.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,5 +34,17 @@ public class Utils {
             }
         }
         return sw.toString();
+    }
+    
+    public static void closeStream(Object oin) {
+        if(oin!=null)
+            try {
+                if(oin instanceof InputStream)
+                    ((InputStream)oin).close();
+                if(oin instanceof OutputStream)
+                    ((OutputStream)oin).close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 }
