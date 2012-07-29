@@ -69,6 +69,9 @@ public class WallMessage implements Serializable {
         //    wm.can_like = jlikes.getInt("can_like")==1;
         //    wm.like_can_publish = jlikes.getInt("can_publish")==1;
         //}
+        JSONArray attachments=o.optJSONArray("attachments");
+        JSONObject geo_json=o.optJSONObject("geo");
+        wm.attachments=Attachment.parseAttachments(attachments, wm.to_id, wm.copy_owner_id, geo_json);
         return wm;
     }
 }
