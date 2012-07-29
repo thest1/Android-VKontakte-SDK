@@ -1992,4 +1992,13 @@ public class Api {
         JSONArray array=root.optJSONArray("response");
         return User.parseUsersForGetByPhones(array);
     }
+    
+  //http://vk.com/pages?oid=-1&p=messages.getLastActivity
+    public LastActivity getLastActivity(long user_id) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("messages.getLastActivity");
+        params.put("uid", user_id);
+        JSONObject root = sendRequest(params);
+        JSONObject response = root.optJSONObject("response");
+        return LastActivity.parse(response);
+    }
 }
