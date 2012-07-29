@@ -1910,4 +1910,57 @@ public class Api {
         return groups;
     }
     /*** end faves  ***/
+    
+    /*** chat methods ***/
+    //http://vk.com/pages?oid=-1&p=messages.createChat
+    public Long chatCreate(ArrayList<Long> uids, String title) throws MalformedURLException, IOException, JSONException, KException {
+        if (uids != null && uids.size() > 0)
+            return null;
+        Params params = new Params("messages.createChat");
+        String str_uids = String.valueOf(uids.get(0));
+        for (int i=1; i<uids.size(); i++)
+            str_uids += "," + String.valueOf(uids.get(i));
+        params.put("uids", str_uids);
+        params.put("title", title);
+        JSONObject root = sendRequest(params);
+        return root.optLong("response");
+    }
+    
+    //http://vk.com/pages?oid=-1&p=messages.editChat
+    public Integer chatEdit(long chat_id, String title) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("messages.editChat");
+        params.put("chat_id", chat_id);
+        params.put("title", title);
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
+    
+    //http://vk.com/pages?oid=-1&p=messages.getChatUsers
+    public ArrayList<User> getChatUsers(long chat_id, String fields) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("messages.getChatUsers");
+        params.put("chat_id", chat_id);
+        params.put("fields", fields);
+        JSONObject root = sendRequest(params);
+        JSONArray array=root.optJSONArray("response");
+        return User.parseUsers(array);
+    }
+    
+    //http://vk.com/pages?oid=-1&p=messages.addChatUser
+    public Integer addUserToChat(long chat_id, long uid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("messages.addChatUser");
+        params.put("chat_id", chat_id);
+        params.put("uid", uid);
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
+    
+    //http://vk.com/pages?oid=-1&p=messages.removeChatUser
+    public Integer removeUserFromChat(long chat_id, long uid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("messages.removeChatUser");
+        params.put("chat_id", chat_id);
+        params.put("uid", uid);
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
+    /*** end chat methods ***/
 }
