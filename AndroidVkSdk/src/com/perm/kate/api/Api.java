@@ -1974,6 +1974,14 @@ public class Api {
         return User.parseUsers(array);
     }
     
+    //http://vk.com/pages?oid=-1&p=account.importContacts
+    public Integer importContacts(Collection<String> contacts) throws MalformedURLException, IOException, JSONException, KException    {
+        Params params = new Params("account.importContacts");
+        params.put("contacts", arrayToString(contacts));
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
+    
     //http://vk.com/pages?oid=-1&p=friends.getByPhones
     public ArrayList<User> getFriendsByPhones(ArrayList<String> phones, String fields) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("friends.getByPhones");
