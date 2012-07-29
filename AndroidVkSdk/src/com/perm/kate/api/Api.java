@@ -14,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.perm.utils.Utils;
 import com.perm.utils.WrongResponseCodeException;
-import android.text.Html;
 import android.util.Log;
 
 public class Api {
@@ -1775,16 +1774,11 @@ public class Api {
     //http://vk.com/developers.php?oid=-1&p=notifications.get
     public Notifications getNotifications(String filters, Long start_time, Long end_time, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("notifications.get");
-        if (filters != null)
-            params.put("filters", filters);
-        if (start_time != null)
-            params.put("start_time", start_time);
-        if (end_time != null)
-            params.put("end_time", end_time);
-        if (offset != null)
-            params.put("offset", offset);
-        if (count != null && count > 0)
-            params.put("count", count);
+        params.put("filters", filters);
+        params.put("start_time", start_time);
+        params.put("end_time", end_time);
+        params.put("offset", offset);
+        params.put("count", count);
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
         return Notifications.parse(response);
