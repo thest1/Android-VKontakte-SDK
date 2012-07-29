@@ -1973,4 +1973,14 @@ public class Api {
         JSONArray array=root.optJSONArray("response");
         return User.parseUsers(array);
     }
+    
+    //http://vk.com/pages?oid=-1&p=friends.getByPhones
+    public ArrayList<User> getFriendsByPhones(ArrayList<String> phones, String fields) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("friends.getByPhones");
+        params.put("phones", arrayToString(phones));
+        params.put("fields", fields);
+        JSONObject root = sendRequest(params);
+        JSONArray array=root.optJSONArray("response");
+        return User.parseUsersForGetByPhones(array);
+    }
 }

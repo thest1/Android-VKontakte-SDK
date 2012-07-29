@@ -50,6 +50,7 @@ public class User implements Serializable {
     //public int followers_count;
     //public int subscriptions_count;
     //public int online_friends_count;
+    public String phone;//for getByPhones
     
     public static User parse(JSONObject o) throws JSONException {
         User u = new User();
@@ -159,6 +160,15 @@ public class User implements Serializable {
         return m;
     }
     
+    public static User parseFromGetByPhones(JSONObject o) throws JSONException {
+        User u = new User();
+        u.uid = o.getLong("uid");
+        u.first_name = Api.unescape(o.optString("first_name"));
+        u.last_name = Api.unescape(o.optString("last_name"));
+        u.phone = o.optString("phone");
+        return u;
+    }
+    
     public static ArrayList<User> parseUsers(JSONArray array) throws JSONException {
         ArrayList<User> users=new ArrayList<User>();
         //it may be null if no users returned
@@ -171,6 +181,23 @@ public class User implements Serializable {
                 continue;
             JSONObject o = (JSONObject)array.get(i);
             User u = User.parse(o);
+            users.add(u);
+        }
+        return users;
+    }
+    
+    public static ArrayList<User> parseUsersForGetByPhones(JSONArray array) throws JSONException {
+        ArrayList<User> users=new ArrayList<User>();
+        //it may be null if no users returned
+        //no users may be returned if we request users that are already removed
+        if(array==null)
+            return users;
+        int category_count=array.length();
+        for(int i=0; i<category_count; ++i){
+            if(array.get(i)==null || ((array.get(i) instanceof JSONObject)==false))
+                continue;
+            JSONObject o = (JSONObject)array.get(i);
+            User u = User.parseFromGetByPhones(o);
             users.add(u);
         }
         return users;
