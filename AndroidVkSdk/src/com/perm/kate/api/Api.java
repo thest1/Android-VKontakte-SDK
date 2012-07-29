@@ -1807,4 +1807,107 @@ public class Api {
         JSONObject response=root.optJSONObject("response");
         return Counters.parse(response);
     }
+    
+    /*** faves ***/
+    //http://vk.com/developers.php?oid=-1&p=fave.getUsers
+    public ArrayList<User> getFaveUsers(String fields, Integer count, Integer offset) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("fave.getUsers");
+        if(fields==null)
+            fields="photo_medium,online";
+        params.put("fields",fields);
+        params.put("count", count);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        ArrayList<User> users=new ArrayList<User>();
+        JSONArray array=root.optJSONArray("response");
+        //if there are no friends "response" will not be array
+        if(array==null)
+            return users;
+        int category_count=array.length();
+        for(int i=0; i<category_count; ++i) {
+            if(array.get(i)==null || ((array.get(i) instanceof JSONObject)==false))
+                continue;
+            JSONObject o = (JSONObject)array.get(i);
+            User u = User.parseFromFave(o);
+            users.add(u);
+        }
+        return users;
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=fave.getPhotos
+    public ArrayList<Photo> getFavePhotos(Integer count, Integer offset) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("fave.getPhotos");
+        params.put("count", count);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        if (array == null)
+            return new ArrayList<Photo>(); 
+        ArrayList<Photo> photos = parsePhotos(array);
+        return photos;
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=fave.getVideos
+    public ArrayList<Video> getFaveVideos(Integer count, Integer offset) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("fave.getVideos");
+        params.put("count", count);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        ArrayList<Video> videos = new ArrayList<Video>();
+        if (array != null) {
+            for(int i = 1; i<array.length(); ++i) {
+                JSONObject o = (JSONObject)array.get(i);
+                Video video = Video.parse(o);
+                videos.add(video);
+            }
+        }
+        return videos;
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=fave.getPosts
+    public ArrayList<WallMessage> getFavePosts(Integer count, Integer offset, Integer extended, Integer photo_sizes) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("fave.getPosts");
+        params.put("extended", extended);
+        params.put("count", count);
+        params.put("photo_sizes", photo_sizes);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        JSONObject response = root.optJSONObject("response");
+        JSONArray array = response.optJSONArray("wall");
+        //JSONArray profiles_array = response.optJSONArray("profiles");
+        //JSONArray groups_array = response.optJSONArray("groups");
+        ArrayList<WallMessage> wmessages = new ArrayList<WallMessage>();
+        if (array == null)
+            return wmessages;
+        int category_count = array.length();
+        for(int i = 1; i < category_count; ++i) {
+            JSONObject o = (JSONObject)array.get(i);
+            WallMessage wm = WallMessage.parse(o);
+            wmessages.add(wm);
+        }
+        return wmessages;
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=fave.getLinks
+    public ArrayList<Link> getFaveLinks(Integer count, Integer offset) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("fave.getLinks");
+        params.put("count", count);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        ArrayList<Link> groups=new ArrayList<Link>();
+        JSONArray array=root.optJSONArray("response");
+        //if there are no groups "response" will not be array
+        if(array==null)
+            return groups;
+        for(int i = 0; i < array.length(); i++) {
+            if(!(array.get(i) instanceof JSONObject))
+                continue;
+            JSONObject jlink = (JSONObject)array.get(i);
+            Link link = Link.parse(jlink);
+            groups.add(link);
+        }
+        return groups;
+    }
+    /*** end faves  ***/
 }

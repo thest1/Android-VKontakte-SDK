@@ -172,4 +172,15 @@ public class User implements Serializable {
         }
         return users;
     }
+    
+    public static User parseFromFave(JSONObject jprofile) throws JSONException {
+        User m = new User();
+        m.uid = Long.parseLong(jprofile.getString("uid"));
+        m.first_name = Api.unescape(jprofile.getString("first_name"));
+        m.last_name = Api.unescape(jprofile.getString("last_name"));
+        m.photo_medium_rec = jprofile.getString("photo_medium_rec");
+        if(!jprofile.isNull("online"))
+            m.online = jprofile.optInt("online")==1;
+        return m;
+    }
 }

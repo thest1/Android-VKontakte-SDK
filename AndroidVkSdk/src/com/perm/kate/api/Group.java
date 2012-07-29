@@ -62,4 +62,16 @@ public class Group implements Serializable {
         }
         return groups;
     }
+    
+    public static Group parseFaveGroup(JSONObject o) throws JSONException{
+        Group g = new Group();
+        String url = o.getString("url");
+        g.gid = Long.parseLong(url.replace("/club", ""));
+        g.name = Api.unescape(o.getString("title"));
+        g.photo_medium = o.optString("image_src");        
+        String description_text = o.optString("description");
+        if (description_text != null)
+            g.description = Api.unescape(description_text);
+        return g;
+    }
 }

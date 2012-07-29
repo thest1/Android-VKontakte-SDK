@@ -26,9 +26,9 @@ public class Photo implements Serializable {
         p.pid = o.getLong("pid");
         p.aid = o.optLong("aid");
         p.owner_id = o.getString("owner_id");
-        p.src = o.getString("src");
+        p.src = o.optString("src");
         p.src_small = o.optString("src_small");
-        p.src_big = o.getString("src_big");
+        p.src_big = o.optString("src_big");
         p.src_xbig = o.optString("src_xbig");
         p.src_xxbig = o.optString("src_xxbig");
         p.src_xxxbig = o.optString("src_xxxbig");
