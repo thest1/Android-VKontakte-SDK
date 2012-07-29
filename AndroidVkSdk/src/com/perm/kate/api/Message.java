@@ -36,8 +36,7 @@ public class Message {
         }
         m.mid = o.getString("mid");
         m.date = o.getString("date");
-        if(!from_history && !from_chat)
-            m.title = Api.unescape(o.getString("title"));
+        m.title = Api.unescape(o.optString("title"));
         m.body = Api.unescape(o.getString("body"));
         m.read_state = o.getString("read_state");
         if(o.has("chat_id"))
