@@ -1993,6 +1993,29 @@ public class Api {
         return User.parseUsersForGetByPhones(array);
     }
     
+    /*** methods for messages search ***/      
+    //http://vk.com/pages?oid=-1&p=messages.search
+    public ArrayList<Message> searchMessages(String q, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("messages.search");
+        params.put("q", q);
+        params.put("count", count);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
+        return messages;
+    }
+    
+    //http://vk.com/pages?oid=-1&p=messages.searchDialogs
+    public ArrayList<SearchDialogItem> searchDialogs(String q, String fields) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("messages.searchDialogs");
+        params.put("q", q);
+        params.put("fields", fields);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        return Message.parseSearchedDialogs(array);
+    }
+    
   //http://vk.com/pages?oid=-1&p=messages.getLastActivity
     public LastActivity getLastActivity(long user_id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getLastActivity");

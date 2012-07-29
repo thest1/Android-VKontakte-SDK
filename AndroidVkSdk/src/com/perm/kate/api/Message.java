@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.perm.kate.api.SearchDialogItem.SDIType;
 
 public class Message {
     public String date;
@@ -18,6 +19,7 @@ public class Message {
     public ArrayList<Attachment> attachments=new ArrayList<Attachment>();
     public Long chat_id;
     public ArrayList<Long> chat_members;
+    public Long admin_id;
 
     public static Message parse(JSONObject o, boolean from_history, long history_uid, boolean from_chat, long me) throws NumberFormatException, JSONException{
         Message m = new Message();
@@ -100,5 +102,46 @@ public class Message {
         }
         //m.attachment = a.getJSONArray(7); TODO
         return m;
+    }
+    
+    public static ArrayList<SearchDialogItem> parseSearchedDialogs(JSONArray array) {
+        ArrayList<SearchDialogItem> items = new ArrayList<SearchDialogItem>();
+        if (array == null)
+            return items;
+        try {
+            int category_count = array.length();
+            for (int i=0; i<category_count; ++i) {
+                if (array.get(i)==null || ((array.get(i) instanceof JSONObject) == false))
+                    continue;
+                JSONObject o = (JSONObject)array.get(i);
+                SearchDialogItem item = new SearchDialogItem();
+                String type = o.getString("type");
+                item.str_type = type;
+                if (type.equals("profile")) {
+                    item.type = SDIType.USER;
+                    item.user = User.parse(o);
+                } else if (type.equals("chat")) {
+                    item.type = SDIType.CHAT;
+                    Message m = new Message();
+                    m.chat_id = o.getLong("chat_id");
+                    m.admin_id = o.getLong("admin_id");
+                    m.title = o.getString("title");
+                    JSONArray users = o.optJSONArray("users");
+                    if(users != null && users.length() != 0) {
+                        m.chat_members = new ArrayList<Long>();
+                        for (int j=0;j<users.length();j++)
+                            m.chat_members.add(users.getLong(j));
+                    }
+                    item.chat = m;
+                } else {
+                    item.type = SDIType.EMAIL;
+                    item.email = o.optString("email");
+                }
+                items.add(item);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return items;
     }
 }
