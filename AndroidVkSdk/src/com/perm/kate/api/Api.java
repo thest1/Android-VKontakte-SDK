@@ -721,7 +721,6 @@ public class Api {
         params.put("lyrics_id", id);
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
-
         return response.optString("text");
     }
     
