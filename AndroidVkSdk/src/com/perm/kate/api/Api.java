@@ -727,7 +727,7 @@ public class Api {
     
     /*** for video ***/
     //http://vkontakte.ru/developers.php?o=-1&p=video.get //width = 130,160,320
-    public ArrayList<Video> getVideo(String videos, Long owner_id, String width, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Video> getVideo(String videos, Long owner_id, Long album_id, String width, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.get");
         params.put("videos", videos);
         if (owner_id != null){
@@ -739,6 +739,7 @@ public class Api {
         params.put("width", width);
         params.put("count", count);
         params.put("offset", offset);
+        params.put("aid", album_id);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Video> videoss = new ArrayList<Video>();
@@ -766,16 +767,7 @@ public class Api {
                 videos.add(Video.parse(o));
             }
         }
-        if(videos.size()==0)
-            return videos;
-        //get video details - original response doesn't contain video links, just id and image
-        String video_ids = "";
-        for (Video v:videos){
-            if(!video_ids.equals(""))
-                video_ids+=",";
-            video_ids = video_ids + String.valueOf(v.owner_id) + "_" + String.valueOf(v.vid);
-        }
-        return getVideo(video_ids, null, null, null, null);
+        return videos;
     }
     
     /*** for crate album ***/
@@ -1267,7 +1259,7 @@ public class Api {
         for (Video v:videoss) {
             video_ids = video_ids + String.valueOf(v.owner_id) + "_" + String.valueOf(v.vid) + ","; 
         }
-        return getVideo(video_ids, null, null, null, null);
+        return getVideo(video_ids, null, null, null, null, null);
     }
     
     //no documentation
@@ -2082,5 +2074,18 @@ public class Api {
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         return parseAudioList(array, 0);
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=video.getAlbums
+    public ArrayList<AudioAlbum> getVideoAlbums(Long uid, Long gid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("video.getAlbums");
+        params.put("uid", uid);
+        params.put("gid", gid);
+        params.put("count", count);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        ArrayList<AudioAlbum> albums = AudioAlbum.parseAlbums(array);
+        return albums;
     }
 }
