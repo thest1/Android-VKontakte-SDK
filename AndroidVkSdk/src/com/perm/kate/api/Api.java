@@ -706,11 +706,12 @@ public class Api {
 
     /*** for audio ***/
     //http://vkontakte.ru/developers.php?o=-1&p=audio.get
-    public ArrayList<Audio> getAudio(Long uid, Long gid, Collection<Long> aids) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Audio> getAudio(Long uid, Long gid, Long album_id, Collection<Long> aids) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.get");
         params.put("uid", uid);
         params.put("gid", gid);
         params.put("aids", arrayToString(aids));
+        params.put("album_id", album_id);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         return parseAudioList(array, 0);
@@ -2061,5 +2062,18 @@ public class Api {
         Params params = new Params("getServerTime");
         JSONObject root = sendRequest(params);
         return root.getLong("response");
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=audio.getAlbums
+    public ArrayList<AudioAlbum> getAudioAlbums(Long uid, Long gid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("audio.getAlbums");
+        params.put("uid", uid);
+        params.put("gid", gid);
+        params.put("count", count);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        ArrayList<AudioAlbum> albums = AudioAlbum.parseAlbums(array);
+        return albums;
     }
 }
