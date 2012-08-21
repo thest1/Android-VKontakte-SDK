@@ -20,6 +20,7 @@ public class Photo implements Serializable {
     public long created;
     public Integer like_count;
     public Boolean user_likes;
+    public Integer comments_count;
 
     public static Photo parse(JSONObject o) throws NumberFormatException, JSONException{
         Photo p = new Photo();
@@ -39,6 +40,10 @@ public class Photo implements Serializable {
             JSONObject jlikes = o.getJSONObject("likes");
             p.like_count = jlikes.getInt("count");
             p.user_likes = jlikes.getInt("user_likes")==1;
+        }
+        if (o.has("comments")){
+            JSONObject jcomments = o.getJSONObject("comments");
+            p.comments_count = jcomments.getInt("count");
         }
         return p;
     }
