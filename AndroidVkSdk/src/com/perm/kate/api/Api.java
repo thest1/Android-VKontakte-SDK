@@ -2015,7 +2015,7 @@ public class Api {
         return Message.parseSearchedDialogs(array);
     }
     
-  //http://vk.com/pages?oid=-1&p=messages.getLastActivity
+    //http://vk.com/pages?oid=-1&p=messages.getLastActivity
     public LastActivity getLastActivity(long user_id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getLastActivity");
         params.put("uid", user_id);
@@ -2053,5 +2053,12 @@ public class Api {
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         return User.parseUsers(array);
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=getServerTime
+    public long getServerTime() throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("getServerTime");
+        JSONObject root = sendRequest(params);
+        return root.getLong("response");
     }
 }
