@@ -2076,4 +2076,11 @@ public class Api {
         ArrayList<AudioAlbum> albums = AudioAlbum.parseAlbums(array);
         return albums;
     }
+    
+    public ArrayList<Audio> getAudioRecommendations() throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("audio.getRecommendations");
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        return parseAudioList(array, 0);
+    }
 }
