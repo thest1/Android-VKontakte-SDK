@@ -2047,7 +2047,8 @@ public class Api {
     }
     
     public ArrayList<User> getGroupsMembersWithExecute(long gid, Integer count, Integer offset, String sort, String fields) throws MalformedURLException, IOException, JSONException, KException {
-        String code = "return API.getProfiles({\"uids\":API.groups.getMembers({\"gid\":\"" + String.valueOf(gid) + "\",\"count\":\"" + String.valueOf(count) + "\",\"offset\":\"" + String.valueOf(offset) + "\",\"gid\":\"id_asc\"})@.users,\"fields\":\"" + fields + "\"});";
+        //String code = "return API.getProfiles({\"uids\":API.groups.getMembers({\"gid\":" + String.valueOf(gid) + ",\"count\":" + String.valueOf(count) + ",\"offset\":" + String.valueOf(offset) + ",\"sort\":\"id_asc\"}),\"fields\":\"" + fields + "\"});";
+        String code = "var members=API.groups.getMembers({\"gid\":" + gid + "}); var u=members[1]; return API.getProfiles({\"uids\":u,\"fields\":\"" + fields + "\"});";
         Params params = new Params("execute");
         params.put("code", code);
         JSONObject root = sendRequest(params);
