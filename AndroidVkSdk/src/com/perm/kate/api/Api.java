@@ -2023,4 +2023,35 @@ public class Api {
         JSONObject response = root.optJSONObject("response");
         return LastActivity.parse(response);
     }
+    
+    //http://vk.com/developers.php?oid=-1&p=groups.getMembers
+    public ArrayList<Long> getGroupsMembers(long gid, Integer count, Integer offset, String sort) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("groups.getMembers");
+        params.put("gid", gid);
+        params.put("count", count);
+        params.put("offset", offset);
+        params.put("sort", sort); //id_asc, id_desc, time_asc, time_desc
+        JSONObject root = sendRequest(params);
+        JSONObject response=root.getJSONObject("response");
+        JSONArray array=response.optJSONArray("users");
+        ArrayList<Long> users=new ArrayList<Long>();
+        if (array != null) {
+            int category_count=array.length();
+            for(int i=0; i<category_count; ++i){
+                Long id = array.optLong(i, -1);
+                if(id!=-1)
+                    users.add(id);
+            }
+        }
+        return users;
+    }
+    
+    public ArrayList<User> getGroupsMembersWithExecute(long gid, Integer count, Integer offset, String sort, String fields) throws MalformedURLException, IOException, JSONException, KException {
+        String code = "return API.getProfiles({\"uids\":API.groups.getMembers({\"gid\":\"" + String.valueOf(gid) + "\",\"count\":\"" + String.valueOf(count) + "\",\"offset\":\"" + String.valueOf(offset) + "\",\"gid\":\"id_asc\"})@.users,\"fields\":\"" + fields + "\"});";
+        Params params = new Params("execute");
+        params.put("code", code);
+        JSONObject root = sendRequest(params);
+        JSONArray array=root.optJSONArray("response");
+        return User.parseUsers(array);
+    }
 }
