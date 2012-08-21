@@ -24,10 +24,10 @@ public class Album {
         a.thumb_id = Long.parseLong(o.optString("thumb_id"));
         a.created = Long.parseLong(o.optString("created"));
         String privacy = o.optString("privacy");
-        if(privacy != null && !privacy.equals(""))
+        if(privacy != null && !privacy.equals("") && !privacy.equals("null"))
             a.privacy = Long.parseLong(privacy);
         String comment_privacy = o.optString("comment_privacy");
-        if(comment_privacy != null && !comment_privacy.equals(""))
+        if(comment_privacy != null && !comment_privacy.equals("") && !comment_privacy.equals("null"))
             a.comment_privacy = Long.parseLong(comment_privacy);
         a.size = Long.parseLong(o.optString("size"));
         a.updated = Long.parseLong(o.optString("updated"));
