@@ -2128,4 +2128,15 @@ public class Api {
         ArrayList<AudioAlbum> albums = AudioAlbum.parseAlbums(array);
         return albums;
     }
+    
+    //http://vk.com/developers.php?oid=-1&p=messages.setActivity
+    public Integer setMessageActivity(long uid, long chat_id, boolean typing) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("messages.setActivity");
+        params.put("uid", uid);
+        params.put("chat_id", chat_id);
+        if (typing)
+            params.put("type", "typing");
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
 }
