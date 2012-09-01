@@ -128,6 +128,46 @@ public class Api {
         .replace("&#39;", "'").replace("<br/>", "\n").replace("&ndash;","-").replace("&#33;", "!").trim();
         //возможно тут могут быть любые коды после &#, например были: 092 - backslash \
     }
+    
+    public static String unescapeWithSmiles(String text){
+        return unescape(text)
+                .replace("\uD83D\uDE0A", ":-)")
+                .replace("\uD83D\uDE03", ":D")
+                .replace("\uD83D\uDE09", ";-)")
+                .replace("\uD83D\uDE06", "xD")
+                .replace("\uD83D\uDE1C", ";P")
+                .replace("\uD83D\uDE0B", ":p")
+                .replace("\uD83D\uDE0D", "8)")
+                .replace("\uD83D\uDE0E", "B)")
+                
+                .replace("\ud83d\ude12", ":(")  //F0 9F 98 92
+                .replace("\ud83d\ude0f", ":]")  //F0 9F 98 8F
+                .replace("\ud83d\ude14", "3(")  //F0 9F 98 94
+                .replace("\ud83d\ude22", ":'(")  //F0 9F 98 A2
+                .replace("\ud83d\ude2d", ":_(")  //F0 9F 98 AD
+                .replace("\ud83d\ude29", ":((")  //F0 9F 98 A9
+                .replace("\ud83d\ude28", ":o")  //F0 9F 98 A8
+                .replace("\ud83d\ude10", ":|")  //F0 9F 98 90
+                                           
+                .replace("\ud83d\ude0c", "3)")  //F0 9F 98 8C
+                .replace("\ud83d\ude20", ">(")  //F0 9F 98 A0
+                .replace("\ud83d\ude21", ">((")  //F0 9F 98 A1
+                .replace("\ud83d\ude07", "O:)")  //F0 9F 98 87
+                .replace("\ud83d\ude30", ";o")  //F0 9F 98 B0
+                .replace("\ud83d\ude32", "8o")  //F0 9F 98 B2
+                .replace("\ud83d\ude33", "8|")  //F0 9F 98 B3
+                .replace("\ud83d\ude37", ":X")  //F0 9F 98 B7
+                                           
+                .replace("\ud83d\ude1a", ":*")  //F0 9F 98 9A
+                .replace("\ud83d\ude08", "}:)")  //F0 9F 98 88
+                .replace("\u2764", "<3")  //E2 9D A4   
+                .replace("\ud83d\udc4d", ":like:")  //F0 9F 91 8D
+                .replace("\ud83d\udc4e", ":dislike:")  //F0 9F 91 8E
+                .replace("\u261d", ":up:")  //E2 98 9D   
+                .replace("\u270c", ":v:")  //E2 9C 8C   
+                .replace("\ud83d\udc4c", ":ok:")  //F0 9F 91 8C
+                ;
+    }
 
     /*** API methods ***/
     //http://vkontakte.ru/developers.php?o=-1&p=getCities

@@ -39,7 +39,7 @@ public class Message {
         m.mid = o.optString("mid");
         m.date = o.getString("date");
         m.title = Api.unescape(o.optString("title"));
-        m.body = Api.unescape(o.getString("body"));
+        m.body = Api.unescapeWithSmiles(o.getString("body"));
         m.read_state = o.optString("read_state");
         if(o.has("chat_id"))
             m.chat_id=o.getLong("chat_id");
@@ -91,7 +91,7 @@ public class Message {
         m.uid = a.getLong(3);
         m.date = a.getString(4);
         m.title = Api.unescape(a.getString(5));
-        m.body = Api.unescape(a.getString(6));
+        m.body = Api.unescapeWithSmiles(a.getString(6));
         int flag = a.getInt(2);
         m.read_state = ((flag & UNREAD) != 0)?"0":"1";
         m.is_out = (flag & OUTBOX) != 0;
