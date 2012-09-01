@@ -1610,7 +1610,7 @@ public class Api {
     }
     
     //http://vk.com/developers.php?oid=-1&p=photos.putTag
-    public String putPhotoTag(PhotoTag ptag) throws MalformedURLException, IOException, JSONException, KException {
+    public String putPhotoTag(PhotoTag ptag, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         if (ptag == null)
             return null;
         Params params = new Params("photos.putTag");
@@ -1621,6 +1621,7 @@ public class Api {
         params.putDouble("x2", ptag.x2);
         params.putDouble("y", ptag.y);
         params.putDouble("y2", ptag.y2);
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
