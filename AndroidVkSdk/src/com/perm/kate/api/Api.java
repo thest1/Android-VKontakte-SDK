@@ -2180,4 +2180,13 @@ public class Api {
         return root.optInt("response");
     }
 
+    //http://vk.com/developers.php?oid=-1&p=photos.edit
+    public Integer photoEdit(Long owner_id, long pid, String caption) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("photos.edit");
+        params.put("owner_id", owner_id);
+        params.put("pid", pid);
+        params.put("caption", caption);
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
 }
