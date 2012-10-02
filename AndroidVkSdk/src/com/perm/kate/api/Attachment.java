@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 public class Attachment implements Serializable {
     private static final long serialVersionUID = 1L;
+    public long id;//used only for wall post attached to message
     public String type; //photo,posted_photo,video,audio,link,note,app,poll,doc,geo,message
     public Photo photo; 
     //public Photo posted_photo; 
@@ -21,6 +22,7 @@ public class Attachment implements Serializable {
     public Geo geo;
     public Document document;
     public Message message;
+    public WallMessage wallMessage;
 
     public static ArrayList<Attachment> parseAttachments(JSONArray attachments, long from_id, long copy_owner_id, JSONObject geo_json) throws JSONException {
         ArrayList<Attachment> attachments_arr=new ArrayList<Attachment>();
@@ -59,6 +61,8 @@ public class Attachment implements Serializable {
                 }
                 if(attachment.type.equals("doc"))
                     attachment.document=Document.parse(json_attachment.getJSONObject("doc"));
+                if(attachment.type.equals("wall"))
+                    attachment.wallMessage=WallMessage.parse(json_attachment.getJSONObject("wall"));
                 attachments_arr.add(attachment);
             }
         }
