@@ -762,6 +762,15 @@ public class Api {
         return parseAudioList(array, 0);
     }
     
+    //http://vk.com/developers.php?oid=-1&p=audio.getById
+    public ArrayList<Audio> getAudioById(String audios) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("audio.getById");
+        params.put("audios", audios);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        return parseAudioList(array, 0);
+    }
+    
     public String getLyrics(Long id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.getLyrics");
         params.put("lyrics_id", id);
