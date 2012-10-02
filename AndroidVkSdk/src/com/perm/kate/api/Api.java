@@ -33,12 +33,12 @@ public class Api {
     static boolean enable_compression=true;
     
     /*** utils methods***/
-    private void checkError(JSONObject root) throws JSONException,KException {
+    private void checkError(JSONObject root, String url) throws JSONException,KException {
         if(!root.isNull("error")){
             JSONObject error=root.getJSONObject("error");
             int code=error.getInt("error_code");
             String message=error.getString("error_msg");
-            KException e = new KException(code, message); 
+            KException e = new KException(code, message, url); 
             if (code==14) {
                 e.captcha_img = error.optString("captcha_img");
                 e.captcha_sid = error.optString("captcha_sid");
@@ -66,7 +66,7 @@ public class Api {
         }
         Log.i(TAG, "response="+response);
         JSONObject root=new JSONObject(response);
-        checkError(root);
+        checkError(root, url);
         return root;
     }
 
@@ -685,7 +685,7 @@ public class Api {
         if (obj != null)
             status_text = unescape(obj.getString("text"));
         return status_text;
-    }
+        }
 
     //http://vkontakte.ru/developers.php?o=-1&p=status.set
     public String setStatus(String status_text) throws MalformedURLException, IOException, JSONException, KException{
