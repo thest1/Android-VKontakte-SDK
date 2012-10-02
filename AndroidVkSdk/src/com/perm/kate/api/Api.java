@@ -932,13 +932,14 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=photos.save
-    public ArrayList<Photo> photosSave(String server, String photos_list, Long aid, Long group_id, String hash) throws MalformedURLException, IOException, JSONException, KException {
+    public ArrayList<Photo> photosSave(String server, String photos_list, Long aid, Long group_id, String hash, String caption) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.save");
         params.put("server",server);
         params.put("photos_list",photos_list);
         params.put("aid",aid);
         params.put("gid",group_id);
         params.put("hash",hash);
+        params.put("caption",caption);
         JSONObject root = sendRequest(params);
         JSONArray array=root.getJSONArray("response");
         ArrayList<Photo> photos = parsePhotos(array);
