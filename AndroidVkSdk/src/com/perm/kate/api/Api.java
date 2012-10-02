@@ -960,9 +960,9 @@ public class Api {
         return photos;
     }
     
-    //http://vkontakte.ru/developers.php?oid=-1&p=saveAudio
+    //http://vk.com/developers.php?oid=-1&p=audio.save
     public Audio saveAudio(String server, String audio, String hash, String artist, String title) throws MalformedURLException, IOException, JSONException, KException {
-        Params params = new Params("saveAudio");
+        Params params = new Params("audio.save");
         params.put("server",server);
         params.put("audio",audio);
         params.put("hash",hash);
