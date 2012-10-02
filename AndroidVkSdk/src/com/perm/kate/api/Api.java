@@ -675,22 +675,27 @@ public class Api {
     }
     
     /*** for status***/
-    //http://vkontakte.ru/developers.php?o=-1&p=status.get
-    public String getStatus(Long uid) throws MalformedURLException, IOException, JSONException, KException{
+    //http://vk.com/developers.php?oid=-1&p=status.get
+    public VkStatus getStatus(Long uid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("status.get");
         params.put("uid", uid);
         JSONObject root = sendRequest(params);
         JSONObject obj = root.optJSONObject("response");
-        String status_text = null;
-        if (obj != null)
-            status_text = unescape(obj.getString("text"));
-        return status_text;
+        VkStatus status = new VkStatus();
+        if (obj != null) {
+            status.text = unescape(obj.getString("text"));
+            JSONObject jaudio = obj.optJSONObject("audio");
+            if (jaudio != null) 
+                status.audio = Audio.parse(jaudio);
         }
+        return status;
+    }
 
-    //http://vkontakte.ru/developers.php?o=-1&p=status.set
-    public String setStatus(String status_text) throws MalformedURLException, IOException, JSONException, KException{
+    //http://vk.com/developers.php?o=-1&p=status.set
+    public String setStatus(String status_text, String audio) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("status.set");
         params.put("text", status_text);
+        params.put("audio", audio); //oid_aid
         JSONObject root = sendRequest(params);
         Object response_id = root.opt("response");
         if (response_id != null)
