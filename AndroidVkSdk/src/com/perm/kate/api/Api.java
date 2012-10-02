@@ -1915,15 +1915,14 @@ public class Api {
     }
     
     //http://vk.com/developers.php?oid=-1&p=fave.getPosts
-    public ArrayList<WallMessage> getFavePosts(Integer count, Integer offset, Integer extended, Integer photo_sizes) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<WallMessage> getFavePosts(Integer count, Integer offset) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("fave.getPosts");
-        params.put("extended", extended);
+        //params.put("extended", extended);
         params.put("count", count);
-        params.put("photo_sizes", photo_sizes);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONObject response = root.optJSONObject("response");
-        JSONArray array = response.optJSONArray("wall");
+        JSONArray array = root.optJSONArray("response");
+        //JSONArray array = response.optJSONArray("wall");
         //JSONArray profiles_array = response.optJSONArray("profiles");
         //JSONArray groups_array = response.optJSONArray("groups");
         ArrayList<WallMessage> wmessages = new ArrayList<WallMessage>();
