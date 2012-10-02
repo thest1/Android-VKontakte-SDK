@@ -51,6 +51,11 @@ public class User implements Serializable {
     //public int subscriptions_count;
     //public int online_friends_count;
     public String phone;//for getByPhones
+    public int groups_count;
+    //relation_partner
+    public Long relation_partner_id;
+    public String relation_partner_first_name;
+    public String relation_partner_last_name;
     
     public static User parse(JSONObject o) throws JSONException {
         User u = new User();
@@ -140,6 +145,15 @@ public class User implements Serializable {
                 //u.online_friends_count = object.optInt("online_friends");
                 //u.followers_count = object.optInt("followers");
                 //u.subscriptions_count = object.optInt("subscriptions");
+                u.groups_count = object.optInt("groups");
+            }
+        }
+        if(!o.isNull("relation_partner")) {
+            JSONObject object = o.optJSONObject("relation_partner");
+            if (object != null) {
+                u.relation_partner_id = object.optLong("id");
+                u.relation_partner_first_name = object.optString("first_name");
+                u.relation_partner_last_name = object.optString("last_name");
             }
         }
         return u;
