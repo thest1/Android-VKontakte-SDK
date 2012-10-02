@@ -2164,4 +2164,20 @@ public class Api {
         JSONObject root = sendRequest(params);
         return root.optInt("response");
     }
+    
+    //http://vk.com/developers.php?oid=-1&p=wall.edit
+    public int editWallPost(long owner_id, long post_id, String text, Collection<String> attachments, String lat, String lon, long place_id, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("wall.edit");
+        params.put("owner_id", owner_id);
+        params.put("post_id", post_id);
+        params.put("message", text);
+        params.put("attachments", arrayToString(attachments));
+        params.put("lat", lat);
+        params.put("long", lon);
+        params.put("place_id", place_id);
+        addCaptchaParams(captcha_key, captcha_sid, params);
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
+
 }
