@@ -221,13 +221,13 @@ public class Api {
     }
 
     //*** methods for users ***//
-    //http://vkontakte.ru/developers.php?o=-1&p=getProfiles
+    //http://vk.com/developers.php?oid=-1&p=users.get
     public ArrayList<User> getProfiles(Collection<Long> uids, Collection<String> domains, String fields, String name_case) throws MalformedURLException, IOException, JSONException, KException{
         if (uids == null && domains == null)
             return null;
         if ((uids != null && uids.size() == 0) || (domains != null && domains.size() == 0))
             return null;
-        Params params = new Params("getProfiles");
+        Params params = new Params("users.get");
         if (uids != null && uids.size() > 0)
             params.put("uids",arrayToString(uids));
         if (domains != null && domains.size() > 0)
