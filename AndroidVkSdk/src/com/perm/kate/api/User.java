@@ -57,6 +57,22 @@ public class User implements Serializable {
     public String relation_partner_first_name;
     public String relation_partner_last_name;
     
+    //new connections fields
+    public String twitter;
+    public String facebook;
+    public String facebook_name;
+    public String skype;
+    public String livejounal;
+
+    //new additional fields
+    public String interests;
+    public String movies;
+    public String tv;
+    public String books;
+    public String games;
+    public String about;
+    
+    
     public static User parse(JSONObject o) throws JSONException {
         User u = new User();
         u.uid = Long.parseLong(o.getString("uid"));
@@ -159,9 +175,34 @@ public class User implements Serializable {
                 u.relation_partner_last_name = object.optString("last_name");
             }
         }
+
+        if(!o.isNull("twitter"))
+            u.twitter = o.optString("twitter");
+        if(!o.isNull("facebook"))
+            u.facebook = o.optString("facebook");
+        if(!o.isNull("facebook_name"))
+            u.facebook_name = o.optString("facebook_name");
+        if(!o.isNull("skype"))
+            u.skype = o.optString("skype");
+        if(!o.isNull("livejounal"))
+            u.livejounal = o.optString("livejounal");
+
+        if(!o.isNull("interests"))
+            u.interests = o.optString("interests");
+        if(!o.isNull("movies"))
+            u.movies = o.optString("movies");
+        if(!o.isNull("tv"))
+            u.tv = o.optString("tv");
+        if(!o.isNull("books"))
+            u.books = o.optString("books");
+        if(!o.isNull("games"))
+            u.games = o.optString("games");
+        if(!o.isNull("about"))
+            u.about = o.optString("about");
+
         return u;
     }
-    
+
     public static User parseFromNews(JSONObject jprofile) throws JSONException {
         User m = new User();
         m.uid = Long.parseLong(jprofile.getString("uid"));
