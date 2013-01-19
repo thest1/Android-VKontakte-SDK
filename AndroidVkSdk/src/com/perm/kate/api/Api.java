@@ -2250,4 +2250,39 @@ public class Api {
         int response = root.optInt("response");
         return response==1;
     }
+    
+    //http://vk.com/developers.php?oid=-1&p=newsfeed.getBanned
+    public BannArg getBanned(boolean is_extended, String fields) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("newsfeed.getBanned");
+        if (is_extended)
+            params.put("extended", "1");
+        params.put("fields", fields);
+        JSONObject root = sendRequest(params);
+        JSONObject object = root.optJSONObject("response");
+        return BannArg.parse(object);
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=newsfeed.addBan
+    public Boolean addBan(Collection<Long> uids, Collection<Long> gids) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("newsfeed.addBan");
+        if (uids != null && uids.size() > 0)
+            params.put("uids",arrayToString(uids));
+        if (gids != null && gids.size() > 0)
+            params.put("gids",arrayToString(gids));
+        JSONObject root = sendRequest(params);
+        int response = root.optInt("response");
+        return response==1;
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=newsfeed.deleteBan
+    public Boolean deleteBan(Collection<Long> uids, Collection<Long> gids) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("newsfeed.deleteBan");
+        if (uids != null && uids.size() > 0)
+            params.put("uids",arrayToString(uids));
+        if (gids != null && gids.size() > 0)
+            params.put("gids",arrayToString(gids));
+        JSONObject root = sendRequest(params);
+        int response = root.optInt("response");
+        return response==1;
+    }
 }
