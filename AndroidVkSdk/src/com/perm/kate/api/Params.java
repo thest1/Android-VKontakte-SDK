@@ -1,5 +1,6 @@
 package com.perm.kate.api;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.TreeMap;
 import java.util.Map.Entry;
@@ -36,10 +37,14 @@ public class Params {
     
     public String getParamsString() {
         String params="";
-        for(Entry<String, String> entry:args.entrySet()){
-            if(params.length()!=0)
-                params+="&";
-            params+=(entry.getKey()+"="+URLEncoder.encode(entry.getValue()));
+        try {
+            for(Entry<String, String> entry:args.entrySet()){
+                if(params.length()!=0)
+                    params+="&";
+                params+=(entry.getKey()+"="+URLEncoder.encode(entry.getValue(), "utf-8"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         return params;
     }
