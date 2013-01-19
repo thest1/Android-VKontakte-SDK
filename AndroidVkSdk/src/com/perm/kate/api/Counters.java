@@ -11,8 +11,8 @@ public class Counters {
         Counters a = new Counters();
         if(o==null)
             return a;
-        a.friends = o.optInt("friends", 0);
-        a.messages = o.optInt("messages", 0);
+        a.friends = o.optInt("friends");
+        a.messages = o.optInt("messages");
         return a;
     }
 

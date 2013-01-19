@@ -24,11 +24,11 @@ public class VkPoll implements Serializable {
         if(o.has("owner_id"))
             v.owner_id = o.getLong("owner_id");
         if(o.has("created"))
-            v.created = o.getLong("created");
+            v.created = o.optLong("created");
         if(o.has("votes"))
-            v.votes = o.getLong("votes");
+            v.votes = o.optLong("votes");
         if(o.has("answer_id"))
-            v.answer_id = o.getLong("answer_id");
+            v.answer_id = o.optLong("answer_id");
         if(o.has("answers"))
             v.answers_json = o.getJSONArray("answers").toString();
         return v;

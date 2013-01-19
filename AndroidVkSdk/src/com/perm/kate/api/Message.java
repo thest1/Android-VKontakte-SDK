@@ -37,9 +37,9 @@ public class Message implements Serializable {
             m.is_out = o.optInt("out")==1;
         }
         m.mid = o.optLong("mid");
-        m.date = o.getLong("date");
+        m.date = o.optLong("date");
         m.title = Api.unescape(o.optString("title"));
-        m.body = Api.unescapeWithSmiles(o.getString("body"));
+        m.body = Api.unescapeWithSmiles(o.optString("body"));
         m.read_state = (o.optInt("read_state")==1);
         if(o.has("chat_id"))
             m.chat_id=o.getLong("chat_id");

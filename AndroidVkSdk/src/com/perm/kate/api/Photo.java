@@ -38,12 +38,12 @@ public class Photo implements Serializable {
         
         if (o.has("likes")){
             JSONObject jlikes = o.getJSONObject("likes");
-            p.like_count = jlikes.getInt("count");
-            p.user_likes = jlikes.getInt("user_likes")==1;
+            p.like_count = jlikes.optInt("count");
+            p.user_likes = jlikes.optInt("user_likes")==1;
         }
         if (o.has("comments")){
             JSONObject jcomments = o.getJSONObject("comments");
-            p.comments_count = jcomments.getInt("count");
+            p.comments_count = jcomments.optInt("count");
         }
         return p;
     }

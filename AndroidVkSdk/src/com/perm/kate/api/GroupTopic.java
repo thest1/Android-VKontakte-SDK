@@ -19,15 +19,15 @@ public class GroupTopic implements Serializable {
     
     public static GroupTopic parse(JSONObject o) throws NumberFormatException, JSONException {
         GroupTopic topic = new GroupTopic();
-        topic.tid = Long.parseLong(o.getString("tid"));
+        topic.tid = o.getLong("tid");
         topic.title = Api.unescape(o.getString("title"));
-        topic.created = Long.parseLong(o.getString("created"));
-        topic.created_by = Long.parseLong(o.getString("created_by"));
-        topic.updated = Long.parseLong(o.getString("updated"));
-        topic.updated_by = Long.parseLong(o.getString("updated_by"));
-        topic.is_closed = Integer.parseInt(o.getString("is_closed"));
-        topic.is_fixed = Integer.parseInt(o.getString("is_fixed"));
-        topic.comments = Integer.parseInt(o.getString("comments"));
+        topic.created = o.optLong("created");
+        topic.created_by = o.optLong("created_by");
+        topic.updated = o.optLong("updated");
+        topic.updated_by = o.optLong("updated_by");
+        topic.is_closed = o.optInt("is_closed");
+        topic.is_fixed = o.optInt("is_fixed");
+        topic.comments = o.optInt("comments");
         return topic;
     }
     

@@ -33,15 +33,15 @@ public class WallMessage implements Serializable {
         wm.id = o.getLong("id");
         wm.from_id = o.getLong("from_id");
         wm.to_id = o.getLong("to_id");
-        wm.date = o.getLong("date");
+        wm.date = o.optLong("date");
         wm.online = o.optString("online");
-        wm.text = Api.unescape(o.getString("text"));
+        wm.text = Api.unescape(o.optString("text"));
         if (o.has("likes")){
             JSONObject jlikes = o.getJSONObject(NewsJTags.LIKES);
-            wm.like_count = jlikes.getInt("count");
-            wm.user_like = jlikes.getInt("user_likes")==1;
-            wm.can_like = jlikes.getInt("can_like")==1;
-            wm.like_can_publish = jlikes.getInt("can_publish")==1;
+            wm.like_count = jlikes.optInt("count");
+            wm.user_like = jlikes.optInt("user_likes")==1;
+            wm.can_like = jlikes.optInt("can_like")==1;
+            wm.like_can_publish = jlikes.optInt("can_publish")==1;
         }
         wm.copy_owner_id = o.optLong("copy_owner_id");
         JSONArray attachments=o.optJSONArray("attachments");
@@ -50,8 +50,8 @@ public class WallMessage implements Serializable {
         wm.attachments=Attachment.parseAttachments(attachments, wm.to_id, wm.copy_owner_id, geo_json);
         if (o.has("comments")){
             JSONObject jcomments = o.getJSONObject("comments");
-            wm.comment_count = jcomments.getInt("count");
-            wm.comment_can_post = jcomments.getInt("can_post")==1;
+            wm.comment_count = jcomments.optInt("count");
+            wm.comment_can_post = jcomments.optInt("can_post")==1;
         }
         return wm;
     }

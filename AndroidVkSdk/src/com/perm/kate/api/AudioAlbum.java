@@ -15,7 +15,7 @@ public class AudioAlbum {
         AudioAlbum a = new AudioAlbum();
         a.title = Api.unescape(o.optString("title"));
         a.album_id = o.getLong("album_id");
-        a.owner_id = o.getLong("owner_id");
+        a.owner_id = o.optLong("owner_id");
         return a;
     }
     

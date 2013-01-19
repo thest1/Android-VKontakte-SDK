@@ -33,8 +33,8 @@ public class Video implements Serializable{
         if(o.has("id"))//video.getUserVideos
             v.vid = Long.parseLong(o.getString("id"));
         v.owner_id = o.getLong("owner_id");
-        v.title = Api.unescape(o.getString("title"));
-        v.duration = o.getLong("duration");
+        v.title = Api.unescape(o.optString("title"));
+        v.duration = o.optLong("duration");
         v.description = Api.unescape(o.optString("description"));
         if(o.has("image"))
             v.image = o.optString("image");

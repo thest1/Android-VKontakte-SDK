@@ -29,7 +29,7 @@ public class Album {
         String comment_privacy = o.optString("comment_privacy");
         if(comment_privacy != null && !comment_privacy.equals("") && !comment_privacy.equals("null"))
             a.comment_privacy = Long.parseLong(comment_privacy);
-        a.size = Long.parseLong(o.optString("size"));
+        a.size = o.optLong("size");
         a.updated = Long.parseLong(o.optString("updated"));
         return a;
     }

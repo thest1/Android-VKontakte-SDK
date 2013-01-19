@@ -19,10 +19,10 @@ public class Audio implements Serializable {
         audio.aid = Long.parseLong(o.getString("aid"));
         audio.owner_id = Long.parseLong(o.getString("owner_id"));
         if(o.has("performer"))
-            audio.artist = Api.unescape(o.getString("performer"));
+            audio.artist = Api.unescape(o.optString("performer"));
         else if(o.has("artist"))
-            audio.artist = Api.unescape(o.getString("artist"));
-        audio.title = Api.unescape(o.getString("title"));
+            audio.artist = Api.unescape(o.optString("artist"));
+        audio.title = Api.unescape(o.optString("title"));
         audio.duration = Long.parseLong(o.getString("duration"));
         audio.url = o.optString("url", null);
         

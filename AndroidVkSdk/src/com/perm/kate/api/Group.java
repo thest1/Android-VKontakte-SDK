@@ -36,9 +36,7 @@ public class Group implements Serializable {
         String is_member = o.optString("is_member");
         if(is_member != null)
             g.is_member = is_member.equals("1");
-        String description_text = o.optString("description");
-        if (description_text != null)
-            g.description = Api.unescape(description_text);
+        g.description = Api.unescape(o.optString("description", null));
         
         //это новые поля, которых у нас пока нет в базе
         //g.screen_name=o.optString("screen_name");
@@ -65,13 +63,11 @@ public class Group implements Serializable {
     
     public static Group parseFaveGroup(JSONObject o) throws JSONException{
         Group g = new Group();
-        String url = o.getString("url");
+        String url = o.optString("url");
         g.gid = Long.parseLong(url.replace("/club", ""));
-        g.name = Api.unescape(o.getString("title"));
-        g.photo_medium = o.optString("image_src");        
-        String description_text = o.optString("description");
-        if (description_text != null)
-            g.description = Api.unescape(description_text);
+        g.name = Api.unescape(o.optString("title"));
+        g.photo_medium = o.optString("image_src");
+        g.description = Api.unescape(o.optString("description", null));
         return g;
     }
 }

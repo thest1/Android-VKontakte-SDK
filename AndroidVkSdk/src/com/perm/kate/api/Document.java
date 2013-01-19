@@ -23,8 +23,8 @@ public class Document implements Serializable {
         d.id = o.optLong("did");
         d.owner_id = o.optLong("owner_id");
         d.title = o.getString("title");
-        d.url = o.getString("url");
-        d.size = o.getLong("size");
+        d.url = o.optString("url");
+        d.size = o.optLong("size");
         d.ext = o.optString("ext");
         d.thumb = o.optString("thumb");
         d.thumb_s = o.optString("thumb_s");

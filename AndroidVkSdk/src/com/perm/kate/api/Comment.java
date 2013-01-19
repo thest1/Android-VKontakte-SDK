@@ -23,8 +23,8 @@ public class Comment implements Serializable {
         Comment comment=new Comment();
         comment.cid = Long.parseLong(o.getString("cid"));
         comment.from_id = Long.parseLong(o.getString("from_id"));
-        comment.date = Long.parseLong(o.getString("date"));
-        comment.message = Api.unescape(o.getString("text"));
+        comment.date = o.optLong("date");
+        comment.message = Api.unescape(o.optString("text"));
         String reply_to_uid = o.optString("reply_to_uid");
         if (reply_to_uid != null && !reply_to_uid.equals(""))
             comment.reply_to_uid = Long.parseLong(reply_to_uid);
@@ -33,9 +33,9 @@ public class Comment implements Serializable {
             comment.reply_to_cid = Long.parseLong(reply_to_cid);
         if (o.has("likes")){
             JSONObject jlikes = o.getJSONObject("likes");
-            comment.like_count = jlikes.getInt("count");
-            comment.user_like = jlikes.getInt("user_likes")==1;
-            comment.can_like = jlikes.getInt("can_like")==1;
+            comment.like_count = jlikes.optInt("count");
+            comment.user_like = jlikes.optInt("user_likes")==1;
+            comment.can_like = jlikes.optInt("can_like")==1;
         }
         return comment;
     }
@@ -43,10 +43,10 @@ public class Comment implements Serializable {
     //for group topic comments 
     public static Comment parseTopicComment(JSONObject o) throws NumberFormatException, JSONException {
         Comment comment = new Comment();
-        comment.cid = Long.parseLong(o.getString("id"));
-        comment.from_id = Long.parseLong(o.getString("from_id"));
-        comment.date = Long.parseLong(o.getString("date"));
-        comment.message = Api.unescape(o.getString("text"));
+        comment.cid = o.getLong("id");
+        comment.from_id = o.optLong("from_id");
+        comment.date = o.optLong("date");
+        comment.message = Api.unescape(o.optString("text"));
         return comment;
     }
      
@@ -62,18 +62,18 @@ public class Comment implements Serializable {
     public static Comment parseVideoComment(JSONObject o) throws NumberFormatException, JSONException {
         Comment comment = new Comment();
         comment.cid = o.getLong("id");
-        comment.from_id = o.getLong("from_id");
-        comment.date = o.getLong("date");
-        comment.message = Api.unescape(o.getString("message"));
+        comment.from_id = o.optLong("from_id");
+        comment.date = o.optLong("date");
+        comment.message = Api.unescape(o.optString("message"));
         return comment;
     }
     
     public static Comment parsePhotoComment(JSONObject o) throws NumberFormatException, JSONException {
         Comment comment = new Comment();
         comment.cid = o.getLong("cid");
-        comment.from_id = o.getLong("from_id");
-        comment.date = o.getLong("date");
-        comment.message = Api.unescape(o.getString("message"));
+        comment.from_id = o.optLong("from_id");
+        comment.date = o.optLong("date");
+        comment.message = Api.unescape(o.optString("message"));
         return comment;
     }
     
@@ -85,8 +85,8 @@ public class Comment implements Serializable {
         comment.message = Api.unescape(o.getString("text"));
         if (o.has("likes")){
             JSONObject jlikes = o.getJSONObject("likes");
-            comment.like_count = jlikes.getInt("count");
-            comment.user_like = jlikes.getInt("user_likes")==1;
+            comment.like_count = jlikes.optInt("count");
+            comment.user_like = jlikes.optInt("user_likes")==1;
         }
         if(parse_post){
             JSONObject post_json=o.getJSONObject("post");

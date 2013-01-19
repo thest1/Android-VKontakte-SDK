@@ -40,7 +40,7 @@ public class NewsItem {
         String from_id=jitem.optString("from_id");
         if(from_id!=null && !from_id.equals(""))
             newsitem.from_id = Long.parseLong(from_id);
-        newsitem.date = jitem.getLong("date");
+        newsitem.date = jitem.optLong("date");
         newsitem.post_id = jitem.optLong("post_id");
         newsitem.text = Api.unescape(jitem.optString("text"));
         newsitem.copy_owner_id = jitem.optLong("copy_owner_id");
@@ -49,16 +49,16 @@ public class NewsItem {
         newsitem.attachments=Attachment.parseAttachments(attachments, newsitem.source_id, newsitem.copy_owner_id, geo_json);
         if (jitem.has(NewsJTags.COMMENTS)){
             JSONObject jcomments = jitem.getJSONObject(NewsJTags.COMMENTS);
-            newsitem.comment_count = jcomments.optInt("count", 0);//однажды была строка null
-            newsitem.comment_can_post = jcomments.getInt("can_post")==1;
+            newsitem.comment_count = jcomments.optInt("count");//однажды была строка null
+            newsitem.comment_can_post = jcomments.optInt("can_post")==1;
             JSONArray x=jcomments.optJSONArray("list");
             if(x!=null)
                 newsitem.comments_json=x.toString();
         }
         if (jitem.has(NewsJTags.LIKES)){
             JSONObject jlikes = jitem.getJSONObject(NewsJTags.LIKES);
-            newsitem.like_count = jlikes.getInt("count");
-            newsitem.user_like = jlikes.getInt("user_likes")==1;
+            newsitem.like_count = jlikes.optInt("count");
+            newsitem.user_like = jlikes.optInt("user_likes")==1;
         }
         if (jitem.has(NewsJTags.PHOTO_TAGS)){
             JSONArray jphoto_tags = jitem.getJSONArray(NewsJTags.PHOTO_TAGS);

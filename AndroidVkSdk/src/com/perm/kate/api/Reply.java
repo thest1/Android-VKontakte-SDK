@@ -14,7 +14,7 @@ public class Reply implements Serializable{
     public static Reply parse(JSONObject o) throws JSONException {
         Reply r = new Reply();
         r.id = o.getLong("id");
-        r.date = o.getLong("date");
+        r.date = o.optLong("date");
         r.text = o.getString("text");
         return r;
     }

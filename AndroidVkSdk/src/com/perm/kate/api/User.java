@@ -165,9 +165,9 @@ public class User implements Serializable {
     public static User parseFromNews(JSONObject jprofile) throws JSONException {
         User m = new User();
         m.uid = Long.parseLong(jprofile.getString("uid"));
-        m.first_name = Api.unescape(jprofile.getString("first_name"));
-        m.last_name = Api.unescape(jprofile.getString("last_name"));
-        m.photo = jprofile.getString("photo");
+        m.first_name = Api.unescape(jprofile.optString("first_name"));
+        m.last_name = Api.unescape(jprofile.optString("last_name"));
+        m.photo = jprofile.optString("photo");
         try{
             m.sex = Integer.parseInt(jprofile.optString("sex"));
         }catch(NumberFormatException ex){
@@ -223,9 +223,9 @@ public class User implements Serializable {
     public static User parseFromFave(JSONObject jprofile) throws JSONException {
         User m = new User();
         m.uid = Long.parseLong(jprofile.getString("uid"));
-        m.first_name = Api.unescape(jprofile.getString("first_name"));
-        m.last_name = Api.unescape(jprofile.getString("last_name"));
-        m.photo_medium_rec = jprofile.getString("photo_medium_rec");
+        m.first_name = Api.unescape(jprofile.optString("first_name"));
+        m.last_name = Api.unescape(jprofile.optString("last_name"));
+        m.photo_medium_rec = jprofile.optString("photo_medium_rec");
         if(!jprofile.isNull("online"))
             m.online = jprofile.optInt("online")==1;
         return m;
