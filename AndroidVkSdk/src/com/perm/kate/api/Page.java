@@ -1,15 +1,15 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Log;
 
 /**
  * Wiki page
  *
  */
-public class Page {
+public class Page implements Serializable{
+    private static final long serialVersionUID = 1L;
     public long id;
     public long group_id;
     public String title;
@@ -19,8 +19,6 @@ public class Page {
         page.title = Api.unescape(o.optString("title"));
         page.id = o.optLong("pid");
         page.group_id = o.optLong("gid");
-        Log.i("sfaf", "parsed attachment");
-        Log.i("sfaf", "title="+page.title);
         return page;
     }
 }
