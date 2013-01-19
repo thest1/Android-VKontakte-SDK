@@ -1961,7 +1961,7 @@ public class Api {
     /*** chat methods ***/
     //http://vk.com/pages?oid=-1&p=messages.createChat
     public Long chatCreate(ArrayList<Long> uids, String title) throws MalformedURLException, IOException, JSONException, KException {
-        if (uids != null && uids.size() > 0)
+        if (uids == null || uids.size() == 0)
             return null;
         Params params = new Params("messages.createChat");
         String str_uids = String.valueOf(uids.get(0));
