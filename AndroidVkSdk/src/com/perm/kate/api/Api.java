@@ -171,11 +171,11 @@ public class Api {
     }
 
     /*** API methods ***/
-    //http://vkontakte.ru/developers.php?o=-1&p=getCities
+    //http://vk.com/developers.php?oid=-1&p=places.getCityById
     public ArrayList<City> getCities(Collection<Long> cids) throws MalformedURLException, IOException, JSONException, KException {
         if (cids == null || cids.size() == 0)
             return null;
-        Params params = new Params("getCities");
+        Params params = new Params("places.getCityById");
         params.put("cids",arrayToString(cids));
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
