@@ -1066,7 +1066,7 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=wall.getComments
-    public CommentList getWallComments(Long owner_id, Long post_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
+    public CommentList getWallComments(Long owner_id, Long post_id, int offset, int count, String v) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.getComments");
         params.put("post_id", post_id);
         params.put("owner_id", owner_id);
@@ -1082,6 +1082,7 @@ public class Api {
             params.put("count", count);
         params.put("preview_length", "0");
         params.put("need_likes", "1");
+        params.put("v", v);
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
         CommentList commnets = new CommentList();

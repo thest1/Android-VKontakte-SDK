@@ -40,6 +40,10 @@ public class Comment implements Serializable {
             comment.user_like = jlikes.optInt("user_likes")==1;
             comment.can_like = jlikes.optInt("can_like")==1;
         }
+        
+        JSONArray attachments=o.optJSONArray("attachments");
+        comment.attachments=Attachment.parseAttachments(attachments, 0, 0, null);
+        
         return comment;
     }
 
