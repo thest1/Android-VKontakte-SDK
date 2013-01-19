@@ -1310,13 +1310,7 @@ public class Api {
                 videoss.add(video);
             }
         }
-        
-        //TODO Это вроде лишнее. В результатах поиска не хватает только link, но ведь он составляется из owner_id+video_id
-        String video_ids = "";
-        for (Video v:videoss) {
-            video_ids = video_ids + String.valueOf(v.owner_id) + "_" + String.valueOf(v.vid) + ","; 
-        }
-        return getVideo(video_ids, null, null, null, null, null, null);
+        return videoss;
     }
     
     //no documentation
