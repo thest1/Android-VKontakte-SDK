@@ -11,7 +11,7 @@ public class Video implements Serializable{
     public String title;
     public String description;
     public long duration;
-    public String link;
+    public String link1;
     public String image;//130*120
     public String image_big;//320*240
     public long date;
@@ -41,7 +41,6 @@ public class Video implements Serializable{
         v.image_big = o.optString("image_medium");
         if(o.has("thumb"))//video.getUserVideos
             v.image = o.optString("thumb");
-        v.link = o.optString("link");
         v.date = o.optLong("date");
         v.player = o.optString("player");
         
@@ -72,7 +71,6 @@ public class Video implements Serializable{
         v.image_big = o.optString("image_big");
         if(o.has("thumb"))//video.getUserVideos
             v.image = o.optString("thumb");
-        v.link = o.optString("link");
         v.date = o.optLong("date");
         v.player = o.optString("player");
         v.access_key = o.optString("access_key");
@@ -80,13 +78,13 @@ public class Video implements Serializable{
     }
     
     public String getVideoUrl() {
-        return getVideoUrl(owner_id, link);
+        return getVideoUrl(owner_id, vid);
     }
     
-    public static String getVideoUrl(long owner_id, String link) {
+    public static String getVideoUrl(long owner_id, long video_id) {
         String res = null;
         String base_url = "http://vk.com/";
-        res = base_url + "video" + String.valueOf(owner_id) + link.replace("video", "_");
+        res = base_url + "video" + owner_id + "_" + video_id;
         //sample http://vkontakte.ru/video4491835_158963813
         //http://79.gt2.vkadre.ru/assets/videos/f6b1af1e4258-24411750.vk.flv
         return res;
