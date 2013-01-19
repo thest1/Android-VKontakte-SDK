@@ -782,7 +782,7 @@ public class Api {
     
     /*** for video ***/
     //http://vkontakte.ru/developers.php?o=-1&p=video.get //width = 130,160,320
-    public ArrayList<Video> getVideo(String videos, Long owner_id, Long album_id, String width, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Video> getVideo(String videos, Long owner_id, Long album_id, String width, Long count, Long offset, String access_key) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.get");
         params.put("videos", videos);
         if (owner_id != null){
@@ -795,6 +795,7 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         params.put("aid", album_id);
+        params.put("access_key", access_key);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Video> videoss = new ArrayList<Video>();
@@ -1315,7 +1316,7 @@ public class Api {
         for (Video v:videoss) {
             video_ids = video_ids + String.valueOf(v.owner_id) + "_" + String.valueOf(v.vid) + ","; 
         }
-        return getVideo(video_ids, null, null, null, null, null);
+        return getVideo(video_ids, null, null, null, null, null, null);
     }
     
     //no documentation

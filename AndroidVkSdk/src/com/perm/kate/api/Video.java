@@ -23,6 +23,7 @@ public class Video implements Serializable{
     public String mp4_480;
     public String mp4_720;
     public String flv_320;
+    public String access_key;//used when private video attached to message
     
     
     public static Video parse(JSONObject o) throws NumberFormatException, JSONException{
@@ -74,6 +75,7 @@ public class Video implements Serializable{
         v.link = o.optString("link");
         v.date = o.optLong("date");
         v.player = o.optString("player");
+        v.access_key = o.optString("access_key");
         return v;
     }
     
