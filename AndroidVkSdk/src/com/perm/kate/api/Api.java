@@ -202,11 +202,11 @@ public class Api {
         return str_cids;
     }
     
-    //http://vkontakte.ru/developers.php?o=-1&p=getCountries
+    //http://vk.com/developers.php?oid=-1&p=places.getCountryById
     public ArrayList<Country> getCountries(Collection<Long> cids) throws MalformedURLException, IOException, JSONException, KException {
         if (cids == null || cids.size() == 0)
             return null;
-        Params params = new Params("getCountries");
+        Params params = new Params("places.getCountryById");
         String str_cids = arrayToString(cids);
         params.put("cids",str_cids);
         JSONObject root = sendRequest(params);
