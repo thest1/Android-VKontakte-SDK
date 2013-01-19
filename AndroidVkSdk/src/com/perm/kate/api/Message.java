@@ -1,20 +1,20 @@
 package com.perm.kate.api;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.perm.kate.api.SearchDialogItem.SDIType;
 
-public class Message {
-    public String date;
+public class Message implements Serializable {
+    private static final long serialVersionUID = 1L;
+    public long date;
     public long uid;
-    //TODO make long
-    public String mid;
+    public long mid;
     public String title;
     public String body;
-    //TODO make boolean
-    public String read_state;
+    public boolean read_state;
     public boolean is_out;
     public ArrayList<Attachment> attachments=new ArrayList<Attachment>();
     public Long chat_id;
@@ -36,11 +36,11 @@ public class Message {
             m.uid = o.getLong("uid");
             m.is_out = o.optInt("out")==1;
         }
-        m.mid = o.optString("mid");
-        m.date = o.getString("date");
+        m.mid = o.optLong("mid");
+        m.date = o.getLong("date");
         m.title = Api.unescape(o.optString("title"));
         m.body = Api.unescapeWithSmiles(o.getString("body"));
-        m.read_state = o.optString("read_state");
+        m.read_state = (o.optInt("read_state")==1);
         if(o.has("chat_id"))
             m.chat_id=o.getLong("chat_id");
         
@@ -87,13 +87,13 @@ public class Message {
 
     public static Message parse(JSONArray a) throws JSONException {
         Message m = new Message();
-        m.mid = a.getString(1);
+        m.mid = a.getLong(1);
         m.uid = a.getLong(3);
-        m.date = a.getString(4);
+        m.date = a.getLong(4);
         m.title = Api.unescape(a.getString(5));
         m.body = Api.unescapeWithSmiles(a.getString(6));
         int flag = a.getInt(2);
-        m.read_state = ((flag & UNREAD) != 0)?"0":"1";
+        m.read_state = ((flag & UNREAD) != 0)?false:true;
         m.is_out = (flag & OUTBOX) != 0;
         if ((flag & BESEDA) != 0) {
             m.chat_id = a.getLong(3) & 63;//cut 6 last digits
