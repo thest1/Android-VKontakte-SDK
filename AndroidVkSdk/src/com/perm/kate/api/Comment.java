@@ -22,7 +22,7 @@ public class Comment implements Serializable {
     public static Comment parse(JSONObject o) throws NumberFormatException, JSONException{
         Comment comment=new Comment();
         comment.cid = Long.parseLong(o.getString("cid"));
-        comment.from_id = Long.parseLong(o.getString("uid"));
+        comment.from_id = Long.parseLong(o.getString("from_id"));
         comment.date = Long.parseLong(o.getString("date"));
         comment.message = Api.unescape(o.getString("text"));
         String reply_to_uid = o.optString("reply_to_uid");
