@@ -72,6 +72,9 @@ public class User implements Serializable {
             u.online = o.optInt("online")==1;
         if(!o.isNull("online_mobile"))
             u.online_mobile = o.optInt("online_mobile")==1;
+        else
+            //if it's not there it means false
+            u.online_mobile=false;
         if(!o.isNull("sex"))
             u.sex = Integer.parseInt(o.optString("sex"));
         if(!o.isNull("bdate"))
