@@ -234,7 +234,7 @@ public class Api {
         if (uids != null && uids.size() > 0)
             params.put("uids",arrayToString(uids));
         if (domains != null && domains.size() > 0)
-            params.put("domains",arrayToString(domains));
+            params.put("uids",arrayToString(domains));
         if (fields == null)
             params.put("fields","uid,first_name,last_name,nickname,domain,sex,bdate,city,country,timezone,photo,photo_medium_rec,photo_big,has_mobile,rate,contacts,education,online");
         else
