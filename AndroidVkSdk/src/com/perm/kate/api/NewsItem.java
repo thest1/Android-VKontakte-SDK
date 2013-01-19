@@ -14,6 +14,7 @@ public class NewsItem {
     public long post_id;
     public long copy_owner_id;
     public long copy_post_id;
+    public String copy_text;
     public String text;
 
     //likes
@@ -44,6 +45,7 @@ public class NewsItem {
         newsitem.post_id = jitem.optLong("post_id");
         newsitem.text = Api.unescape(jitem.optString("text"));
         newsitem.copy_owner_id = jitem.optLong("copy_owner_id");
+        newsitem.copy_text = jitem.optString("copy_text");
         JSONArray attachments=jitem.optJSONArray("attachments");
         JSONObject geo_json=jitem.optJSONObject("geo");
         newsitem.attachments=Attachment.parseAttachments(attachments, newsitem.source_id, newsitem.copy_owner_id, geo_json);
