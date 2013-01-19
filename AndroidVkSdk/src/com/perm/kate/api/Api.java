@@ -2286,8 +2286,18 @@ public class Api {
         return response==1;
     }
     
+    //gets status of broadcasting user current audio to his page
     public boolean audioGetBroadcast() throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("audio.getBroadcast");
+        JSONObject root = sendRequest(params);
+        JSONObject response = root.optJSONObject("response");
+        return response.optInt("enabled")==1;
+    }
+
+    //enables broadcasting user current audio to his page
+    public boolean audioSetBroadcast(boolean enabled) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("audio.setBroadcast");
+        params.put("enabled",enabled?"1":"0");
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
         return response.optInt("enabled")==1;
