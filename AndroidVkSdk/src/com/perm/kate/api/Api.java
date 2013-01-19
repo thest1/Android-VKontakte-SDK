@@ -2191,4 +2191,43 @@ public class Api {
         JSONObject root = sendRequest(params);
         return root.optInt("response");
     }
+    
+    //http://vk.com/developers.php?oid=-1&p=docs.get
+    public ArrayList<Document> getDocs(Long owner_id, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("docs.get");
+        params.put("oid", owner_id);
+        params.put("count", count);
+        params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        return Document.parseDocs(array);
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=docs.getUploadServer
+    public String docsGetUploadServer() throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("docs.getUploadServer");
+        JSONObject root = sendRequest(params);
+        JSONObject response = root.getJSONObject("response");
+        return response.getString("upload_url");
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=docs.save
+    public Document saveDoc(String file) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("docs.save");
+        params.put("file", file);
+        JSONObject root = sendRequest(params);
+        JSONArray array=root.getJSONArray("response");
+        ArrayList<Document> docs = Document.parseDocs(array);
+        return docs.get(0);
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=docs.delete
+    public Boolean deleteDoc(Long doc_id, long owner_id) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("docs.delete");
+        params.put("oid", owner_id);
+        params.put("did", doc_id);
+        JSONObject root = sendRequest(params);
+        int response = root.optInt("response");
+        return response==1;
+    }
 }
