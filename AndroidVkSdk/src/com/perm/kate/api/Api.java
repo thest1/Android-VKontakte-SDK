@@ -2227,4 +2227,12 @@ public class Api {
         int response = root.optInt("response");
         return response==1;
     }
+    
+    //Помечает уведомления о новых ответах как прочитанные, документации нет
+    public Boolean markNotificationsAsViewed() throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("notifications.markAsViewed");
+        JSONObject root = sendRequest(params);
+        int response = root.optInt("response");
+        return response==1;
+    }
 }
