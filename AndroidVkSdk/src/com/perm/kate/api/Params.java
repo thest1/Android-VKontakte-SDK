@@ -35,7 +35,7 @@ public class Params {
         args.put(param_name, Double.toString(param_value));
     }
     
-    public String getParamsString() {
+    public String getParamsString(boolean is_post) {
         String params="";
         try {
             for(Entry<String, String> entry:args.entrySet()){

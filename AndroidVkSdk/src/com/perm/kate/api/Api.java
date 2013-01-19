@@ -47,16 +47,25 @@ public class Api {
         }
     }
     
-    private final static int MAX_TRIES=3;
     private JSONObject sendRequest(Params params) throws IOException, MalformedURLException, JSONException, KException {
-        String url = getSignedUrl(params);
+        return sendRequest(params, false);
+    }
+    
+    private final static int MAX_TRIES=3;
+    private JSONObject sendRequest(Params params, boolean is_post) throws IOException, MalformedURLException, JSONException, KException {
+        String url = getSignedUrl(params, is_post);
+        String body="";
+        if(is_post)
+            body=params.getParamsString(is_post);
         Log.i(TAG, "url="+url);
+        if(body.length()!=0)
+            Log.i(TAG, "body="+body);
         String response="";
         for(int i=1;i<=MAX_TRIES;++i){
             try{
                 if(i!=1)
                     Log.i(TAG, "try "+i);
-                response = sendRequestInternal(url);
+                response = sendRequestInternal(url, body, is_post);
                 break;
             }catch(javax.net.ssl.SSLException ex){
                 processNetworkException(i, ex);
@@ -76,17 +85,20 @@ public class Api {
             throw ex;
     }
 
-    private String sendRequestInternal(String url) throws IOException, MalformedURLException, WrongResponseCodeException {
+    private String sendRequestInternal(String url, String body, boolean is_post) throws IOException, MalformedURLException, WrongResponseCodeException {
         HttpURLConnection connection=null;
         try{
             connection = (HttpURLConnection)new URL(url).openConnection();
             connection.setConnectTimeout(30000);
             connection.setReadTimeout(30000);
             connection.setUseCaches(false);
-            connection.setDoOutput(false);
+            connection.setDoOutput(is_post);
             connection.setDoInput(true);
+            connection.setRequestMethod(is_post?"POST":"GET");
             if(enable_compression)
                 connection.setRequestProperty("Accept-Encoding", "gzip");
+            if(is_post)
+                connection.getOutputStream().write(body.getBytes("UTF-8"));
             int code=connection.getResponseCode();
             Log.i(TAG, "code="+code);
             //It may happen due to keep-alive problem http://stackoverflow.com/questions/1440957/httpurlconnection-getresponsecode-returns-1-on-second-invocation
@@ -112,8 +124,10 @@ public class Api {
         return now-31*24*60*60;//month ago
     }
 
-    private String getSignedUrl(Params params) {
-        String args = params.getParamsString();
+    private String getSignedUrl(Params params, boolean is_post) {
+        String args = "";
+        if(!is_post)
+            args=params.getParamsString(is_post);
         
         //add access_token
         if(args.length()!=0)
@@ -641,7 +655,7 @@ public class Api {
         params.put("lat", lat);
         params.put("long", lon);
         addCaptchaParams(captcha_key, captcha_sid, params);
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         Object message_id = root.opt("response");
         if (message_id != null)
             return String.valueOf(message_id);
@@ -1059,7 +1073,7 @@ public class Api {
         if (signed)
             params.put("signed","1");
         addCaptchaParams(captcha_key, captcha_sid, params);
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         JSONObject response = root.getJSONObject("response");
         long post_id = response.optLong("post_id");
         return post_id;
@@ -1359,7 +1373,7 @@ public class Api {
         params.put("text", text);
         params.put("privacy", "0");
         params.put("comment_privacy", "0");
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         JSONObject response = root.getJSONObject("response");
         long note_id = response.optLong("nid");
         return note_id;
