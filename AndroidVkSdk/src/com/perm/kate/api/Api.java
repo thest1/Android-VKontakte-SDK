@@ -1799,13 +1799,14 @@ public class Api {
     }
     
     //http://vk.com/pages?oid=-1&p=account.registerDevice
-    public String registerDevice(String token, String device_model, String system_version, Integer no_text) 
+    public String registerDevice(String token, String device_model, String system_version, Integer no_text, String subscribe)
             throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("account.registerDevice");
         params.put("token", token);
         params.put("device_model", device_model);
         params.put("system_version", system_version);
         params.put("no_text", no_text);
+        params.put("subscribe", subscribe);
         JSONObject root = sendRequest(params);
         return root.getString("response");
     }
