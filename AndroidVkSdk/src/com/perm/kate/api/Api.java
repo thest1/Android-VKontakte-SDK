@@ -375,7 +375,7 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=photos.get
-    public ArrayList<Photo> getPhotos(Long uid, Long aid) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Photo> getPhotos(Long uid, Long aid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.get");
         if(uid>0)
             params.put("uid", uid);
@@ -383,6 +383,8 @@ public class Api {
             params.put("gid", -uid);
         params.put("aid", aid);
         params.put("extended", "1");
+        params.put("offset",offset);
+        params.put("limit",count);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         if (array == null)
@@ -392,11 +394,12 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=photos.getUserPhotos
-    public ArrayList<Photo> getUserPhotos(Long uid) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Photo> getUserPhotos(Long uid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getUserPhotos");
         params.put("uid", uid);
         params.put("sort","0");
-        params.put("count","50");
+        params.put("count",count);
+        params.put("offset",offset);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         if (array == null)
@@ -405,21 +408,18 @@ public class Api {
         return photos;
     }
 
-    //http://vkontakte.ru/developers.php?o=-1&p=photos.getAll
-    public ArrayList<Photo> getAllPhotos(Long owner_id, Long offset, Long count) throws MalformedURLException, IOException, JSONException, KException{
+    //http://vk.com/developers.php?oid=-1&p=photos.getAll
+    public ArrayList<Photo> getAllPhotos(Long owner_id, Integer offset, Integer count, boolean extended) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getAll");
         params.put("owner_id", owner_id);
         params.put("offset", offset);
-        params.put("count", count);
+        params.put("count",count);
+        params.put("extended",extended?1:0);
         JSONObject root = sendRequest(params);
-        JSONArray array=root.getJSONArray("response");
-        ArrayList<Photo> photos=new ArrayList<Photo>(); 
-        int category_count=array.length();
-        for(int i=1; i<category_count; ++i){
-            JSONObject o = (JSONObject)array.get(i);
-            Photo p = Photo.parse(o);
-            photos.add(p);
-        }
+        JSONArray array = root.optJSONArray("response");
+        if (array == null)
+            return new ArrayList<Photo>(); 
+        ArrayList<Photo> photos = parsePhotos(array);
         return photos;
     }
     
