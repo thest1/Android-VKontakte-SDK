@@ -239,7 +239,7 @@ public class Api {
 
     //*** methods for users ***//
     //http://vk.com/developers.php?oid=-1&p=users.get
-    public ArrayList<User> getProfiles(Collection<Long> uids, Collection<String> domains, String fields, String name_case) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<User> getProfiles(Collection<Long> uids, Collection<String> domains, String fields, String name_case, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         if (uids == null && domains == null)
             return null;
         if ((uids != null && uids.size() == 0) || (domains != null && domains.size() == 0))
@@ -254,6 +254,7 @@ public class Api {
         else
             params.put("fields",fields);
         params.put("name_case",name_case);
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         return User.parseUsers(array);
@@ -261,7 +262,7 @@ public class Api {
 
     /*** methods for friends ***/
     //http://vkontakte.ru/developers.php?o=-1&p=friends.get
-    public ArrayList<User> getFriends(Long user_id, String fields, Integer lid) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<User> getFriends(Long user_id, String fields, Integer lid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("friends.get");
         if(fields==null)
             fields="first_name,last_name,photo_medium,online";
@@ -273,6 +274,7 @@ public class Api {
         if(lid==null)
             params.put("order","hints");
         
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         ArrayList<User> users=new ArrayList<User>();
         JSONArray array=root.optJSONArray("response");
@@ -614,13 +616,14 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=messages.getDialogs
-    public ArrayList<Message> getMessagesDialogs(long offset, int count) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Message> getMessagesDialogs(long offset, int count, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getDialogs");
         if (offset!=0)
             params.put("offset", offset);
         if (count != 0)
             params.put("count", count);
         params.put("preview_length","0");
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Message> messages = parseMessages(array, false, 0, false ,0);
@@ -745,7 +748,7 @@ public class Api {
      * @throws KException ***/
     //http://vkontakte.ru/developers.php?o=-1&p=newsfeed.get
     //always returns about 33-35 items
-    public Newsfeed getNews(long start_time, long count, long end_time) throws MalformedURLException, IOException, JSONException, KException{
+    public Newsfeed getNews(long start_time, long count, long end_time, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("newsfeed.get");
         params.put("filters","post,photo,photo_tag,friend,note");
         params.put("start_time",(start_time==-1)?getDefaultStartTime():start_time);
@@ -753,6 +756,7 @@ public class Api {
             params.put("end_time",end_time);
         if(count!=0)
             params.put("count",count);
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         return Newsfeed.parse(root, false);
     }
@@ -1380,8 +1384,9 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=messages.getLongPollServer
-    public Object[] getLongPollServer() throws MalformedURLException, IOException, JSONException, KException{
+    public Object[] getLongPollServer(String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getLongPollServer");
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
         String key=response.getString("key");
@@ -1391,8 +1396,9 @@ public class Api {
     }
     
     //не документирован
-    public void setOnline() throws MalformedURLException, IOException, JSONException, KException{
+    public void setOnline(String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("activity.online");
+        addCaptchaParams(captcha_key, captcha_sid, params);
         sendRequest(params);
     }
     
@@ -1545,11 +1551,12 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?oid=-1&p=polls.addVote
-    public int addPollVote(long poll_id, long answer_id, long owner_id) throws JSONException, MalformedURLException, IOException, KException {
+    public int addPollVote(long poll_id, long answer_id, long owner_id, String captcha_key, String captcha_sid) throws JSONException, MalformedURLException, IOException, KException {
         Params params = new Params("polls.addVote");
         params.put("owner_id", owner_id);
         params.put("poll_id", poll_id);
         params.put("answer_id", answer_id);
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         return root.getInt("response");
     }
@@ -1864,8 +1871,9 @@ public class Api {
         return messages;
     }
     
-    public Counters getCounters() throws MalformedURLException, IOException, JSONException, KException {
+    public Counters getCounters(String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("getCounters");
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONObject response=root.optJSONObject("response");
         return Counters.parse(response);
