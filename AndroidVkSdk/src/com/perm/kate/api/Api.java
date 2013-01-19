@@ -2285,4 +2285,11 @@ public class Api {
         int response = root.optInt("response");
         return response==1;
     }
+    
+    public boolean audioGetBroadcast() throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("audio.getBroadcast");
+        JSONObject root = sendRequest(params);
+        JSONObject response = root.optJSONObject("response");
+        return response.optInt("enabled")==1;
+    }
 }
