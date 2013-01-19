@@ -1,6 +1,8 @@
 package com.perm.kate.api;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +15,7 @@ public class Comment implements Serializable {
     public long reply_to_uid;
     public long reply_to_cid;
     public WallMessage post;//parent post, used only for notifications type "reply_comment"
+    public ArrayList<Attachment> attachments=new ArrayList<Attachment>();
 
     //likes
     public int like_count;
@@ -47,6 +50,10 @@ public class Comment implements Serializable {
         comment.from_id = o.optLong("from_id");
         comment.date = o.optLong("date");
         comment.message = Api.unescape(o.optString("text"));
+        
+        JSONArray attachments=o.optJSONArray("attachments");
+        comment.attachments=Attachment.parseAttachments(attachments, 0, 0, null);
+        
         return comment;
     }
      
