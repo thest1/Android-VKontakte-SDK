@@ -22,12 +22,12 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         
-        webview = (WebView) findViewById(R.id.facebookview);
+        webview = (WebView) findViewById(R.id.vkontakteview);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.clearCache(true);
         
         //Чтобы получать уведомления об окончании загрузки страницы
-        webview.setWebViewClient(new FacebookWebViewClient());
+        webview.setWebViewClient(new VkontakteWebViewClient());
                 
         //otherwise CookieManager will fall with java.lang.IllegalStateException: CookieSyncManager::createInstance() needs to be called before CookieSyncManager::getInstance()
         CookieSyncManager.createInstance(this);
@@ -39,7 +39,7 @@ public class LoginActivity extends Activity {
         webview.loadUrl(url);
     }
     
-    class FacebookWebViewClient extends WebViewClient {
+    class VkontakteWebViewClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
