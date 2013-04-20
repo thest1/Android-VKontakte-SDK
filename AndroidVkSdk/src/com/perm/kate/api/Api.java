@@ -1790,7 +1790,7 @@ public class Api {
         else
             str_uids = domain;
         params.put("gids", str_uids);
-        params.put("fields", fields); //Possible values: place,wiki_page,city,country,description,start_date,finish_date,site
+        params.put("fields", fields); //Possible values: place,wiki_page,city,country,description,start_date,finish_date,site,fixed_post
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         return Group.parseGroups(array);
@@ -2363,5 +2363,21 @@ public class Api {
         params.put("gid", gid);
         JSONObject root = sendRequest(params);
         return root.optInt("response");
+    }
+    
+    //http://vkontakte.ru/developers.php?o=-1&p=wall.getById
+    public ArrayList<WallMessage> getWallMessage(ArrayList<String> posts) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("wall.getById");
+        params.put("posts", arrayToString(posts));
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.getJSONArray("response");
+        ArrayList<WallMessage> wmessages = new ArrayList<WallMessage>();
+        int category_count = array.length();
+        for(int i = 0; i < category_count; ++i) {
+            JSONObject o = (JSONObject)array.get(i);
+            WallMessage wm = WallMessage.parse(o);
+            wmessages.add(wm);
+        }
+        return wmessages;
     }
 }
