@@ -215,6 +215,8 @@ public class User implements Serializable {
             //если там мусор, то мы это пропускаем
             ex.printStackTrace();
         }
+        if(!jprofile.isNull("online"))
+            m.online = jprofile.optInt("online")==1;
         return m;
     }
     
