@@ -47,4 +47,13 @@ public class Utils {
                 e.printStackTrace();
             }
     }
+    
+    private static String pattern_string_profile_id = "^(id)?(\\d{1,10})$";
+    private static Pattern pattern_profile_id = Pattern.compile(pattern_string_profile_id);
+    public static String parseProfileId(String text) {
+        Matcher m = pattern_profile_id.matcher(text);
+        if (!m.find())
+            return null;
+        return m.group(2);
+    }
 }
