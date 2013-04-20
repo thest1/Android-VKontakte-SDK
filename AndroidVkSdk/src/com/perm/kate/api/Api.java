@@ -2312,4 +2312,43 @@ public class Api {
         JSONObject response = root.optJSONObject("response");
         return response.optInt("enabled")==1;
     }
+    
+    //http://vk.com/developers.php?oid=-1&p=audio.addAlbum
+    public Long addAudioAlbum(String title, Long gid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("audio.addAlbum");
+        params.put("title", title);
+        params.put("gid", gid);
+        JSONObject root = sendRequest(params);
+        JSONObject obj = root.getJSONObject("response");
+        return obj.optLong("album_id");
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=audio.editAlbum
+    public Integer editAudioAlbum(String title, long album_id, Long gid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("audio.editAlbum");
+        params.put("title", title);
+        params.put("album_id", album_id);
+        params.put("gid", gid);
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=audio.deleteAlbum
+    public Integer deleteAudioAlbum(long album_id, Long gid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("audio.deleteAlbum");
+        params.put("album_id", album_id);
+        params.put("gid", gid);
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
+    
+    //http://vk.com/developers.php?oid=-1&p=audio.moveToAlbum
+    public Integer moveToAudioAlbum(Collection<Long> aids, long album_id, Long gid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("audio.moveToAlbum");
+        params.put("aids", arrayToString(aids));
+        params.put("album_id", album_id);
+        params.put("gid", gid);
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
 }
