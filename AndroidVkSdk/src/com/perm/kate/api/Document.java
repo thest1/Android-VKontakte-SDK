@@ -15,8 +15,8 @@ public class Document implements Serializable {
     public String url;
     public long size;
     public String ext;
-    public String thumb;//for photos
-    public String thumb_s;//for photos
+    public String thumb;//for photos. 130*65.
+    public String thumb_s;//for photos. 100*50.
     
     public static Document parse(JSONObject o) throws JSONException {
         Document d = new Document();
