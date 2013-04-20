@@ -1644,21 +1644,23 @@ public class Api {
         return null;
     }
     
-    //http://vkontakte.ru/developers.php?oid=-1&p=subscriptions.get
-    public ArrayList<Long> getSubscriptions(Long uid, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
-        Params params = new Params("subscriptions.get");
+    //http://vk.com/dev/users.getSubscriptions
+    public ArrayList<Long> getSubscriptions(Long uid, int offset, int count, Integer extended) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("users.getSubscriptions");
         params.put("uid", uid);
+        //params.put("extended", extended); //TODO
         if (offset>0)
             params.put("offset", offset);
         if (count>0)
             params.put("count", count);
         JSONObject root = sendRequest(params);
-        JSONObject response=root.getJSONObject("response");
-        JSONArray array=response.optJSONArray("users");
-        ArrayList<Long> users=new ArrayList<Long>();
+        JSONObject response = root.getJSONObject("response");
+        JSONObject jusers = response.optJSONObject("users");
+        JSONArray array=jusers.optJSONArray("items");
+        ArrayList<Long> users = new ArrayList<Long>();
         if (array != null) {
             int category_count=array.length();
-            for(int i=0; i<category_count; ++i){
+            for(int i=0; i<category_count; ++i) {
                 Long id = array.optLong(i, -1);
                 if(id!=-1)
                     users.add(id);
@@ -1667,28 +1669,22 @@ public class Api {
         return users;
     }
 
-    
-    //http://vkontakte.ru/developers.php?oid=-1&p=subscriptions.getFollowers
-    public ArrayList<Long> getFollowers(Long uid, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
-        Params params = new Params("subscriptions.getFollowers");
+    //http://vk.com/dev/users.getFollowers
+    public ArrayList<User> getFollowers(Long uid, int offset, int count, String fields, String name_case) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("users.getFollowers");
         params.put("uid", uid);
-        if (offset>0)
+        if (offset > 0)
             params.put("offset", offset);
-        if (count>0)
+        if (count > 0)
             params.put("count", count);
+        if (fields == null)
+            fields = "first_name,last_name,photo_medium_rec,online";
+        params.put("fields", fields);
+        params.put("name_case", name_case);
         JSONObject root = sendRequest(params);
         JSONObject response=root.getJSONObject("response");
-        JSONArray array=response.optJSONArray("users");
-        ArrayList<Long> users=new ArrayList<Long>();
-        if (array != null) {
-            int category_count=array.length();
-            for(int i=0; i<category_count; ++i){
-                Long id = array.optLong(i, -1);
-                if(id!=-1)
-                    users.add(id);
-            }
-        }
-        return users;
+        JSONArray array=response.optJSONArray("items");
+        return User.parseUsers(array);
     }
 
     //http://vkontakte.ru/pages?oid=-1&p=messages.deleteDialog
