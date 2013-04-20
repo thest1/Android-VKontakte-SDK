@@ -1398,7 +1398,7 @@ public class Api {
         return videoss;
     }
     
-    //no documentation
+    //http://vk.com/developers.php?oid=-1&p=users.search
     public ArrayList<User> searchUser(String q, String fields, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("users.search");
         params.put("q", q);
@@ -1408,6 +1408,22 @@ public class Api {
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         return User.parseUsers(array);
+    }
+    
+    public ArrayList<User> searchUserExtended(String q, String fields, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
+        String uids = Utils.parseProfileId(q);
+        if (uids != null && uids.length() > 0 && (offset == null || offset == 0)) {
+            Log.i(TAG, "Search with uid = " + uids);
+            String code = "var a=API.users.search({\"q\":\"" + q + "\",\"count\":" + count + ",\"count\":" + offset + ",\"fields\":\"" + fields + "\"});";
+            code += "var b=API.getProfiles({\"uids\":" + uids +",\"fields\":\"" + fields + "\"});";
+            code += "return b+a;";
+            Params params = new Params("execute");
+            params.put("code", code);
+            JSONObject root = sendRequest(params);
+            JSONArray array=root.optJSONArray("response");
+            return User.parseUsers(array);
+        } else
+            return searchUser(q, fields, count, offset);
     }
 
     //http://vkontakte.ru/developers.php?o=-1&p=video.delete
@@ -1747,6 +1763,7 @@ public class Api {
     }
     
     /*** topics region ***/
+    //http://vk.com/developers.php?oid=-1&p=board.getTopics
     public ArrayList<GroupTopic> getGroupTopics(long gid, int extended, int count, int offset) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.getTopics");
         params.put("gid", gid);
