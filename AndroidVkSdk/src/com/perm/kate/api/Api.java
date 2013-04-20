@@ -1636,11 +1636,13 @@ public class Api {
         return root.getInt("response");
     }
     
-    public ArrayList<User> getPollVoters(long poll_id, long owner_id, Collection<Long> answer_ids, String fields) throws JSONException, MalformedURLException, IOException, KException {
+    public ArrayList<User> getPollVoters(long poll_id, long owner_id, Collection<Long> answer_ids, Long count, Long offset, String fields) throws JSONException, MalformedURLException, IOException, KException {
         Params params = new Params("polls.getVoters");
         params.put("owner_id", owner_id);
         params.put("poll_id", poll_id);
         params.put("answer_ids", arrayToString(answer_ids));
+        params.put("count", count);
+        params.put("offset", offset);
         params.put("fields", fields);
         params.put("v", "4.6");
         JSONObject root = sendRequest(params);
@@ -1745,7 +1747,6 @@ public class Api {
     }
     
     /*** topics region ***/
-    //http://kate1.unfuddle.com/a#/projects/2/tickets/by_number/340?cycle=true
     public ArrayList<GroupTopic> getGroupTopics(long gid, int extended, int count, int offset) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.getTopics");
         params.put("gid", gid);
