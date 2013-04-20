@@ -187,6 +187,24 @@ public class Api {
     }
 
     /*** API methods ***/
+    //http://vk.com/dev/places.getCities
+    public ArrayList<City> getCitiesByCountry(int country, String q) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("places.getCities");
+        params.put("country", country);
+        params.put("q", q);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        ArrayList<City> cities = new ArrayList<City>(); 
+        if (array != null) {
+            for (int i=0; i<array.length(); i++){
+                JSONObject o = (JSONObject)array.get(i);
+                City c = City.parse(o);
+                cities.add(c);
+            }
+        }
+        return cities;
+    }
+
     //http://vk.com/developers.php?oid=-1&p=places.getCityById
     public ArrayList<City> getCities(Collection<Long> cids) throws MalformedURLException, IOException, JSONException, KException {
         if (cids == null || cids.size() == 0)
@@ -216,6 +234,23 @@ public class Api {
             str_cids+=item;
         }
         return str_cids;
+    }
+    
+    //http://vk.com/dev/places.getCountries
+    public ArrayList<Country> getCountriesByCode(Integer need_full, String code) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("places.getCountries");
+        params.put("need_full", need_full);
+        params.put("code", code);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.getJSONArray("response");
+        ArrayList<Country> countries = new ArrayList<Country>(); 
+        int category_count = array.length();
+        for (int i=0; i<category_count; i++) {
+            JSONObject o = (JSONObject)array.get(i);
+            Country c = Country.parse(o);
+            countries.add(c);
+        }
+        return countries;
     }
     
     //http://vk.com/developers.php?oid=-1&p=places.getCountryById
@@ -1400,18 +1435,75 @@ public class Api {
     }
     
     //http://vk.com/developers.php?oid=-1&p=users.search
-    public ArrayList<User> searchUser(String q, String fields, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
+    //http://vk.com/dev/users.search
+    public ArrayList<User> searchUser(String q, String fields, Long count, Long offset, Integer sort,
+            Integer city, Integer country, String hometown, Integer university_country, Integer university, Integer university_year,
+            Integer sex, Integer age_from, Integer age_to, Integer birth_day, Integer birth_month, Integer birth_year,
+            Integer online, Integer has_photo, Integer school_country, Integer school_city, Integer school, Integer school_year, 
+            String religion, String interests, String company, String position, Long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("users.search");
         params.put("q", q);
         params.put("count", count);
         params.put("offset", offset);
         params.put("fields", fields);
+        if (sort != null && sort > 0)
+            params.put("sort", sort);
+        if (city != null && city > 0)
+            params.put("city", city);
+        if (country != null && country > 0)
+            params.put("country", country);
+        if (hometown != null && hometown.length() > 0)
+            params.put("hometown", hometown);
+        if (university_country != null && university_country > 0)
+            params.put("university_country", university_country);
+        if (university != null && university > 0)
+            params.put("university", university);
+        if (university_year != null && university_year > 0)
+            params.put("university_year", university_year);
+        if (sex != null && sex > 0)
+            params.put("sex", sex);
+        if (age_from != null && age_from > 0)
+            params.put("age_from", age_from);
+        if (age_to != null && age_to > 0)
+            params.put("age_to", age_to);
+        if (birth_day != null && birth_day > 0)
+            params.put("birth_day", birth_day);
+        if (birth_month != null && birth_month > 0)
+            params.put("birth_month", birth_month);
+        if (birth_year != null && birth_year > 0)
+            params.put("birth_year", birth_year);
+        if (online != null && online > 0)
+            params.put("online", online);
+        if (has_photo != null && has_photo > 0)
+            params.put("has_photo", has_photo);
+        if (school_country != null && school_country > 0)
+            params.put("school_country", school_country);
+        if (school_city != null && school_city > 0)
+            params.put("school_city", school_city);
+        if (school != null && school > 0)
+            params.put("school", school);
+        if (school_year != null && school_year > 0)
+            params.put("school_year", school_year);
+        if (religion != null && religion.length() > 0)
+            params.put("religion", religion);
+        if (interests != null && interests.length() > 0)
+            params.put("interests", interests);
+        if (company != null && company.length() > 0)
+            params.put("company", company);
+        if (position != null && position.length() > 0)
+            params.put("position", position);
+        if (gid != null && gid > 0)
+            params.put("gid", gid);
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         return User.parseUsers(array);
     }
     
-    public ArrayList<User> searchUserExtended(String q, String fields, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
+    public ArrayList<User> searchUserExtended(String q, String fields, Long count, Long offset, Integer sort,
+            Integer city, Integer country, String hometown, Integer university_country, Integer university, Integer university_year,
+            Integer sex, Integer age_from, Integer age_to, Integer birth_day, Integer birth_month, Integer birth_year,
+            Integer online, Integer has_photo, Integer school_country, Integer school_city, Integer school, Integer school_year, 
+            String religion, String interests, String company, String position, Long gid) throws MalformedURLException, IOException, JSONException, KException {
         String uids = Utils.parseProfileId(q);
         if (uids != null && uids.length() > 0 && (offset == null || offset == 0)) {
             Log.i(TAG, "Search with uid = " + uids);
@@ -1424,7 +1516,11 @@ public class Api {
             JSONArray array=root.optJSONArray("response");
             return User.parseUsers(array);
         } else
-            return searchUser(q, fields, count, offset);
+            return searchUser(q, fields, count, offset, sort, 
+                    city, country, hometown, university_country, university, university_year, 
+                    sex, age_from, age_to, birth_day, birth_month, birth_year, 
+                    online, has_photo, school_country, school_city, school, school_year, 
+                    religion, interests, company, position, gid);
     }
 
     //http://vkontakte.ru/developers.php?o=-1&p=video.delete
