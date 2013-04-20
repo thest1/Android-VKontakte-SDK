@@ -26,8 +26,8 @@ public class Document implements Serializable {
         d.url = o.optString("url");
         d.size = o.optLong("size");
         d.ext = o.optString("ext");
-        d.thumb = o.optString("thumb");
-        d.thumb_s = o.optString("thumb_s");
+        d.thumb = o.optString("thumb", null);
+        d.thumb_s = o.optString("thumb_s", null);
         return d;
     }
     
