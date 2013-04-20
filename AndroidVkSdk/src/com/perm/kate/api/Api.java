@@ -1720,11 +1720,13 @@ public class Api {
         return result;
     }
     
-    public long createGroupTopicComment(long gid, long tid, String text, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
+    //http://vk.com/developers.php?oid=-1&p=board.addComment
+    public long createGroupTopicComment(long gid, long tid, String text, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.addComment");
         params.put("gid", gid);
         params.put("tid", tid);
         params.put("text", text);
+        params.put("attachments", arrayToString(attachments));
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         long message_id = root.optLong("response");
