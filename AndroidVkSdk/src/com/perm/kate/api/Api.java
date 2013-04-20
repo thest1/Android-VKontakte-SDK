@@ -400,6 +400,7 @@ public class Api {
         params.put("sort","0");
         params.put("count",count);
         params.put("offset",offset);
+        params.put("extended",1);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         if (array == null)
