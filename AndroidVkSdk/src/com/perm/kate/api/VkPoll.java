@@ -16,6 +16,7 @@ public class VkPoll implements Serializable {
     public Long votes;
     public Long answer_id;
     public String answers_json;
+    public boolean anonymous;
     
     public static VkPoll parse(JSONObject o) throws NumberFormatException, JSONException{
         VkPoll v = new VkPoll();
@@ -31,6 +32,8 @@ public class VkPoll implements Serializable {
             v.answer_id = o.optLong("answer_id");
         if(o.has("answers"))
             v.answers_json = o.getJSONArray("answers").toString();
+        if(o.has("anonymous"))
+            v.anonymous = o.getString("anonymous").equals("1");
         return v;
     }
 

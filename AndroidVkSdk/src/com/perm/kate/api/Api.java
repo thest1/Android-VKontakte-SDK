@@ -1558,6 +1558,7 @@ public class Api {
         Params params = new Params("polls.getById");
         params.put("owner_id", owner_id);
         params.put("poll_id", poll_id);
+        params.put("v", "4.6");
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
         return VkPoll.parse(response);
@@ -1582,6 +1583,21 @@ public class Api {
         params.put("answer_id", answer_id);
         JSONObject root = sendRequest(params);
         return root.getInt("response");
+    }
+    
+    public ArrayList<User> getPollVoters(long poll_id, long owner_id, Collection<Long> answer_ids, String fields) throws JSONException, MalformedURLException, IOException, KException {
+        Params params = new Params("polls.getVoters");
+        params.put("owner_id", owner_id);
+        params.put("poll_id", poll_id);
+        params.put("answer_ids", arrayToString(answer_ids));
+        params.put("fields", fields);
+        params.put("v", "4.6");
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        JSONObject object = (JSONObject)array.get(0);
+        JSONArray array2 = object.optJSONArray("users");
+        //TODO for others answer_ids
+        return User.parseUsers(array2);
     }
     
     //http://vkontakte.ru/developers.php?oid=-1&p=friends.getLists
