@@ -1083,6 +1083,18 @@ public class Api {
         long post_id = response.optLong("post_id");
         return post_id;
     }
+
+    public long repostWallPost(String object, String message, long gid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("wall.repost");
+        params.put("gid", gid);
+        params.put("message", message);
+        params.put("object", object);
+        addCaptchaParams(captcha_key, captcha_sid, params);
+        JSONObject root = sendRequest(params);
+        JSONObject response = root.getJSONObject("response");
+        long post_id = response.optLong("post_id");
+        return post_id;
+    }
     
     //http://vkontakte.ru/developers.php?o=-1&p=wall.getComments
     public CommentList getWallComments(Long owner_id, Long post_id, int offset, int count, String v) throws MalformedURLException, IOException, JSONException, KException{
