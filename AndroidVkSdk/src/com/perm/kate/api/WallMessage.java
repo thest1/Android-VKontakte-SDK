@@ -28,6 +28,7 @@ public class WallMessage implements Serializable {
     public long copy_owner_id=0;
     public long copy_post_id=0;
     public String copy_text;
+    public long signer_id=0;
     
     public static WallMessage parse(JSONObject o) throws JSONException {
         WallMessage wm = new WallMessage();
@@ -55,6 +56,7 @@ public class WallMessage implements Serializable {
             wm.comment_count = jcomments.optInt("count");
             wm.comment_can_post = jcomments.optInt("can_post")==1;
         }
+        wm.signer_id = o.optLong("signer_id");
         return wm;
     }
     
