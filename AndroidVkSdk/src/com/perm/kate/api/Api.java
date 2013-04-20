@@ -1597,10 +1597,12 @@ public class Api {
         return root.optLong("response");
     }
     
+    //http://vk.com/dev/friends.getRequests
     //http://vkontakte.ru/developers.php?oid=-1&p=friends.getRequests
-    public ArrayList<Object[]> getRequestsFriends() throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Object[]> getRequestsFriends(Integer out) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("friends.getRequests");
         params.put("need_messages", "1");
+        params.put("out", out);
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         ArrayList<Object[]> users=new ArrayList<Object[]>();
