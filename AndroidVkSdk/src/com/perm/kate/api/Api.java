@@ -1047,12 +1047,13 @@ public class Api {
     }*/
     
     //http://vkontakte.ru/developers.php?o=-1&p=wall.addComment
-    public long createWallComment(Long owner_id, Long post_id, String text, Long reply_to_cid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createWallComment(Long owner_id, Long post_id, String text, Long reply_to_cid, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.addComment");
         params.put("owner_id", owner_id);
         params.put("post_id", post_id);
         params.put("text", text);
         params.put("reply_to_cid", reply_to_cid);
+        params.put("attachments", arrayToString(attachments));
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
