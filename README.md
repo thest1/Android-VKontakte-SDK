@@ -41,6 +41,7 @@
 
 ## Проекты использующие ВКонтакте Android SDK
 <a href="https://play.google.com/store/apps/details?id=com.perm.kate&hl=ru">Kate Mobile</a>  
+<a href="https://play.google.com/store/apps/details?id=com.jelzova.brandisor">Brandisor</a>  
 <a href="https://play.google.com/store/apps/details?id=ru.brorecipes">Бро Рецепты</a>  
 Напишите нам, чтобы добавить свой проект в этот список
 
