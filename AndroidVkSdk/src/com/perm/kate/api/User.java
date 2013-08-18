@@ -47,7 +47,7 @@ public class User implements Serializable {
     public int friends_count;
     public int user_photos_count;
     public int user_videos_count;
-    //public int followers_count;
+    public int followers_count;
     //public int subscriptions_count;
     //public int online_friends_count;
     public String phone;//for getByPhones
@@ -162,7 +162,7 @@ public class User implements Serializable {
                 u.user_photos_count = object.optInt("user_photos");
                 u.user_videos_count = object.optInt("user_videos");
                 //u.online_friends_count = object.optInt("online_friends");
-                //u.followers_count = object.optInt("followers");
+                u.followers_count = object.optInt("followers");
                 //u.subscriptions_count = object.optInt("subscriptions");
                 u.groups_count = object.optInt("groups");
             }
