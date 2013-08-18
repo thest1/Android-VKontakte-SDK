@@ -17,12 +17,12 @@ public class BannArg {
         is_extended = extended;
     }
 
-    public static BannArg parse(JSONObject object) throws JSONException {
+    public static BannArg parse(JSONObject object, boolean is_extended) throws JSONException {
         BannArg arg = null;
         JSONArray jmembers = object.optJSONArray("members");
         JSONArray jgroups = object.optJSONArray("groups");
         JSONArray jprofiles = object.optJSONArray("profiles");
-        if (jmembers == null) {
+        if (is_extended) {
             arg = new BannArg(true);
             if (jgroups != null)
                 arg.full_groups = Group.parseGroups(jgroups);

@@ -2522,7 +2522,7 @@ public class Api {
         params.put("fields", fields);
         JSONObject root = sendRequest(params);
         JSONObject object = root.optJSONObject("response");
-        return BannArg.parse(object);
+        return BannArg.parse(object, is_extended);
     }
     
     //http://vk.com/dev/newsfeed.addBan
