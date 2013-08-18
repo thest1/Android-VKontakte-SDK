@@ -886,9 +886,10 @@ public class Api {
     }
     
     //http://vk.com/developers.php?oid=-1&p=audio.getById
-    public ArrayList<Audio> getAudioById(String audios) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Audio> getAudioById(String audios, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.getById");
         params.put("audios", audios);
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         return parseAudioList(array, 0);
@@ -1244,7 +1245,7 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=audio.search
-    public ArrayList<Audio> searchAudio(String q, String sort, String lyrics, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Audio> searchAudio(String q, String sort, String lyrics, Long count, Long offset, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.search");
         params.put("q", q);
         params.put("sort", sort);
@@ -1252,6 +1253,7 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         params.put("auto_complete", "1");
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         return parseAudioList(array, 1);
@@ -1282,11 +1284,12 @@ public class Api {
     }
 
     //http://vkontakte.ru/developers.php?o=-1&p=audio.add
-    public String addAudio(Long aid, Long oid, Long gid) throws MalformedURLException, IOException, JSONException, KException{
+    public String addAudio(Long aid, Long oid, Long gid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.add");
         params.put("aid", aid);
         params.put("oid", oid);
         params.put("gid", gid);
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
