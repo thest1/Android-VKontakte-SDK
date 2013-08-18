@@ -1596,9 +1596,9 @@ public class Api {
         return new Object[]{key, server, ts};
     }
     
-    //не документирован
+    //http://vk.com/dev/account.setOnline
     public void setOnline(String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
-        Params params = new Params("activity.online");
+        Params params = new Params("account.setOnline");
         addCaptchaParams(captcha_key, captcha_sid, params);
         sendRequest(params);
     }
