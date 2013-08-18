@@ -800,10 +800,12 @@ public class Api {
         return null;
     }
 
-    //http://vkontakte.ru/developers.php?o=-1&p=messages.delete
+    //http://vk.com/dev/messages.delete
     public String deleteMessage(Long mid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.delete");
+        //TODO устаревший параметр, временно оставил его для подстраховки, удалить.
         params.put("mid", mid);
+        params.put("message_ids", mid);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
