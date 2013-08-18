@@ -1309,29 +1309,16 @@ public class Api {
         return null;
     }
     
-    //TODO deprecated, use http://vk.com/dev/likes.add instead
-    //http://vkontakte.ru/developers.php?o=-1&p=wall.addLike
+    //deprecated, use http://vk.com/dev/likes.add instead
+    @Deprecated
     public Long wallAddLike(Long owner_id, Long post_id, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
-        Params params = new Params("wall.addLike");
-        params.put("owner_id", owner_id);
-        params.put("post_id", post_id);
-        addCaptchaParams(captcha_key, captcha_sid, params);
-        JSONObject root = sendRequest(params);
-        JSONObject response = root.optJSONObject("response");
-        long likes=response.optLong("likes", -1);
-        return likes;
+        return addLike(owner_id, post_id, "post", null, captcha_key, captcha_sid);
     }
     
-    //TODO use http://vk.com/dev/likes.delete instead
-    //http://vkontakte.ru/developers.php?o=-1&p=wall.deleteLike
+    //deprecated, use http://vk.com/dev/likes.delete instead
+    @Deprecated
     public Long wallDeleteLike(Long owner_id, Long post_id) throws MalformedURLException, IOException, JSONException, KException{
-        Params params = new Params("wall.deleteLike");
-        params.put("owner_id", owner_id);
-        params.put("post_id", post_id);
-        JSONObject root = sendRequest(params);
-        JSONObject response = root.optJSONObject("response");
-        long likes=response.optLong("likes", -1);
-        return likes;
+        return deleteLike(owner_id, "post", post_id, null, null);
     }
     
     //http://vk.com/dev/likes.add
