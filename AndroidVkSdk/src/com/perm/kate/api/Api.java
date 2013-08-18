@@ -2572,4 +2572,34 @@ public class Api {
         }
         return wmessages;
     }
+    
+    //http://vk.com/dev/account.getBanned
+    public ArrayList<User> getBlackList(Long offset, Long count) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("account.getBanned");
+        String fields="first_name,last_name,photo_medium,online";
+        params.put("fields", fields);
+        params.put("offset", offset);
+        params.put("count", count);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        return User.parseUsers(array);
+    }
+    
+    //http://vk.com/dev/account.banUser
+    public Boolean addToBlackList(long uid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("account.banUser");
+        params.put("uid", uid);
+        JSONObject root = sendRequest(params);
+        int response = root.optInt("response");
+        return response==1;
+    }
+    
+    //http://vk.com/dev/account.unbanUser
+    public Boolean deleteFromBlackList(long uid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("account.unbanUser");
+        params.put("uid", uid);
+        JSONObject root = sendRequest(params);
+        int response = root.optInt("response");
+        return response==1;
+    }
 }
