@@ -545,14 +545,28 @@ public class Api {
         params.put("v", v);
         params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
-        JSONArray array = root.getJSONArray("response");
+        Object x=root.get("response");
         CommentList commnets = new CommentList();
-        commnets.count=array.getInt(0);
-        int category_count = array.length();
-        for(int i = 1; i<category_count; ++i) { //get(0) is integer, it is comments count
-            JSONObject o = (JSONObject)array.get(i);
-            Comment comment = Comment.parse(o);
-            commnets.comments.add(comment);
+        if(x instanceof JSONArray){
+            JSONArray array = (JSONArray)x;
+            commnets.count=array.getInt(0);
+            int category_count = array.length();
+            for(int i = 1; i<category_count; ++i) { //get(0) is integer, it is comments count
+                JSONObject o = (JSONObject)array.get(i);
+                Comment comment = Comment.parse(o);
+                commnets.comments.add(comment);
+            }
+        }
+        if(x instanceof JSONObject){
+            JSONObject y=(JSONObject)x;
+            JSONArray array = y.getJSONArray("items");
+            commnets.count=y.getInt("count");
+            int category_count = array.length();
+            for(int i = 0; i<category_count; ++i) { //get(0) is integer, it is comments count
+                JSONObject o = (JSONObject)array.get(i);
+                Comment comment = Comment.parse(o);
+                commnets.comments.add(comment);
+            }
         }
         return commnets;
     }
