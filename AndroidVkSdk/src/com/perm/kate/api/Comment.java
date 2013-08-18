@@ -34,17 +34,21 @@ public class Comment implements Serializable {
         String reply_to_cid = o.optString("reply_to_cid");
         if (reply_to_cid != null && !reply_to_cid.equals(""))
             comment.reply_to_cid = Long.parseLong(reply_to_cid);
+        parseLikes(o, comment);
+        
+        JSONArray attachments=o.optJSONArray("attachments");
+        comment.attachments=Attachment.parseAttachments(attachments, 0, 0, null);
+        
+        return comment;
+    }
+
+    private static void parseLikes(JSONObject o, Comment comment) throws JSONException {
         if (o.has("likes")){
             JSONObject jlikes = o.getJSONObject("likes");
             comment.like_count = jlikes.optInt("count");
             comment.user_like = jlikes.optInt("user_likes")==1;
             comment.can_like = jlikes.optInt("can_like")==1;
         }
-        
-        JSONArray attachments=o.optJSONArray("attachments");
-        comment.attachments=Attachment.parseAttachments(attachments, 0, 0, null);
-        
-        return comment;
     }
 
     //for group topic comments 
