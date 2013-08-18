@@ -205,7 +205,7 @@ public class User implements Serializable {
 
     public static User parseFromNews(JSONObject jprofile) throws JSONException {
         User m = new User();
-        m.uid = Long.parseLong(jprofile.getString("uid"));
+        m.uid = jprofile.getLong("uid");
         m.first_name = Api.unescape(jprofile.optString("first_name"));
         m.last_name = Api.unescape(jprofile.optString("last_name"));
         m.photo = jprofile.optString("photo");
