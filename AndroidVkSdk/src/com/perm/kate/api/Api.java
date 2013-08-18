@@ -1161,7 +1161,7 @@ public class Api {
         if (from_group)
             params.put("from_group","1");
         addCaptchaParams(captcha_key, captcha_sid, params);
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         JSONObject response = root.getJSONObject("response");
         long cid = response.optLong("cid");
         return cid;
