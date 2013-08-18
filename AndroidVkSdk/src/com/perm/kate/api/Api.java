@@ -45,6 +45,21 @@ public class Api {
             }
             throw e;
         }
+        if(!root.isNull("execute_errors")){
+            JSONArray errors=root.getJSONArray("execute_errors");
+            if(errors.length()==0)
+                return;
+            //only first error is processed if there are multiple
+            JSONObject error=errors.getJSONObject(0);
+            int code=error.getInt("error_code");
+            String message=error.getString("error_msg");
+            KException e = new KException(code, message, url); 
+            if (code==14) {
+                e.captcha_img = error.optString("captcha_img");
+                e.captcha_sid = error.optString("captcha_sid");
+            }
+            throw e;
+        }
     }
     
     private JSONObject sendRequest(Params params) throws IOException, MalformedURLException, JSONException, KException {
