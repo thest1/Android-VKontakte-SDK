@@ -472,7 +472,7 @@ public class Api {
     }
 
     //http://vkontakte.ru/developers.php?o=-1&p=photos.getComments
-    public CommentList getPhotoComments(Long pid, Long owner_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
+    public CommentList getPhotoComments(Long pid, Long owner_id, int offset, int count, String v) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getComments");
         params.put("pid", pid);
         params.put("owner_id", owner_id);
@@ -481,6 +481,7 @@ public class Api {
         if (offset > 0)
             params.put("offset", offset);
         params.put("sort", "asc");
+        params.put("v", v);
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
         CommentList commnets = new CommentList();
@@ -488,7 +489,7 @@ public class Api {
         int category_count = array.length();
         for(int i = 1; i<category_count; ++i) { //get(0) is integer, it is comments count
             JSONObject o = (JSONObject)array.get(i);
-            Comment comment = Comment.parsePhotoComment(o);
+            Comment comment = Comment.parse(o);
             commnets.comments.add(comment);
         }
         return commnets;
@@ -517,7 +518,7 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=video.getComments
-    public CommentList getVideoComments(long video_id, Long owner_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
+    public CommentList getVideoComments(long video_id, Long owner_id, int offset, int count, String v) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.getComments");
         params.put("vid", video_id);
         params.put("owner_id", owner_id);
@@ -525,6 +526,7 @@ public class Api {
             params.put("count", count);
         if (offset > 0)
             params.put("offset", offset);
+        params.put("v", v);
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
         CommentList commnets = new CommentList();
@@ -532,7 +534,7 @@ public class Api {
         int category_count = array.length();
         for(int i = 1; i<category_count; ++i) { //get(0) is integer, it is comments count
             JSONObject o = (JSONObject)array.get(i);
-            Comment comment = Comment.parseVideoComment(o);
+            Comment comment = Comment.parse(o);
             commnets.comments.add(comment);
         }
         return commnets;

@@ -70,24 +70,6 @@ public class Comment implements Serializable {
         return comment;
     }
     
-    public static Comment parseVideoComment(JSONObject o) throws NumberFormatException, JSONException {
-        Comment comment = new Comment();
-        comment.cid = o.getLong("id");
-        comment.from_id = o.optLong("from_id");
-        comment.date = o.optLong("date");
-        comment.message = Api.unescape(o.optString("message"));
-        return comment;
-    }
-    
-    public static Comment parsePhotoComment(JSONObject o) throws NumberFormatException, JSONException {
-        Comment comment = new Comment();
-        comment.cid = o.getLong("cid");
-        comment.from_id = o.optLong("from_id");
-        comment.date = o.optLong("date");
-        comment.message = Api.unescape(o.optString("message"));
-        return comment;
-    }
-    
     public static Comment parseNotificationComment(JSONObject o, boolean parse_post) throws NumberFormatException, JSONException{
         Comment comment = new Comment();
         comment.cid = Long.parseLong(o.getString("id"));
