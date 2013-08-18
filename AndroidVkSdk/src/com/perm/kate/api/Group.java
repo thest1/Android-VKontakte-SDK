@@ -24,6 +24,7 @@ public class Group implements Serializable {
     public String description;
     public String wiki_page;
     public Long fixed_post;
+    public Boolean can_see_all_posts;//can_see_all_posts=false означает что стена закрыта
 
     public static Group parse(JSONObject o) throws JSONException{
         Group g=new Group();
@@ -53,6 +54,9 @@ public class Group implements Serializable {
         //    g.is_admin=is_admin.equals("1");
         //g.photo_medium = o.getString("photo_medium");
         //g.photo_big = o.getString("photo_big");
+
+        if(o.has("can_see_all_posts"))
+            g.can_see_all_posts=o.optInt("can_see_all_posts", 1)==1;
         return g;
     }
     
