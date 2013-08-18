@@ -1896,10 +1896,11 @@ public class Api {
     }
     
     /*** topics region ***/
-    //http://vk.com/developers.php?oid=-1&p=board.getTopics
-    public ArrayList<GroupTopic> getGroupTopics(long gid, int extended, int count, int offset) throws MalformedURLException, IOException, JSONException, KException {
+    //http://vk.com/dev/board.getTopics
+    public ArrayList<GroupTopic> getGroupTopics(long gid, Integer order, int extended, int count, int offset) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.getTopics");
         params.put("gid", gid);
+        params.put("order", order);
         if (extended == 1)
             params.put("extended", "1"); //for profiles
         if (count > 0)
