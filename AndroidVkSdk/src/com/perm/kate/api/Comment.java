@@ -58,6 +58,7 @@ public class Comment implements Serializable {
         comment.from_id = o.optLong("from_id");
         comment.date = o.optLong("date");
         comment.message = Api.unescape(o.optString("text"));
+        parseLikes(o, comment);
         
         JSONArray attachments=o.optJSONArray("attachments");
         comment.attachments=Attachment.parseAttachments(attachments, 0, 0, null);
