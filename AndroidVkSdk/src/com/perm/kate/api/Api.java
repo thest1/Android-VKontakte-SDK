@@ -1320,6 +1320,7 @@ public class Api {
         return null;
     }
     
+    //TODO deprecated, use http://vk.com/dev/likes.add instead
     //http://vkontakte.ru/developers.php?o=-1&p=wall.addLike
     public Long wallAddLike(Long owner_id, Long post_id, boolean need_publish, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.addLike");
@@ -1333,6 +1334,7 @@ public class Api {
         return likes;
     }
     
+    //TODO use http://vk.com/dev/likes.delete instead
     //http://vkontakte.ru/developers.php?o=-1&p=wall.deleteLike
     public Long wallDeleteLike(Long owner_id, Long post_id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.deleteLike");
