@@ -2409,9 +2409,9 @@ public class Api {
         return User.parseUsers(array);
     }
     
-    //http://vk.com/developers.php?oid=-1&p=getServerTime
+    //http://vk.com/dev/utils.getServerTime
     public long getServerTime() throws MalformedURLException, IOException, JSONException, KException{
-        Params params = new Params("getServerTime");
+        Params params = new Params("utils.getServerTime");
         JSONObject root = sendRequest(params);
         return root.getLong("response");
     }
