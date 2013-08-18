@@ -338,12 +338,13 @@ public class Api {
         return users;
     }
     
-    //http://vkontakte.ru/developers.php?oid=-1&p=likes.getList
-    public ArrayList<Long> getLikeUsers(String item_type, long item_id, long owner_id) throws MalformedURLException, IOException, JSONException, KException{
+    //http://vk.com/dev/likes.getList
+    public ArrayList<Long> getLikeUsers(String item_type, long item_id, long owner_id, String filter) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("likes.getList");
-        params.put("type",item_type);
-        params.put("owner_id",owner_id);
-        params.put("item_id",item_id);
+        params.put("type", item_type);
+        params.put("owner_id", owner_id);
+        params.put("item_id", item_id);
+        params.put("filter", filter); //likes - default, copies 
         JSONObject root = sendRequest(params);
         JSONObject response=root.getJSONObject("response");
         JSONArray array=response.optJSONArray("users");
