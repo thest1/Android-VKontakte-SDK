@@ -2612,4 +2612,15 @@ public class Api {
         int response = root.optInt("response");
         return response==1;
     }
+    
+    //http://vk.com/dev/docs.add
+    public Long docsAdd(long owner_id, long document_id, String access_key) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("docs.add");
+        params.put("did", document_id);
+        params.put("oid", owner_id);
+        params.put("access_key", access_key);
+        JSONObject root = sendRequest(params);
+        //returns new document_id
+        return root.optLong("response");
+    }
 }

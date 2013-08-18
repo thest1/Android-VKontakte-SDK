@@ -17,6 +17,7 @@ public class Document implements Serializable {
     public String ext;
     public String thumb;//for photos. 130*65.
     public String thumb_s;//for photos. 100*50.
+    public String access_key;
     
     public static Document parse(JSONObject o) throws JSONException {
         Document d = new Document();
@@ -28,6 +29,7 @@ public class Document implements Serializable {
         d.ext = o.optString("ext");
         d.thumb = o.optString("thumb", null);
         d.thumb_s = o.optString("thumb_s", null);
+        d.access_key = o.optString("access_key", null);
         return d;
     }
     
