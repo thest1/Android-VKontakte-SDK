@@ -72,6 +72,7 @@ public class Comment implements Serializable {
         comment.from_id = Long.parseLong(o.getString("uid"));
         comment.date = Long.parseLong(o.getString("date"));
         comment.message = Api.unescape(o.getString("message"));
+        comment.reply_to_uid=o.optLong("reply_to");
         return comment;
     }
     
