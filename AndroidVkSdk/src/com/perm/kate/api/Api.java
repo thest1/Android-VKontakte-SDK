@@ -792,13 +792,14 @@ public class Api {
 
     /*** methods for wall 
      * @throws KException ***/
-    //http://vkontakte.ru/developers.php?o=-1&p=wall.get
-    public ArrayList<WallMessage> getWallMessages(Long owner_id, int count, int offset) throws MalformedURLException, IOException, JSONException, KException{
+    //http://vkontakte.ru/developers.php?o=-1&p=wall.get //new api url - http://vk.com/dev/wall.get
+    public ArrayList<WallMessage> getWallMessages(Long owner_id, int count, int offset, String filter) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.get");
         params.put("owner_id", owner_id);
         if (count > 0)
             params.put("count", count);
         params.put("offset", offset);
+        params.put("filter", filter); //owner, others, all - default
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
         ArrayList<WallMessage> wmessages = new ArrayList<WallMessage>();
