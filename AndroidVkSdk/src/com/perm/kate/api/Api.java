@@ -2412,7 +2412,7 @@ public class Api {
     }
     
     //http://vk.com/developers.php?oid=-1&p=messages.setActivity
-    public Integer setMessageActivity(long uid, long chat_id, boolean typing) throws MalformedURLException, IOException, JSONException, KException {
+    public Integer setMessageActivity(Long uid, Long chat_id, boolean typing) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("messages.setActivity");
         params.put("uid", uid);
         params.put("chat_id", chat_id);
