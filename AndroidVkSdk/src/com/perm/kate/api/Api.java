@@ -815,7 +815,7 @@ public class Api {
      * @throws KException ***/
     //http://vkontakte.ru/developers.php?o=-1&p=newsfeed.get
     //always returns about 33-35 items
-    public Newsfeed getNews(Long start_time, long count, Long end_time, Integer offset, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public Newsfeed getNews(Long start_time, long count, Long end_time, Integer offset, String from, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("newsfeed.get");
         params.put("filters","post,photo,photo_tag,friend,note");
         params.put("start_time",start_time);
@@ -823,6 +823,7 @@ public class Api {
         if(count!=0)
             params.put("count",count);
         params.put("offset",offset);
+        params.put("from",from);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         return Newsfeed.parse(root, false);

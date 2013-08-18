@@ -9,6 +9,8 @@ public class Newsfeed {
     public ArrayList<NewsItem> items=new ArrayList<NewsItem>();
     public ArrayList<User> profiles;
     public ArrayList<Group> groups;
+    public int new_offset;
+    public String new_from;
 
     public static Newsfeed parse(JSONObject root, boolean is_comments) throws JSONException {
         JSONObject response1 = root.getJSONObject("response");
@@ -35,6 +37,8 @@ public class Newsfeed {
         }
         if (jgroups != null)
             newsfeed.groups = Group.parseGroups(jgroups);
+        newsfeed.new_offset = response1.optInt("new_offset");
+        newsfeed.new_from = response1.optString("new_from");
         return newsfeed;
     }
 }
