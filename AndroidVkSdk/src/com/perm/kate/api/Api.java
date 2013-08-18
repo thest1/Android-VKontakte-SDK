@@ -1832,10 +1832,11 @@ public class Api {
         return response.getString("upload_url");
     }
     
-    //http://vkontakte.ru/developers.php?oid=-1&p=photos.deleteAlbum
-    public String deleteAlbum(Long aid) throws MalformedURLException, IOException, JSONException, KException{
+    //http://vk.com/dev/photos.deleteAlbum
+    public String deleteAlbum(Long aid, Long gid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.deleteAlbum");
         params.put("aid", aid);
+        params.put("gid", gid);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
