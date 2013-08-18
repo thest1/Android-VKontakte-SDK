@@ -1177,12 +1177,11 @@ public class Api {
     }
     
     //http://vk.com/dev/wall.editComment 
-    public boolean editWallComment(long cid, Long owner_id, Long post_id, String text, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public boolean editWallComment(long cid, Long owner_id, String text, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.editComment");
-        params.put("cid", cid);
+        params.put("comment_id", cid);
         params.put("owner_id", owner_id);
-        params.put("post_id", post_id);
-        params.put("text", text);
+        params.put("message", text);
         params.put("attachments", arrayToString(attachments));
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params, true);
