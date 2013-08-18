@@ -25,6 +25,10 @@ public class WallMessage implements Serializable {
     public boolean can_like;
     public boolean like_can_publish;
     
+    //reposts
+    public int reposts_count;
+    public boolean user_reposted;
+    
     public long copy_owner_id=0;
     public long copy_post_id=0;
     public String copy_text;
@@ -57,6 +61,11 @@ public class WallMessage implements Serializable {
             wm.comment_can_post = jcomments.optInt("can_post")==1;
         }
         wm.signer_id = o.optLong("signer_id");
+        if (o.has(NewsJTags.REPOSTS)){
+            JSONObject jlikes = o.getJSONObject(NewsJTags.REPOSTS);
+            wm.reposts_count = jlikes.optInt("count");
+            wm.user_reposted = jlikes.optInt("user_reposted")==1;
+        }
         return wm;
     }
     

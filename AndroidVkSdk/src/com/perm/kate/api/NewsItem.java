@@ -25,6 +25,10 @@ public class NewsItem {
     //comments
     public int comment_count;
     public boolean comment_can_post;
+    
+    //reposts
+    public int reposts_count;
+    public boolean user_reposted;
 
     public ArrayList<Attachment> attachments=new ArrayList<Attachment>();
     public Geo geo;
@@ -63,6 +67,11 @@ public class NewsItem {
             JSONObject jlikes = jitem.getJSONObject(NewsJTags.LIKES);
             newsitem.like_count = jlikes.optInt("count");
             newsitem.user_like = jlikes.optInt("user_likes")==1;
+        }
+        if (jitem.has(NewsJTags.REPOSTS)){
+            JSONObject jlikes = jitem.getJSONObject(NewsJTags.REPOSTS);
+            newsitem.reposts_count = jlikes.optInt("count");
+            newsitem.user_reposted = jlikes.optInt("user_reposted")==1;
         }
         if (jitem.has(NewsJTags.PHOTO_TAGS)){
             JSONArray jphoto_tags = jitem.getJSONArray(NewsJTags.PHOTO_TAGS);

@@ -12,4 +12,5 @@ public class NewsJTags {
     public static final String LIKES = "likes";
     public static final String AUDIO = "audio";
     public static final String VIDEO = "video";
+    public static final String REPOSTS = "reposts";
 }
