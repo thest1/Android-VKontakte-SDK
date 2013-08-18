@@ -2140,8 +2140,9 @@ public class Api {
         return messages;
     }
     
+    //http://vk.com/dev/account.getCounters
     public Counters getCounters(String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
-        Params params = new Params("getCounters");
+        Params params = new Params("account.getCounters");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONObject response=root.optJSONObject("response");
