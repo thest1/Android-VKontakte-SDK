@@ -2271,24 +2271,26 @@ public class Api {
         return User.parseUsersForGetByPhones(array);
     }
     
-    /*** methods for messages search ***/      
-    //http://vk.com/pages?oid=-1&p=messages.search
-    public ArrayList<Message> searchMessages(String q, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
+    /*** methods for messages search ***/
+    //http://vk.com/dev/messages.search
+    public ArrayList<Message> searchMessages(String q, int offset, int count, Integer preview_length) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.search");
         params.put("q", q);
         params.put("count", count);
         params.put("offset", offset);
+        params.put("preview_length", preview_length);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
         return messages;
     }
     
-    //http://vk.com/pages?oid=-1&p=messages.searchDialogs
-    public ArrayList<SearchDialogItem> searchDialogs(String q, String fields) throws MalformedURLException, IOException, JSONException, KException{
+    //http://vk.com/dev/messages.searchDialogs
+    public ArrayList<SearchDialogItem> searchDialogs(String q, String fields, Integer limit) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.searchDialogs");
         params.put("q", q);
         params.put("fields", fields);
+        params.put("limit", limit);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         return Message.parseSearchedDialogs(array);
