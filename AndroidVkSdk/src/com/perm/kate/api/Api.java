@@ -384,25 +384,24 @@ public class Api {
     }
     
     /*** methods for photos ***/
-    //http://vkontakte.ru/developers.php?o=-1&p=photos.getAlbums
-    public ArrayList<Album> getAlbums(Long owner_id) throws MalformedURLException, IOException, JSONException, KException{
+    //http://vk.com/dev/photos.getAlbums
+    public ArrayList<Album> getAlbums(Long oid, Collection<Long> aids, Integer need_system, Integer need_covers, Integer photo_sizes) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getAlbums");
-        if (owner_id > 0)
-            //user
-            params.put("uid",owner_id);
-        else
-            //group
-            params.put("gid",-owner_id);
+        params.put("oid", oid);
+        params.put("aids", arrayToString(aids));
+        params.put("need_system", need_system);
+        params.put("need_covers", need_covers);
+        params.put("photo_sizes", photo_sizes);
         JSONObject root = sendRequest(params);
         ArrayList<Album> albums=new ArrayList<Album>();
         JSONArray array=root.optJSONArray("response");
-        if(array==null)
+        if (array == null)
             return albums;
         int category_count=array.length(); 
-        for(int i=0; i<category_count; ++i){
+        for (int i=0; i<category_count; ++i) {
             JSONObject o = (JSONObject)array.get(i);
             Album a = Album.parse(o);
-            if(a.title.equals("DELETED"))
+            if (a.title.equals("DELETED"))
                 continue;
             albums.add(a);
         }
