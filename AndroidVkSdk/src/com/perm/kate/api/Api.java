@@ -568,26 +568,28 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=photos.createComment
-    public long createPhotoComment(Long pid, Long owner_id, String message, Long reply_to_cid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createPhotoComment(Long pid, Long owner_id, String message, Long reply_to_cid, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.createComment");
         params.put("pid",pid);
         params.put("owner_id",owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message",message);
         params.put("reply_to_cid", reply_to_cid);
+        params.put("attachments", arrayToString(attachments));
         JSONObject root = sendRequest(params);
         long message_id = root.optLong("response");
         return message_id;
     }
     
     //http://vk.com/developers.php?oid=-1&p=photos.editComment
-    public boolean editPhotoComment(long cid, long pid, Long owner_id, String message, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public boolean editPhotoComment(long cid, long pid, Long owner_id, String message, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.editComment");
         params.put("cid", cid);
         params.put("pid", pid);
         params.put("owner_id", owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message", message);
+        params.put("attachments", arrayToString(attachments));
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response == 1;
@@ -620,24 +622,26 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=video.createComment
-    public long createVideoComment(Long video_id, Long owner_id, String message, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createVideoComment(Long video_id, Long owner_id, String message, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.createComment");
         params.put("vid",video_id);
         params.put("owner_id",owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message",message);
+        params.put("attachments", arrayToString(attachments));
         JSONObject root = sendRequest(params);
         long message_id = root.optLong("response");
         return message_id;
     }
     
     //http://vk.com/developers.php?oid=-1&p=video.editComment
-    public boolean editVideoComment(long cid, Long owner_id, String message, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public boolean editVideoComment(long cid, Long owner_id, String message, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.editComment");
         params.put("cid", cid);
         params.put("owner_id", owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message", message);
+        params.put("attachments", arrayToString(attachments));
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response == 1;
