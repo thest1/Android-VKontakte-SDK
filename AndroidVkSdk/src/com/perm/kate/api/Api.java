@@ -950,10 +950,11 @@ public class Api {
     }
     
     /*** for crate album ***/
-    //http://vkontakte.ru/developers.php?o=-1&p=photos.createAlbum
-    public Album createAlbum(String title, String privacy, String comment_privacy, String description) throws MalformedURLException, IOException, JSONException, KException {
+    //http://vk.com/dev/photos.createAlbum
+    public Album createAlbum(String title, Long gid, String privacy, String comment_privacy, String description) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.createAlbum");
         params.put("title", title);
+        params.put("gid", gid);
         params.put("privacy", privacy);
         params.put("comment_privacy", comment_privacy);
         params.put("description", description);
@@ -964,10 +965,11 @@ public class Api {
         return Album.parse(o);
     }
     
-    //http://vk.com/developers.php?oid=-1&p=photos.editAlbum
-    public String editAlbum(long aid, String title, String privacy, String comment_privacy, String description) throws MalformedURLException, IOException, JSONException, KException {
+    //http://vk.com/dev/photos.editAlbum
+    public String editAlbum(long aid, Long oid, String title, String privacy, String comment_privacy, String description) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.editAlbum");
         params.put("aid", String.valueOf(aid));
+        params.put("oid", oid);
         params.put("title", title);
         params.put("privacy", privacy);
         params.put("comment_privacy", comment_privacy);
