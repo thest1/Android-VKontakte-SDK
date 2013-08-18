@@ -2573,6 +2573,16 @@ public class Api {
         return wmessages;
     }
     
+    //http://vk.com/dev/newsfeed.unsubscribe
+    public Integer newsfeedUnsubscribe(String type, Long owner_id, Long item_id) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("newsfeed.unsubscribe");
+        params.put("type", type);
+        params.put("owner_id", owner_id);
+        params.put("item_id", item_id);
+        JSONObject root = sendRequest(params);
+        return root.optInt("response");
+    }
+    
     //http://vk.com/dev/account.getBanned
     public ArrayList<User> getBlackList(Long offset, Long count) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("account.getBanned");
