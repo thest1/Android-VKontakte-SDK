@@ -263,6 +263,7 @@ public class User implements Serializable {
         return users;
     }
     
+    //TODO why it duplicates parse() method
     public static User parseFromFave(JSONObject jprofile) throws JSONException {
         User m = new User();
         m.uid = Long.parseLong(jprofile.getString("uid"));
@@ -271,6 +272,11 @@ public class User implements Serializable {
         m.photo_medium_rec = jprofile.optString("photo_medium_rec");
         if(!jprofile.isNull("online"))
             m.online = jprofile.optInt("online")==1;
+        if(!jprofile.isNull("online_mobile"))
+            m.online_mobile = jprofile.optInt("online_mobile")==1;
+        else
+            //if it's not there it means false
+            m.online_mobile=false;
         return m;
     }
 }
