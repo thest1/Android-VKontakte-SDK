@@ -1227,7 +1227,7 @@ public class Api {
         return post_id;
     }
 
-    public long repostWallPost(String object, String message, long gid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public WallMessage repostWallPost(String object, String message, Long gid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.repost");
         params.put("gid", gid);
         params.put("message", message);
@@ -1235,8 +1235,11 @@ public class Api {
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
-        long post_id = response.optLong("post_id");
-        return post_id;
+        WallMessage wall=new WallMessage(); 
+        wall.id = response.optLong("post_id");
+        wall.like_count=response.optInt("likes_count");
+        wall.reposts_count=response.optInt("reposts_count");
+        return wall;
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=wall.getComments
@@ -1322,11 +1325,10 @@ public class Api {
     
     //TODO deprecated, use http://vk.com/dev/likes.add instead
     //http://vkontakte.ru/developers.php?o=-1&p=wall.addLike
-    public Long wallAddLike(Long owner_id, Long post_id, boolean need_publish, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public Long wallAddLike(Long owner_id, Long post_id, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.addLike");
         params.put("owner_id", owner_id);
         params.put("post_id", post_id);
-        params.put("need_publish", need_publish?"1":"0");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
