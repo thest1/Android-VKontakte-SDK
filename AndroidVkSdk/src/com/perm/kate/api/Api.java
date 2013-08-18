@@ -482,6 +482,7 @@ public class Api {
             params.put("offset", offset);
         params.put("sort", "asc");
         params.put("v", v);
+        params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
         CommentList commnets = new CommentList();
@@ -527,6 +528,7 @@ public class Api {
         if (offset > 0)
             params.put("offset", offset);
         params.put("v", v);
+        params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
         CommentList commnets = new CommentList();
@@ -550,6 +552,7 @@ public class Api {
             params.put("count", count);
         if (offset > 0)
             params.put("offset", offset);
+        params.put("need_likes", "1");
         ArrayList<Comment> commnets = new ArrayList<Comment>();
         @SuppressWarnings("unused")
         JSONObject root = sendRequest(params);
@@ -557,7 +560,7 @@ public class Api {
         //вынести парсящий код чтобы не было дублирования
         //JSONArray array = root.getJSONArray("response");
         //int category_count = array.length();
-        //for(int i = 0; i<category_count; ++i) {           
+        //for(int i = 0; i<category_count; ++i) {
         //    JSONObject o = (JSONObject)array.get(i);
         //    Comment comment = new Comment();
         //    comment.cid = Long.parseLong(o.getString("cid"));
@@ -1900,6 +1903,7 @@ public class Api {
             params.put("count", count);
         if (offset > 0)
             params.put("offset", offset);
+        params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
         CommentList result = new CommentList();
