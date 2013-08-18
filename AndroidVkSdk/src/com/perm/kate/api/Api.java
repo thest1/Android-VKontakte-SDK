@@ -889,12 +889,13 @@ public class Api {
 
     /*** for audio ***/
     //http://vk.com/dev/audio.get
-    public ArrayList<Audio> getAudio(Long uid, Long gid, Long album_id, Collection<Long> aids) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Audio> getAudio(Long uid, Long gid, Long album_id, Collection<Long> aids, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.get");
         params.put("uid", uid);
         params.put("gid", gid);
         params.put("aids", arrayToString(aids));
         params.put("album_id", album_id);
+        addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         return parseAudioList(array, 0);
