@@ -45,12 +45,11 @@ public class Message implements Serializable {
             m.chat_id=o.getLong("chat_id");
         
         //for dialog list
-        String tmp = o.optString("chat_active");
+        JSONArray tmp = o.optJSONArray("chat_active");
         if(tmp!=null && tmp.length()!=0){
             m.chat_members=new ArrayList<Long>();
-            String[] ids=tmp.split(",");
-            for(String id:ids)
-                m.chat_members.add(Long.parseLong(id));
+            for(int i=0;i<tmp.length();++i)
+                m.chat_members.add(tmp.getLong(i));
         }
 
         JSONArray attachments=o.optJSONArray("attachments");

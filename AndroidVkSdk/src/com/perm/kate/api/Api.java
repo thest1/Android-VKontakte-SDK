@@ -693,7 +693,7 @@ public class Api {
         if (count != 0)
             params.put("count", count);
         params.put("preview_length","0");
-        params.put("v","4.0");
+        params.put("v","4.2");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
@@ -724,7 +724,7 @@ public class Api {
         if (count != 0)
             params.put("count", count);
         params.put("preview_length","0");
-        params.put("v","4.0");
+        params.put("v","4.2");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
@@ -2147,6 +2147,7 @@ public class Api {
     public ArrayList<Message> getMessagesById(ArrayList<Long> message_ids) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getById");
         params.put("mids", arrayToString(message_ids));
+        params.put("v","4.2");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
@@ -2352,6 +2353,7 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         params.put("preview_length", preview_length);
+        params.put("v","4.2");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
