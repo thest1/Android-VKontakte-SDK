@@ -2671,4 +2671,25 @@ public class Api {
         //returns new document_id
         return root.optLong("response");
     }
+    
+    //http://vk.com/dev/newsfeed.search
+    public Newsfeed searchNews(String q, Long start_id, int extended, Long start_time, Long end_time, long count, Long offset, double latitude, double longitude, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("newsfeed.search");
+        params.put("q", q);
+        params.put("start_id", start_id);
+        params.put("extended", extended);
+        params.put("start_time", start_time);
+        params.put("end_time", end_time);
+        if (count != 0)
+            params.put("count", count);
+        params.put("offset", offset);
+        if (latitude != 0)
+            params.putDouble("latitude", latitude);
+        if (longitude != 0)
+            params.putDouble("longitude", longitude);
+        params.put("v", "4.99");
+        addCaptchaParams(captcha_key, captcha_sid, params);
+        JSONObject root = sendRequest(params);
+        return Newsfeed.parseFromSearch(root);
+    }
 }
