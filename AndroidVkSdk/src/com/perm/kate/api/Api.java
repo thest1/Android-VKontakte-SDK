@@ -454,24 +454,6 @@ public class Api {
         return photos;
     }
     
-    //http://vkontakte.ru/developers.php?o=-1&p=photos.getUserPhotos
-    public ArrayList<Photo> getUserPhotos(Long owner_id, Long offset, Long count) throws MalformedURLException, IOException, JSONException, KException{
-        Params params = new Params("photos.getUserPhotos");
-        params.put("owner_id", owner_id);
-        params.put("offset", offset);
-        params.put("count", count);
-        JSONObject root = sendRequest(params);
-        JSONArray array=root.getJSONArray("response");
-        ArrayList<Photo> photos=new ArrayList<Photo>(); 
-        int category_count = array.length(); 
-        for(int i=1; i<category_count; ++i){
-            JSONObject o = (JSONObject)array.get(i);
-            Photo p = Photo.parse(o);
-            photos.add(p);
-        }
-        return photos;
-    }
-
     //http://vkontakte.ru/developers.php?o=-1&p=photos.getComments
     public CommentList getPhotoComments(Long pid, Long owner_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getComments");
