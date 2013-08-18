@@ -17,10 +17,15 @@ public class Notification implements Serializable {
     public static final String COMMENT_POST = "comment_post";
     public static final String COMMENT_PHOTO = "comment_photo";
     public static final String COMMENT_VIDEO = "comment_video";
-    public static final String REPLY_COMMENT = "reply_comment";
+    public static final String REPLY_COMMENT = "reply_comment";//wall
+    public static final String REPLY_COMMENT_PHOTO = "reply_comment_photo";
+    public static final String REPLY_COMMENT_VIDEO = "reply_comment_video";
     public static final String REPLY_TOPIC = "reply_topic";
     public static final String LIKE_POST = "like_post";
     public static final String LIKE_COMMENT = "like_comment";
+    public static final String LIKE_COMMENT_PHOTO = "like_comment_photo";
+    public static final String LIKE_COMMENT_VIDEO = "like_comment_video";
+    public static final String LIKE_COMMENT_TOPIC = "like_comment_topic";
     public static final String LIKE_PHOTO = "like_photo";
     public static final String LIKE_VIDEO = "like_video";
     public static final String COPY_POST = "copy_post";
@@ -32,6 +37,8 @@ public class Notification implements Serializable {
     public Object parent;
     public Object feedback;
     public Object reply;
+    public Photo photo;//for type reply_comment_photo
+    public Video video;//for type reply_comment_video
     
     public static Notification parse(JSONObject o) {
         Notification n = null;
@@ -93,6 +100,24 @@ public class Notification implements Serializable {
                     n.parent = Comment.parseNotificationComment(jparent, true);
                     n.feedback = Comment.parseNotificationComment(jfeedback, false);
                 }
+            } else if (n.type.equals(REPLY_COMMENT_PHOTO)) {
+                JSONObject jparent = o.optJSONObject("parent"); //comment
+                JSONObject jfeedback = o.optJSONObject("feedback");//comment
+                if (jparent != null && jfeedback != null) {
+                    n.parent = Comment.parseNotificationComment(jparent, false);
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
+                    if(jparent.has("photo"))
+                        n.photo=Photo.parse(jparent.optJSONObject("photo"));
+                }
+            } else if (n.type.equals(REPLY_COMMENT_VIDEO)) {
+                JSONObject jparent = o.optJSONObject("parent"); //comment
+                JSONObject jfeedback = o.optJSONObject("feedback");//comment
+                if (jparent != null && jfeedback != null) {
+                    n.parent = Comment.parseNotificationComment(jparent, false);
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
+                    if(jparent.has("video"))
+                        n.video=Video.parse(jparent.optJSONObject("video"));
+                }
             } else if (n.type.equals(REPLY_TOPIC)) {
                 JSONObject jparent = o.optJSONObject("parent"); //topic
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
@@ -113,6 +138,34 @@ public class Notification implements Serializable {
                 if (jparent != null && jfeedback != null) {
                     n.parent = Comment.parseNotificationComment(jparent, false);
                     n.feedback = getProfiles(jfeedback);
+                }
+            } else if (n.type.equals(LIKE_COMMENT_PHOTO)) {
+                JSONObject jparent = o.optJSONObject("parent"); //comment
+                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                if (jparent != null && jfeedback != null) {
+                    n.parent = Comment.parseNotificationComment(jparent, false);
+                    n.feedback = getProfiles(jfeedback);
+                    if(jparent.has("photo"))
+                        n.photo=Photo.parse(jparent.optJSONObject("photo"));
+                }
+            } else if (n.type.equals(LIKE_COMMENT_VIDEO)) {
+                JSONObject jparent = o.optJSONObject("parent"); //comment
+                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                if (jparent != null && jfeedback != null) {
+                    n.parent = Comment.parseNotificationComment(jparent, false);
+                    n.feedback = getProfiles(jfeedback);
+                    if(jparent.has("video"))
+                        n.video=Video.parse(jparent.optJSONObject("video"));
+                }
+            } else if (n.type.equals(LIKE_COMMENT_TOPIC)) {
+                JSONObject jparent = o.optJSONObject("parent"); //comment
+                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                if (jparent != null && jfeedback != null) {
+                    n.parent = Comment.parseNotificationComment(jparent, false);
+                    n.feedback = getProfiles(jfeedback);
+                    //TODO
+                    //if(jparent.has("topic"))
+                    //    n.xxx=Xxx.parse(jparent.optJSONObject("topic"));
                 }
             } else if (n.type.equals(LIKE_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //photo

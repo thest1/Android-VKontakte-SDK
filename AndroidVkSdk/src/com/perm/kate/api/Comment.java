@@ -14,7 +14,7 @@ public class Comment implements Serializable {
     public String message;
     public long reply_to_uid;
     public long reply_to_cid;
-    public WallMessage post;//parent post, used only for notifications type "reply_comment"
+    public WallMessage post;//parent post, used only for notifications type "reply_comment". Can be moved to Notification class.
     public ArrayList<Attachment> attachments=new ArrayList<Attachment>();
 
     //likes
