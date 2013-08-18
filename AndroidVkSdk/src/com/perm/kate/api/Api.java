@@ -1647,28 +1647,6 @@ public class Api {
         return users;
     }
     
-    //http://vkontakte.ru/developers.php?oid=-1&p=subscriptions.follow
-    public String followUser(Long uid) throws MalformedURLException, IOException, JSONException, KException {
-        Params params = new Params("subscriptions.follow");
-        params.put("uid", uid);
-        JSONObject root = sendRequest(params);
-        Object response_code = root.opt("response");
-        if (response_code != null)
-            return String.valueOf(response_code);
-        return null;
-    }
-    
-    //http://vkontakte.ru/developers.php?oid=-1&p=subscriptions.unfollow
-    public String unfollowUser(Long uid) throws MalformedURLException, IOException, JSONException, KException {
-        Params params = new Params("subscriptions.unfollow");
-        params.put("uid", uid);
-        JSONObject root = sendRequest(params);
-        Object response_code = root.opt("response");
-        if (response_code != null)
-            return String.valueOf(response_code);
-        return null;
-    }
-    
     //http://vk.com/dev/users.getSubscriptions
     public ArrayList<Long> getSubscriptions(Long uid, int offset, int count, Integer extended) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("users.getSubscriptions");
