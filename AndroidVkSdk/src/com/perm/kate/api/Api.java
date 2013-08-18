@@ -1376,10 +1376,12 @@ public class Api {
         return response.optLong("likes", -1);
     }
     
-    //http://vkontakte.ru/developers.php?o=-1&p=photos.getById
-    public ArrayList<Photo> getPhotosById(String photos) throws MalformedURLException, IOException, JSONException, KException{
+    //http://vk.com/dev/photos.getById
+    public ArrayList<Photo> getPhotosById(String photos, Integer extended, Integer photo_sizes) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getById");
         params.put("photos", photos);
+        params.put("extended", extended);
+        params.put("photo_sizes", photo_sizes);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         if (array == null)
@@ -1387,6 +1389,17 @@ public class Api {
         ArrayList<Photo> photos1 = parsePhotos(array);
         return photos1;
     }
+    
+    public Photo getPhotoCountsByIdWithExecute(String photo) throws MalformedURLException, IOException, JSONException, KException {
+        String code = "var p=API.photos.getById({\"photos\":\"" + photo + "\",\"extended\":1}); return {\"pid\":p@.pid,\"likes\":p@.likes,\"comments\":p@.comments,\"can_comment\":p@.can_comment,\"tags\":p@.tags};";
+        Params params = new Params("execute");
+        params.put("code", code);
+        JSONObject root = sendRequest(params);
+        JSONObject array = root.optJSONObject("response");
+        if (array == null)
+            return null;
+        return Photo.parseCounts(array);
+    }    
     
     //http://vkontakte.ru/developers.php?oid=-1&p=groups.get
     public ArrayList<Group> getUserGroups(Long user_id) throws MalformedURLException, IOException, JSONException, KException{
