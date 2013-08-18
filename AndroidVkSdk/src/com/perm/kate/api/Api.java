@@ -415,6 +415,7 @@ public class Api {
         params.put("extended", "1");
         params.put("offset",offset);
         params.put("limit",count);
+        params.put("v","4.1");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         if (array == null)
