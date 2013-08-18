@@ -1229,7 +1229,7 @@ public class Api {
     }
     
     //http://vk.com/dev/wall.getComments
-    public CommentList getWallComments(Long owner_id, Long post_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
+    public CommentList getWallComments(Long owner_id, Long post_id, int offset, int count, boolean reverse_order) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.getComments");
         params.put("post_id", post_id);
         params.put("owner_id", owner_id);
@@ -1246,6 +1246,8 @@ public class Api {
         params.put("preview_length", "0");
         params.put("need_likes", "1");
         params.put("v", "4.4");
+        if(reverse_order)
+            params.put("sort", "desc");
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
         CommentList commnets = new CommentList();
