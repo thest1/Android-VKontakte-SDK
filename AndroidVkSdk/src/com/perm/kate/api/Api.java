@@ -601,7 +601,7 @@ public class Api {
         params.put("attachments", arrayToString(attachments));
         if (from_group)
             params.put("from_group", "1");
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         long message_id = root.optLong("response");
         return message_id;
     }
@@ -615,7 +615,7 @@ public class Api {
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message", message);
         params.put("attachments", arrayToString(attachments));
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         int response = root.optInt("response");
         return response == 1;
     }
@@ -629,7 +629,7 @@ public class Api {
         params.put("message",message);
         //if (reply_to != null && !reply_to.equals(""))
         //    params.put("reply_to", reply_to);
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         long message_id = root.optLong("response");
         return message_id;
     }
@@ -641,7 +641,7 @@ public class Api {
         params.put("owner_id", owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message", message);
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         int response = root.optInt("response");
         return response == 1;
     }
@@ -657,7 +657,7 @@ public class Api {
         params.put("attachments", arrayToString(attachments));
         if (from_group)
             params.put("from_group", "1");
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         long message_id = root.optLong("response");
         return message_id;
     }
@@ -670,7 +670,7 @@ public class Api {
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message", message);
         params.put("attachments", arrayToString(attachments));
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         int response = root.optInt("response");
         return response == 1;
     }
@@ -1176,7 +1176,7 @@ public class Api {
         params.put("text", text);
         params.put("attachments", arrayToString(attachments));
         addCaptchaParams(captcha_key, captcha_sid, params);
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         int response = root.optInt("response");
         return response == 1;
     }
@@ -1960,7 +1960,7 @@ public class Api {
         if (from_group)
             params.put("from_group", "1");
         addCaptchaParams(captcha_key, captcha_sid, params);
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         long message_id = root.optLong("response");
         return message_id;
     }
@@ -1974,7 +1974,7 @@ public class Api {
         params.put("text", text);
         params.put("attachments", arrayToString(attachments));
         addCaptchaParams(captcha_key, captcha_sid, params);
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         int response = root.optInt("response");
         return response == 1;
     }
@@ -2453,7 +2453,7 @@ public class Api {
         params.put("long", lon);
         params.put("place_id", place_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
-        JSONObject root = sendRequest(params);
+        JSONObject root = sendRequest(params, true);
         return root.optInt("response");
     }
 
