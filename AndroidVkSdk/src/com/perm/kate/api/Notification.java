@@ -136,7 +136,7 @@ public class Notification implements Serializable {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONArray jfeedback = o.optJSONArray("feedback");//profiles
                 if (jparent != null && jfeedback != null) {
-                    n.parent = Comment.parseNotificationComment(jparent, false);
+                    n.parent = Comment.parseNotificationComment(jparent, true);
                     n.feedback = getProfiles(jfeedback);
                 }
             } else if (n.type.equals(LIKE_COMMENT_PHOTO)) {
