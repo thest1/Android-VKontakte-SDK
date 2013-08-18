@@ -248,6 +248,8 @@ public class Api {
         Params params = new Params("database.getCountries");
         params.put("need_all", need_full);
         params.put("code", code);
+        if (need_full != null && need_full == 1)
+            params.put("count", 1000);
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
         ArrayList<Country> countries = new ArrayList<Country>(); 
