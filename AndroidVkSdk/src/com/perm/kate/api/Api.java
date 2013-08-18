@@ -135,18 +135,15 @@ public class Api {
     }
     
     private String getSignedUrl(Params params, boolean is_post) {
+        params.put("access_token", access_token);
+        
         String args = "";
         if(!is_post)
             args=params.getParamsString();
         
-        //add access_token
-        if(args.length()!=0)
-            args+="&";
-        args+="access_token="+access_token;
-        
         return BASE_URL+params.method_name+"?"+args;
     }
-
+    
     public static String unescape(String text){
         if(text==null)
             return null;
