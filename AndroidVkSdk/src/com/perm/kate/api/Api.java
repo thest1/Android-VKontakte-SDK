@@ -1053,9 +1053,9 @@ public class Api {
         return response.getString("upload_url");
     }
     
-    //http://vkontakte.ru/developers.php?oid=-1&p=getAudioUploadServer
+    //http://vk.com/dev/audio.getUploadServer
     public String getAudioUploadServer() throws MalformedURLException, IOException, JSONException, KException {
-        Params params = new Params("getAudioUploadServer");
+        Params params = new Params("audio.getUploadServer");
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
         return response.getString("upload_url");
