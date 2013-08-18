@@ -17,6 +17,7 @@ public class VkPoll implements Serializable {
     public Long answer_id;
     public String answers_json;
     public boolean anonymous;
+    public Long topic_id;//if poll is attached to topic
     
     public static VkPoll parse(JSONObject o) throws NumberFormatException, JSONException{
         VkPoll v = new VkPoll();

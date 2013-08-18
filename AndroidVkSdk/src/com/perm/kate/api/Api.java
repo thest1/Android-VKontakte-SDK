@@ -1753,10 +1753,12 @@ public class Api {
     }
 
     //http://vkontakte.ru/developers.php?oid=-1&p=polls.getById
-    public VkPoll getPoll(long poll_id, long owner_id) throws JSONException, MalformedURLException, IOException, KException {
+    public VkPoll getPoll(long poll_id, long owner_id, long topic_id) throws JSONException, MalformedURLException, IOException, KException {
         Params params = new Params("polls.getById");
         params.put("owner_id", owner_id);
         params.put("poll_id", poll_id);
+        if(topic_id!=0)
+            params.put("board", topic_id);
         params.put("v", "4.6");
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
@@ -1764,10 +1766,12 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?oid=-1&p=polls.addVote
-    public int addPollVote(long poll_id, long answer_id, long owner_id, String captcha_key, String captcha_sid) throws JSONException, MalformedURLException, IOException, KException {
+    public int addPollVote(long poll_id, long answer_id, long owner_id, long topic_id, String captcha_key, String captcha_sid) throws JSONException, MalformedURLException, IOException, KException {
         Params params = new Params("polls.addVote");
         params.put("owner_id", owner_id);
         params.put("poll_id", poll_id);
+        if(topic_id!=0)
+            params.put("board", topic_id);
         params.put("answer_id", answer_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
@@ -1775,19 +1779,23 @@ public class Api {
     }
 
     //http://vkontakte.ru/developers.php?oid=-1&p=polls.deleteVote
-    public int deletePollVote(long poll_id, long answer_id, long owner_id) throws JSONException, MalformedURLException, IOException, KException {
+    public int deletePollVote(long poll_id, long answer_id, long owner_id, long topic_id) throws JSONException, MalformedURLException, IOException, KException {
         Params params = new Params("polls.deleteVote");
         params.put("owner_id", owner_id);
         params.put("poll_id", poll_id);
+        if(topic_id!=0)
+            params.put("board", topic_id);
         params.put("answer_id", answer_id);
         JSONObject root = sendRequest(params);
         return root.getInt("response");
     }
     
-    public ArrayList<User> getPollVoters(long poll_id, long owner_id, Collection<Long> answer_ids, Long count, Long offset, String fields) throws JSONException, MalformedURLException, IOException, KException {
+    public ArrayList<User> getPollVoters(long poll_id, long owner_id, Collection<Long> answer_ids, Long count, Long offset, String fields, long topic_id) throws JSONException, MalformedURLException, IOException, KException {
         Params params = new Params("polls.getVoters");
         params.put("owner_id", owner_id);
         params.put("poll_id", poll_id);
+        if(topic_id!=0)
+            params.put("board", topic_id);
         params.put("answer_ids", arrayToString(answer_ids));
         params.put("count", count);
         params.put("offset", offset);
@@ -1949,6 +1957,20 @@ public class Api {
                 JSONObject o = comments.getJSONObject(i);
                 Comment c = Comment.parseTopicComment(o);
                 result.comments.add(c);
+            }
+            
+            //topic poll parsed separately
+            if(offset==0){
+                JSONObject poll_json=response.optJSONObject("poll");
+                if(poll_json!=null){
+                    VkPoll poll=VkPoll.parse(poll_json);
+                    poll.topic_id=tid;
+                    Attachment attachment=new Attachment();
+                    attachment.poll=poll;
+                    attachment.type="poll";
+                    if(result.comments.size()>0)
+                        result.comments.get(0).attachments.add(attachment);
+                }
             }
         }
         return result;
