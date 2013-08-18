@@ -1937,7 +1937,7 @@ public class Api {
     }
     
     //http://vk.com/dev/board.getComments
-    public CommentList getGroupTopicComments(long gid, long tid, int photo_sizes, int extended, int count, int offset) throws MalformedURLException, IOException, JSONException, KException{
+    public CommentList getGroupTopicComments(long gid, long tid, int photo_sizes, int extended, int count, int offset, boolean reverse_order) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("board.getComments");
         params.put("gid", gid);
         params.put("tid", tid);
@@ -1949,6 +1949,8 @@ public class Api {
             params.put("count", count);
         if (offset > 0)
             params.put("offset", offset);
+        if(reverse_order)
+            params.put("sort", "desc");
         params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
