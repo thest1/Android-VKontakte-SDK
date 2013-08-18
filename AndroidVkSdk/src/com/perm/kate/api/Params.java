@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 public class Params {
+    //TreeMap нужен был чтобы сортировать параметры по имени, сейчас это уже не важно, главно подписывать и передавать параметры в одном и тотм же порядке
     TreeMap<String, String> args = new TreeMap<String, String>();
     String method_name;
     
@@ -35,7 +36,7 @@ public class Params {
         args.put(param_name, Double.toString(param_value));
     }
     
-    public String getParamsString(boolean is_post) {
+    public String getParamsString() {
         String params="";
         try {
             for(Entry<String, String> entry:args.entrySet()){

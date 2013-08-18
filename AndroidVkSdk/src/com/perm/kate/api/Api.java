@@ -71,7 +71,7 @@ public class Api {
         String url = getSignedUrl(params, is_post);
         String body="";
         if(is_post)
-            body=params.getParamsString(is_post);
+            body=params.getParamsString();
         Log.i(TAG, "url="+url);
         if(body.length()!=0)
             Log.i(TAG, "body="+body);
@@ -137,7 +137,7 @@ public class Api {
     private String getSignedUrl(Params params, boolean is_post) {
         String args = "";
         if(!is_post)
-            args=params.getParamsString(is_post);
+            args=params.getParamsString();
         
         //add access_token
         if(args.length()!=0)
