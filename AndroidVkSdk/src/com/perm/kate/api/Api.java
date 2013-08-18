@@ -197,10 +197,10 @@ public class Api {
     }
 
     /*** API methods ***/
-    //http://vk.com/dev/places.getCities
+    //http://vk.com/dev/database.getCities
     public ArrayList<City> getCitiesByCountry(int country, String q) throws MalformedURLException, IOException, JSONException, KException {
-        Params params = new Params("places.getCities");
-        params.put("country", country);
+        Params params = new Params("database.getCities");
+        params.put("country_id", country);
         params.put("q", q);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
@@ -215,12 +215,12 @@ public class Api {
         return cities;
     }
 
-    //http://vk.com/developers.php?oid=-1&p=places.getCityById
+    //http://vk.com/dev/database.getCitiesById
     public ArrayList<City> getCities(Collection<Long> cids) throws MalformedURLException, IOException, JSONException, KException {
         if (cids == null || cids.size() == 0)
             return null;
-        Params params = new Params("places.getCityById");
-        params.put("cids",arrayToString(cids));
+        Params params = new Params("database.getCitiesById");
+        params.put("city_ids",arrayToString(cids));
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         ArrayList<City> cities=new ArrayList<City>(); 
@@ -246,10 +246,10 @@ public class Api {
         return str_cids;
     }
     
-    //http://vk.com/dev/places.getCountries
+    //http://vk.com/dev/database.getCountries
     public ArrayList<Country> getCountriesByCode(Integer need_full, String code) throws MalformedURLException, IOException, JSONException, KException {
-        Params params = new Params("places.getCountries");
-        params.put("need_full", need_full);
+        Params params = new Params("database.getCountries");
+        params.put("need_all", need_full);
         params.put("code", code);
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
@@ -263,13 +263,13 @@ public class Api {
         return countries;
     }
     
-    //http://vk.com/developers.php?oid=-1&p=places.getCountryById
+    //http://vk.com/dev/database.getCountriesById
     public ArrayList<Country> getCountries(Collection<Long> cids) throws MalformedURLException, IOException, JSONException, KException {
         if (cids == null || cids.size() == 0)
             return null;
-        Params params = new Params("places.getCountryById");
+        Params params = new Params("database.getCountriesById");
         String str_cids = arrayToString(cids);
-        params.put("cids",str_cids);
+        params.put("country_ids",str_cids);
         JSONObject root = sendRequest(params);
         JSONArray array=root.getJSONArray("response");
         ArrayList<Country> countries=new ArrayList<Country>(); 
