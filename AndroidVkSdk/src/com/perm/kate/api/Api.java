@@ -473,7 +473,7 @@ public class Api {
     }
 
     //http://vkontakte.ru/developers.php?o=-1&p=photos.getComments
-    public CommentList getPhotoComments(Long pid, Long owner_id, int offset, int count, String v) throws MalformedURLException, IOException, JSONException, KException{
+    public CommentList getPhotoComments(Long pid, Long owner_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getComments");
         params.put("pid", pid);
         params.put("owner_id", owner_id);
@@ -482,11 +482,13 @@ public class Api {
         if (offset > 0)
             params.put("offset", offset);
         params.put("sort", "asc");
-        params.put("v", v);
+        params.put("v", "4.99");
         params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
         Object x=root.get("response");
         CommentList commnets = new CommentList();
+        //TODO remove later
+        //parse for v=4.99
         if(x instanceof JSONArray){
             JSONArray array = (JSONArray)x;
             commnets.count=array.getInt(0);
@@ -497,6 +499,7 @@ public class Api {
                 commnets.comments.add(comment);
             }
         }
+        //parse for v=5.0
         if(x instanceof JSONObject){
             JSONObject y=(JSONObject)x;
             JSONArray array = y.getJSONArray("items");
@@ -534,7 +537,7 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=video.getComments
-    public CommentList getVideoComments(long video_id, Long owner_id, int offset, int count, String v) throws MalformedURLException, IOException, JSONException, KException{
+    public CommentList getVideoComments(long video_id, Long owner_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.getComments");
         params.put("vid", video_id);
         params.put("owner_id", owner_id);
@@ -542,11 +545,13 @@ public class Api {
             params.put("count", count);
         if (offset > 0)
             params.put("offset", offset);
-        params.put("v", v);
+        params.put("v", "4.99");
         params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
         Object x=root.get("response");
         CommentList commnets = new CommentList();
+        //TODO remove later
+        //parse for v=4.99
         if(x instanceof JSONArray){
             JSONArray array = (JSONArray)x;
             commnets.count=array.getInt(0);
@@ -557,6 +562,7 @@ public class Api {
                 commnets.comments.add(comment);
             }
         }
+        //parse for v=5.0
         if(x instanceof JSONObject){
             JSONObject y=(JSONObject)x;
             JSONArray array = y.getJSONArray("items");
@@ -1228,7 +1234,7 @@ public class Api {
     }
     
     //http://vkontakte.ru/developers.php?o=-1&p=wall.getComments
-    public CommentList getWallComments(Long owner_id, Long post_id, int offset, int count, String v) throws MalformedURLException, IOException, JSONException, KException{
+    public CommentList getWallComments(Long owner_id, Long post_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.getComments");
         params.put("post_id", post_id);
         params.put("owner_id", owner_id);
@@ -1244,7 +1250,7 @@ public class Api {
             params.put("count", count);
         params.put("preview_length", "0");
         params.put("need_likes", "1");
-        params.put("v", v);
+        params.put("v", "4.4");
         JSONObject root = sendRequest(params);
         JSONArray array = root.getJSONArray("response");
         CommentList commnets = new CommentList();
