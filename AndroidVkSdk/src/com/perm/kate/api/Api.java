@@ -2406,6 +2406,18 @@ public class Api {
         return parseAudioList(array, 0);
     }
     
+    //http://vk.com/dev/audio.getPopular
+    public ArrayList<Audio> getAudioPopular() throws MalformedURLException, IOException, JSONException, KException{
+        Params params = new Params("audio.getPopular");
+        //params.put("only_eng", only_eng);
+        //params.put("genre_id", genre_id);
+        //params.put("count", count);
+        //params.put("offset", offset);
+        JSONObject root = sendRequest(params);
+        JSONArray array = root.optJSONArray("response");
+        return parseAudioList(array, 0);
+    }
+    
     //http://vk.com/dev/video.getAlbums
     public ArrayList<AudioAlbum> getVideoAlbums(Long uid, Long gid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.getAlbums");
