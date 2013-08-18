@@ -2122,13 +2122,6 @@ public class Api {
         return Notifications.parse(response);
     }
     
-    //http://vk.com/dev/notifications.markAsViewed
-    public String resetUnreadNotifications() throws MalformedURLException, IOException, JSONException, KException {
-        Params params = new Params("notifications.markAsViewed");
-        JSONObject root = sendRequest(params);
-        return root.getString("response");
-    }
-    
     //http://vk.com/dev/messages.getById
     public ArrayList<Message> getMessagesById(ArrayList<Long> message_ids) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getById");
