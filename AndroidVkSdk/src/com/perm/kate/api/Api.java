@@ -2676,7 +2676,7 @@ public class Api {
     }
     
     //http://vk.com/dev/newsfeed.search
-    public Newsfeed searchNews(String q, Long start_id, int extended, Long start_time, Long end_time, long count, Long offset, double latitude, double longitude, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
+    public Newsfeed searchNews(String q, String start_id, int extended, Long start_time, Long end_time, long count, Long offset, double latitude, double longitude, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("newsfeed.search");
         params.put("q", q);
         params.put("start_id", start_id);
