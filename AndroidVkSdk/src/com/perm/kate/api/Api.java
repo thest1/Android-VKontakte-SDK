@@ -1579,11 +1579,11 @@ public class Api {
         return null;
     }
 
-    //http://vkontakte.ru/developers.php?o=-1&p=video.add
+    //http://vk.com/dev/video.add
     public String addVideo(Long vid, Long oid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("video.add");
-        params.put("vid", vid);
-        params.put("oid", oid);
+        params.put("video_id", vid);
+        params.put("owner_id", oid);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
