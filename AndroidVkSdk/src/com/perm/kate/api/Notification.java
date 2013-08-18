@@ -60,7 +60,7 @@ public class Notification implements Serializable {
                 JSONObject jfeedback = o.optJSONObject("feedback");//post
                 n.parent = null;//empty
                 if (jfeedback != null)
-                    n.feedback = WallMessage.parse(jfeedback);
+                    n.feedback = WallMessage.parseForNotifications(jfeedback);
             } else if (n.type.equals(MENTION_COMMENTS)) {
                 JSONObject jparent = o.optJSONObject("parent"); //post
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment

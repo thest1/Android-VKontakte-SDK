@@ -72,7 +72,8 @@ public class WallMessage implements Serializable {
     public static WallMessage parseForNotifications(JSONObject o) throws JSONException {
         WallMessage wm = new WallMessage();
         wm.id = o.getLong("id");
-        wm.from_id = Long.parseLong(o.getString("owner_id"));
+        wm.from_id = o.getLong("owner_id");
+        wm.to_id = o.optLong("to_id");
         wm.text = Api.unescape(o.getString("text"));
         //likes is there but I don't parse it because I don't need it
         //if (o.has("likes")){
