@@ -50,7 +50,7 @@ public class NewsItem {
         newsitem.post_id = jitem.optLong("post_id");
         newsitem.text = Api.unescape(jitem.optString("text"));
         newsitem.copy_owner_id = jitem.optLong("copy_owner_id");
-        newsitem.copy_text = jitem.optString("copy_text");
+        newsitem.copy_text = Api.unescape(jitem.optString("copy_text"));
         newsitem.signer_id = jitem.optLong("signer_id");
         JSONArray attachments=jitem.optJSONArray("attachments");
         JSONObject geo_json=jitem.optJSONObject("geo");

@@ -50,7 +50,7 @@ public class WallMessage implements Serializable {
             wm.like_can_publish = jlikes.optInt("can_publish")==1;
         }
         wm.copy_owner_id = o.optLong("copy_owner_id");
-        wm.copy_text = o.optString("copy_text");
+        wm.copy_text = Api.unescape(o.optString("copy_text"));
         JSONArray attachments=o.optJSONArray("attachments");
         JSONObject geo_json=o.optJSONObject("geo");
         //владельцем опроса является to_id. Даже если добавить опрос в группу от своего имени, то from_id буду я, но опрос всё-равно будет принадлежать группе.
