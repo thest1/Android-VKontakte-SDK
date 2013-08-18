@@ -1343,11 +1343,12 @@ public class Api {
     }
     
     //http://vk.com/developers.php?oid=-1&p=likes.add
-    public Long addLike(Long owner_id, Long item_id, String type, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public Long addLike(Long owner_id, Long item_id, String type, String access_key, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("likes.add");
         params.put("owner_id", owner_id);
         params.put("item_id", item_id);
         params.put("type", type);
+        params.put("access_key", access_key);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");

@@ -26,6 +26,7 @@ public class Photo implements Serializable {
     public Boolean can_comment;
     public int width;//0 means value is unknown
     public int height;//0 means value is unknown
+    public String access_key;
 
     public static Photo parse(JSONObject o) throws NumberFormatException, JSONException{
         Photo p = new Photo();
@@ -58,6 +59,7 @@ public class Photo implements Serializable {
             p.can_comment = o.optInt("can_comment")==1;
         p.width = o.optInt("width");
         p.height = o.optInt("height");
+        p.access_key=o.optString("access_key");
         return p;
     }
 
