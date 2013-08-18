@@ -1349,30 +1349,6 @@ public class Api {
     }
     
     //http://vk.com/dev/likes.delete
-    public Long deleteLike(Long owner_id, Long item_id, String type) throws MalformedURLException, IOException, JSONException, KException{
-        Params params = new Params("likes.delete");
-        params.put("owner_id", owner_id);
-        params.put("item_id", item_id);
-        params.put("type", type);
-        JSONObject root = sendRequest(params);
-        JSONObject response = root.optJSONObject("response");
-        long likes=response.optLong("likes", -1);
-        return likes;
-    }
-    
-    //http://vk.com/dev/likes.add
-    public Long addLike(Long owner_id, String type, Long item_id, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
-        Params params = new Params("likes.add");
-        params.put("owner_id", owner_id);
-        params.put("type", type);
-        params.put("item_id", item_id);
-        addCaptchaParams(captcha_key, captcha_sid, params);
-        JSONObject root = sendRequest(params);
-        JSONObject response = root.optJSONObject("response");
-        return response.optLong("likes", -1);
-    }
-    
-    //http://vk.com/dev/likes.delete
     public Long deleteLike(Long owner_id, String type, Long item_id, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("likes.delete");
         params.put("owner_id", owner_id);
