@@ -572,8 +572,9 @@ public class Api {
         return commnets;
     }
     
+    //http://vk.com/dev/photos.createComment
     //http://vkontakte.ru/developers.php?o=-1&p=photos.createComment
-    public long createPhotoComment(Long pid, Long owner_id, String message, Long reply_to_cid, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createPhotoComment(Long pid, Long owner_id, String message, Long reply_to_cid, Collection<String> attachments, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.createComment");
         params.put("pid",pid);
         params.put("owner_id",owner_id);
@@ -581,6 +582,8 @@ public class Api {
         params.put("message",message);
         params.put("reply_to_cid", reply_to_cid);
         params.put("attachments", arrayToString(attachments));
+        if (from_group)
+            params.put("from_group", "1");
         JSONObject root = sendRequest(params);
         long message_id = root.optLong("response");
         return message_id;
@@ -626,14 +629,17 @@ public class Api {
         return response == 1;
     }
     
+    //http://vk.com/dev/video.createComment
     //http://vkontakte.ru/developers.php?o=-1&p=video.createComment
-    public long createVideoComment(Long video_id, Long owner_id, String message, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createVideoComment(Long video_id, Long owner_id, String message, Collection<String> attachments, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.createComment");
         params.put("vid",video_id);
         params.put("owner_id",owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message",message);
         params.put("attachments", arrayToString(attachments));
+        if (from_group)
+            params.put("from_group", "1");
         JSONObject root = sendRequest(params);
         long message_id = root.optLong("response");
         return message_id;
@@ -1125,14 +1131,17 @@ public class Api {
         return message_id;
     }*/
     
+    //http://vk.com/dev/wall.addComment
     //http://vkontakte.ru/developers.php?o=-1&p=wall.addComment
-    public long createWallComment(Long owner_id, Long post_id, String text, Long reply_to_cid, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createWallComment(Long owner_id, Long post_id, String text, Long reply_to_cid, Collection<String> attachments, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.addComment");
         params.put("owner_id", owner_id);
         params.put("post_id", post_id);
         params.put("text", text);
         params.put("reply_to_cid", reply_to_cid);
         params.put("attachments", arrayToString(attachments));
+        if (from_group)
+            params.put("from_group","1");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
@@ -1891,6 +1900,7 @@ public class Api {
         return result;
     }
     
+    //http://vk.com/dev/board.getComments
     public CommentList getGroupTopicComments(long gid, long tid, int photo_sizes, int extended, int count, int offset) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("board.getComments");
         params.put("gid", gid);
@@ -1921,12 +1931,14 @@ public class Api {
     }
     
     //http://vk.com/developers.php?oid=-1&p=board.addComment
-    public long createGroupTopicComment(long gid, long tid, String text, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
+    public long createGroupTopicComment(long gid, long tid, String text, Collection<String> attachments, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.addComment");
         params.put("gid", gid);
         params.put("tid", tid);
         params.put("text", text);
         params.put("attachments", arrayToString(attachments));
+        if (from_group)
+            params.put("from_group", "1");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         long message_id = root.optLong("response");
@@ -1947,6 +1959,7 @@ public class Api {
         return response == 1;
     }
     
+    //http://vk.com/dev/board.deleteComment
     public Boolean deleteGroupTopicComment(long gid, long tid, long cid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.deleteComment");
         params.put("gid", gid);
@@ -1957,17 +1970,21 @@ public class Api {
         return response==1;
     }
     
-    public long createGroupTopic(long gid, String title, String text, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
+    //http://vk.com/dev/board.addTopic
+    public long createGroupTopic(long gid, String title, String text, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.addTopic");
         params.put("gid", gid);
         params.put("title", title);
         params.put("text", text);
+        if (from_group)
+            params.put("from_group", "1");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         long topic_id = root.optLong("response");
         return topic_id;
     }
     
+    //http://vk.com/dev/board.deleteTopic
     public Boolean deleteGroupTopic(long gid, long tid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.deleteTopic");
         params.put("gid", gid);
