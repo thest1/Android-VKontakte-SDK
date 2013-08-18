@@ -871,6 +871,7 @@ public class Api {
         Params params = new Params("newsfeed.getComments");
         params.put("last_comments","1");
         params.put("count","50");
+        params.put("v","4.4");
         JSONObject root = sendRequest(params);
         return Newsfeed.parse(root, true);
     }
