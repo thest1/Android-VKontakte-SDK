@@ -692,6 +692,7 @@ public class Api {
         if (count != 0)
             params.put("count", count);
         params.put("preview_length","0");
+        params.put("v","4.0");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
@@ -722,6 +723,7 @@ public class Api {
         if (count != 0)
             params.put("count", count);
         params.put("preview_length","0");
+        params.put("v","4.0");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
