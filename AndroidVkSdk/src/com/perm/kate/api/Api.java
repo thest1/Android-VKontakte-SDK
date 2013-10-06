@@ -20,7 +20,7 @@ public class Api {
     static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
-    public static final String API_VERSION="4.98";
+    public static final String API_VERSION="4.99";
     
     public Api(String access_token, String api_id){
         this.access_token=access_token;
@@ -481,7 +481,6 @@ public class Api {
         if (offset > 0)
             params.put("offset", offset);
         params.put("sort", "asc");
-        params.put("v", "4.99");
         params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
         Object x=root.get("response");
@@ -544,7 +543,6 @@ public class Api {
             params.put("count", count);
         if (offset > 0)
             params.put("offset", offset);
-        params.put("v", "4.99");
         params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
         Object x=root.get("response");
@@ -827,10 +825,9 @@ public class Api {
     }
 
     //http://vk.com/dev/status.set
-    public String setStatus(String status_text, String audio) throws MalformedURLException, IOException, JSONException, KException{
+    public String setStatus(String status_text) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("status.set");
         params.put("text", status_text);
-        params.put("audio", audio); //oid_aid
         JSONObject root = sendRequest(params);
         Object response_id = root.opt("response");
         if (response_id != null)
@@ -2553,15 +2550,17 @@ public class Api {
     //gets status of broadcasting user current audio to his page
     public boolean audioGetBroadcast() throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("audio.getBroadcast");
+        //метод устаревший, можно передавать старую версию 4.98 если перестанет работать. Замены ему пока нет http://vk.com/bugs?act=show&id=4717174_23
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
         return response.optInt("enabled")==1;
     }
 
     //http://vk.com/dev/audio.setBroadcast
-    public boolean audioSetBroadcast(boolean enabled) throws MalformedURLException, IOException, JSONException, KException {
+    public boolean audioSetBroadcast(String audio, String target_ids) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("audio.setBroadcast");
-        params.put("enabled",enabled?"1":"0");
+        params.put("audio",audio);
+        params.put("target_ids",target_ids);
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
         return response.optInt("enabled")==1;
@@ -2688,7 +2687,6 @@ public class Api {
             params.putDouble("latitude", latitude);
         if (longitude != 0)
             params.putDouble("longitude", longitude);
-        params.put("v", "4.99");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         return Newsfeed.parseFromSearch(root);
