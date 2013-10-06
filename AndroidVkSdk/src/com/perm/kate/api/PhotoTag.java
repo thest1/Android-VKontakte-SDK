@@ -21,7 +21,11 @@ public class PhotoTag {
     
     public static PhotoTag parse(JSONObject o) throws NumberFormatException, JSONException {
         PhotoTag t = new PhotoTag();
-        t.uid = o.getLong("user_id");
+        //Баг в API - должно быть user_id - уже исправлен, оставил старое пока для подстраховки, можно удалить уже
+        if(o.has("user_id"))
+            t.uid = o.getLong("user_id");
+        else
+            t.uid = o.getLong("photo_id");
         t.tag_id = o.optLong("id");
         t.placer_id = o.optLong("placer_id");
         t.tagged_name = Api.unescape(o.optString("tagged_name"));
