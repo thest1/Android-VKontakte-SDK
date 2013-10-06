@@ -1153,7 +1153,7 @@ public class Api {
     }
     
     //http://vk.com/dev/wall.post
-    public long createWallPost(long owner_id, String text, Collection<String> attachments, String export, boolean only_friends, boolean from_group, boolean signed, String lat, String lon, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public long createWallPost(long owner_id, String text, Collection<String> attachments, String export, boolean only_friends, boolean from_group, boolean signed, String lat, String lon, Long publish_date, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.post");
         params.put("owner_id", owner_id);
         params.put("attachments", arrayToString(attachments));
@@ -1168,6 +1168,7 @@ public class Api {
             params.put("friends_only","1");
         if (signed)
             params.put("signed","1");
+        params.put("publish_date", publish_date);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params, true);
         JSONObject response = root.getJSONObject("response");
