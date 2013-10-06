@@ -20,7 +20,7 @@ public class Api {
     static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
-    public static final String API_VERSION="4.92";
+    public static final String API_VERSION="4.93";
     
     public Api(String access_token, String api_id){
         this.access_token=access_token;
@@ -364,7 +364,7 @@ public class Api {
         params.put("filter", filter); //likes - default, copies 
         JSONObject root = sendRequest(params);
         JSONObject response=root.getJSONObject("response");
-        JSONArray array=response.optJSONArray("users");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Long> users=new ArrayList<Long>();
         if (array != null) {
             int category_count=array.length();
