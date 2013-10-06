@@ -35,10 +35,6 @@ public class Video implements Serializable{
         v.duration = o.optLong("duration");
         v.description = Api.unescape(o.optString("description"));
         v.image = o.optString("photo_130");
-        //video.getUserVideos возвращает видео неправильно - баг в API
-        if(!o.has("photo_130") && o.has("photo_160"))
-            v.image = o.optString("photo_160");
-        
         v.image_big = o.optString("photo_320");
         v.date = o.optLong("date");
         v.player = o.optString("player");
