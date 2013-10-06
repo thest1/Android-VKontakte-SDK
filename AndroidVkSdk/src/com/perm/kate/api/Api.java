@@ -2746,4 +2746,15 @@ public class Api {
         int response = root.optInt("response");
         return response==1;
     }
+    
+    //http://vk.com/dev/photos.copy
+    public Long photoCopy(long owner_id, long photo_id) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("photos.copy");
+        params.put("owner_id", owner_id);
+        params.put("photo_id", photo_id);
+        params.put("v", "5.0");
+        JSONObject root = sendRequest(params);
+        Long response = root.optLong("response");
+        return response;
+    }
 }
