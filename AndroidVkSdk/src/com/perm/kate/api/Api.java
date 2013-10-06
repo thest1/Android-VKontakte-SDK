@@ -918,8 +918,10 @@ public class Api {
         params.put("access_key", access_key);
         JSONObject root = sendRequest(params);
         JSONObject response=root.optJSONObject("response");
-        JSONArray array=response.optJSONArray("items");
         ArrayList<Video> videoss = new ArrayList<Video>();
+        if(response==null)
+            return videoss;
+        JSONArray array=response.optJSONArray("items");
         if (array != null) {
             for(int i = 0; i<array.length(); ++i) {
                 JSONObject o = (JSONObject)array.get(i);
