@@ -60,8 +60,15 @@ public class WallMessage implements Serializable {
         JSONArray copy_history_json=o.optJSONArray("copy_history");
         if(copy_history_json!=null){
             wm.copy_history=new ArrayList<WallMessage>();
-            for(int i=0;i<copy_history_json.length();++i)
-                wm.copy_history.add(parse(copy_history_json.getJSONObject(i)));
+            for(int i=0;i<copy_history_json.length();++i){
+                JSONObject history_item=copy_history_json.getJSONObject(i);
+                
+                //empty items happen sometimes, seems to be bug in API
+                if(history_item.isNull("id"))
+                    continue;
+                
+                wm.copy_history.add(parse(history_item));
+            }
         }
         JSONArray attachments=o.optJSONArray("attachments");
         JSONObject geo_json=o.optJSONObject("geo");
