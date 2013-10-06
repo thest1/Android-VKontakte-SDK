@@ -2391,8 +2391,7 @@ public class Api {
     public ArrayList<Audio> getAudioRecommendations() throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.getRecommendations");
         JSONObject root = sendRequest(params);
-        JSONObject response=root.optJSONObject("response");
-        JSONArray array=response.optJSONArray("items");
+        JSONArray array=root.optJSONArray("response");
         return parseAudioList(array);
     }
     
@@ -2404,8 +2403,7 @@ public class Api {
         //params.put("count", count);
         //params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONObject response=root.optJSONObject("response");
-        JSONArray array=response.optJSONArray("items");
+        JSONArray array=root.optJSONArray("response");
         return parseAudioList(array);
     }
     
