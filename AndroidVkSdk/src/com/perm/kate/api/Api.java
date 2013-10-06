@@ -1271,6 +1271,7 @@ public class Api {
     public String deleteAudio(Long aid, Long oid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.delete");
         params.put("audio_id", aid);
+        params.put("album_id", aid);//Баг в Api - это лишний параметр
         params.put("owner_id", oid);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
