@@ -2550,9 +2550,11 @@ public class Api {
         Params params = new Params("audio.setBroadcast");
         params.put("audio",audio);
         params.put("target_ids",target_ids);
-        JSONObject root = sendRequest(params);
-        JSONObject response = root.optJSONObject("response");
-        return response.optInt("enabled")==1;
+        sendRequest(params);
+        //В случае успешного выполнения возвращает массив идентификаторов сообществ и пользователя, которым был установлен или удален аудиостатус.
+        //response: [1661530]
+        //нет необходимости парсить пока
+        return true;
     }
     
     //http://vk.com/dev/audio.addAlbum
