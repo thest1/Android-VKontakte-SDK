@@ -10,7 +10,7 @@ public class FriendsList {
 
     public static FriendsList parse(JSONObject o) throws JSONException {
         FriendsList fl = new FriendsList();
-        fl.lid = o.getInt("lid");
+        fl.lid = o.getInt("list_id");
         fl.name = o.getString("name");
         return fl;
     }
