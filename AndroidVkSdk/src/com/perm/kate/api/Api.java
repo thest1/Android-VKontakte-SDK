@@ -2403,12 +2403,9 @@ public class Api {
     }
     
     //http://vk.com/dev/video.getAlbums
-    public ArrayList<AudioAlbum> getVideoAlbums(Long uid, Long gid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<AudioAlbum> getVideoAlbums(long owner_id, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.getAlbums");
-        if(uid!=null)
-            params.put("owner_id", uid);
-        if(gid!=null)
-            params.put("owner_id", gid);
+        params.put("owner_id", owner_id);
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
