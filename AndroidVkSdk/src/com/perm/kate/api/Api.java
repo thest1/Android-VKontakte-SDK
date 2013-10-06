@@ -1464,7 +1464,7 @@ public class Api {
     //http://vk.com/dev/users.search
     public ArrayList<User> searchUser(String q, String fields, Long count, Long offset, Integer sort,
             Integer city, Integer country, String hometown, Integer university_country, Integer university, Integer university_year,
-            Integer sex, Integer age_from, Integer age_to, Integer birth_day, Integer birth_month, Integer birth_year,
+            Integer sex, Integer status, Integer age_from, Integer age_to, Integer birth_day, Integer birth_month, Integer birth_year,
             Integer online, Integer has_photo, Integer school_country, Integer school_city, Integer school, Integer school_year, 
             String religion, String interests, String company, String position, Long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("users.search");
@@ -1488,6 +1488,8 @@ public class Api {
             params.put("university_year", university_year);
         if (sex != null && sex > 0)
             params.put("sex", sex);
+        if (status != null && status > 0)
+            params.put("status", status);
         if (age_from != null && age_from > 0)
             params.put("age_from", age_from);
         if (age_to != null && age_to > 0)
@@ -1527,7 +1529,7 @@ public class Api {
     
     public ArrayList<User> searchUserExtended(String q, String fields, Long count, Long offset, Integer sort,
             Integer city, Integer country, String hometown, Integer university_country, Integer university, Integer university_year,
-            Integer sex, Integer age_from, Integer age_to, Integer birth_day, Integer birth_month, Integer birth_year,
+            Integer sex, Integer status, Integer age_from, Integer age_to, Integer birth_day, Integer birth_month, Integer birth_year,
             Integer online, Integer has_photo, Integer school_country, Integer school_city, Integer school, Integer school_year, 
             String religion, String interests, String company, String position, Long gid) throws MalformedURLException, IOException, JSONException, KException {
         String uids = Utils.parseProfileId(q);
@@ -1544,7 +1546,7 @@ public class Api {
         } else
             return searchUser(q, fields, count, offset, sort, 
                     city, country, hometown, university_country, university, university_year, 
-                    sex, age_from, age_to, birth_day, birth_month, birth_year, 
+                    sex, status, age_from, age_to, birth_day, birth_month, birth_year, 
                     online, has_photo, school_country, school_city, school, school_year, 
                     religion, interests, company, position, gid);
     }
