@@ -2758,4 +2758,13 @@ public class Api {
         Long response = root.optLong("response");
         return response;
     }
+    
+    //http://vk.com/dev/account.setOffline
+    public Long setOffline() throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("account.setOffline");
+        params.put("v", "5.0");
+        JSONObject root = sendRequest(params);
+        Long response = root.optLong("response");
+        return response;
+    }
 }
