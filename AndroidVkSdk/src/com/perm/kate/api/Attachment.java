@@ -41,17 +41,17 @@ public class Attachment implements Serializable {
                     if(x!=null)
                         attachment.photo=Photo.parse(x);
                 }
-                if(attachment.type.equals("graffiti"))
+                else if(attachment.type.equals("graffiti"))
                     attachment.graffiti=Graffiti.parse(json_attachment.getJSONObject("graffiti"));
-                if(attachment.type.equals("link"))
+                else if(attachment.type.equals("link"))
                     attachment.link=Link.parse(json_attachment.getJSONObject("link"));
-                if(attachment.type.equals("audio"))
+                else if(attachment.type.equals("audio"))
                     attachment.audio=Audio.parse(json_attachment.getJSONObject("audio"));
-                if(attachment.type.equals("note"))
+                else if(attachment.type.equals("note"))
                     attachment.note=Note.parse(json_attachment.getJSONObject("note"), false);
-                if(attachment.type.equals("video"))
+                else if(attachment.type.equals("video"))
                     attachment.video=Video.parseForAttachments(json_attachment.getJSONObject("video"));
-                if(attachment.type.equals("poll")){
+                else if(attachment.type.equals("poll")){
                     attachment.poll=VkPoll.parse(json_attachment.getJSONObject("poll"));
                     if(attachment.poll.owner_id==0){
                         if(copy_owner_id!=0)
@@ -60,11 +60,11 @@ public class Attachment implements Serializable {
                             attachment.poll.owner_id=from_id;
                     }
                 }
-                if(attachment.type.equals("doc"))
+                else if(attachment.type.equals("doc"))
                     attachment.document=Document.parse(json_attachment.getJSONObject("doc"));
-                if(attachment.type.equals("wall"))
+                else if(attachment.type.equals("wall"))
                     attachment.wallMessage=WallMessage.parse(json_attachment.getJSONObject("wall"));
-                if(attachment.type.equals("page"))
+                else if(attachment.type.equals("page"))
                     attachment.page=Page.parseFromAttachment(json_attachment.getJSONObject("page"));
                 attachments_arr.add(attachment);
             }
