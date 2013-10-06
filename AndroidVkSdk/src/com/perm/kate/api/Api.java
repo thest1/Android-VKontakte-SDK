@@ -20,7 +20,7 @@ public class Api {
     static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
-    public static final String API_VERSION="4.91";
+    public static final String API_VERSION="4.92";
     
     public Api(String access_token, String api_id){
         this.access_token=access_token;
@@ -899,7 +899,7 @@ public class Api {
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
-        return parseAudioList(array, 0);
+        return parseAudioList(array, 1);
     }
     
     //http://vk.com/dev/audio.getById
