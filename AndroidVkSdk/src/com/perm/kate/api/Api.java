@@ -2590,7 +2590,7 @@ public class Api {
     public Integer moveToAudioAlbum(Collection<Long> aids, long album_id, Long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("audio.moveToAlbum");
         params.put("audio_ids", arrayToString(aids));
-        params.put("album_ids", arrayToString(aids));//album_ids instead audio_ids
+        params.put("album_ids", arrayToString(aids));//album_ids instead audio_ids - Баг в API
         params.put("album_id", album_id);
         params.put("group_id", gid);
         JSONObject root = sendRequest(params);
