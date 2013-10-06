@@ -36,7 +36,13 @@ public class Video implements Serializable{
         v.duration = o.optLong("duration");
         v.description = Api.unescape(o.optString("description"));
         v.image = o.optString("photo_130");
+        //notifications.get возвращает видео по-старому в типе like_video - баг в API
+        if(!o.has("photo_130") && o.has("image"))
+            v.image = o.optString("image");
         v.image_big = o.optString("photo_320");
+        //notifications.get возвращает видео по-старому в типе like_video - баг в API
+        if(!o.has("photo_320") && o.has("image_medium"))
+            v.image_big = o.optString("image_medium");
         v.date = o.optLong("date");
         v.player = o.optString("player");
         if (o.has("views"))
