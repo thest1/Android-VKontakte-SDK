@@ -78,8 +78,14 @@ public class Comment implements Serializable {
     
     public static Comment parseNotificationComment(JSONObject o, boolean parse_post) throws NumberFormatException, JSONException{
         Comment comment = new Comment();
-        comment.cid = o.getLong("id");
-        comment.from_id = o.getLong("owner_id");
+        if(o.has("id"))
+            comment.cid = o.getLong("id");
+        else
+            comment.cid = o.getLong("cid");//fix for reply_comment и comment_post, поле feedback
+        if(o.has("owner_id"))
+            comment.from_id = o.getLong("owner_id");
+        else
+            comment.from_id = o.getLong("from_id");//or uid. fix for reply_comment и comment_post, поле feedback
         comment.date = o.getLong("date");
         comment.message = Api.unescape(o.getString("text"));
         if (o.has("likes")){

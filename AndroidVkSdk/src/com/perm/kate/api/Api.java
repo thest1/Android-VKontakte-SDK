@@ -20,7 +20,7 @@ public class Api {
     static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
-    public static final String API_VERSION="4.6";
+    public static final String API_VERSION="4.7";
     
     public Api(String access_token, String api_id){
         this.access_token=access_token;
