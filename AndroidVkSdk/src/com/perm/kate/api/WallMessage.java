@@ -29,16 +29,24 @@ public class WallMessage implements Serializable {
     public int reposts_count;
     public boolean user_reposted;
     
+    //deprecated fields
     public long copy_owner_id=0;
     public long copy_post_id=0;
     public String copy_text;
+    
+    public ArrayList<WallMessage> copy_history;
+    
     public long signer_id=0;
     
     public static WallMessage parse(JSONObject o) throws JSONException {
         WallMessage wm = new WallMessage();
         wm.id = o.getLong("id");
         wm.from_id = o.getLong("from_id");
-        wm.to_id = o.getLong("to_id");
+        if(o.has("to_id"))
+            wm.to_id = o.getLong("to_id");
+        else
+            //in copy_history owner_id is used
+            wm.to_id = o.getLong("owner_id");
         wm.date = o.optLong("date");
         wm.online = o.optString("online");
         wm.text = Api.unescape(o.optString("text"));
@@ -49,8 +57,12 @@ public class WallMessage implements Serializable {
             wm.can_like = jlikes.optInt("can_like")==1;
             wm.like_can_publish = jlikes.optInt("can_publish")==1;
         }
-        wm.copy_owner_id = o.optLong("copy_owner_id");
-        wm.copy_text = Api.unescape(o.optString("copy_text"));
+        JSONArray copy_history_json=o.optJSONArray("copy_history");
+        if(copy_history_json!=null){
+            wm.copy_history=new ArrayList<WallMessage>();
+            for(int i=0;i<copy_history_json.length();++i)
+                wm.copy_history.add(parse(copy_history_json.getJSONObject(i)));
+        }
         JSONArray attachments=o.optJSONArray("attachments");
         JSONObject geo_json=o.optJSONObject("geo");
         //владельцем опроса является to_id. Даже если добавить опрос в группу от своего имени, то from_id буду я, но опрос всё-равно будет принадлежать группе.

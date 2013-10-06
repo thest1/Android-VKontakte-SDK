@@ -12,9 +12,14 @@ public class NewsItem {
     public long from_id;//когда пост приходит в комментариях, то в source_id там стена, а в from_id автор сообщения.
     public long date;
     public long post_id;
+    
+    //deprecated fields
     public long copy_owner_id;
     public long copy_post_id;
     public String copy_text;
+    
+    public ArrayList<WallMessage> copy_history;
+    
     public String text;
     public long signer_id=0;
 
@@ -49,8 +54,14 @@ public class NewsItem {
         newsitem.date = jitem.optLong("date");
         newsitem.post_id = jitem.optLong("post_id");
         newsitem.text = Api.unescape(jitem.optString("text"));
-        newsitem.copy_owner_id = jitem.optLong("copy_owner_id");
-        newsitem.copy_text = Api.unescape(jitem.optString("copy_text"));
+        
+        JSONArray copy_history_json=jitem.optJSONArray("copy_history");
+        if(copy_history_json!=null){
+            newsitem.copy_history=new ArrayList<WallMessage>();
+            for(int i=0;i<copy_history_json.length();++i)
+                newsitem.copy_history.add(WallMessage.parse(copy_history_json.getJSONObject(i)));
+        }
+        
         newsitem.signer_id = jitem.optLong("signer_id");
         JSONArray attachments=jitem.optJSONArray("attachments");
         JSONObject geo_json=jitem.optJSONObject("geo");
