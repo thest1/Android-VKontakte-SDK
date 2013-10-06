@@ -25,6 +25,8 @@ public class Group implements Serializable {
     public String wiki_page;
     public Long fixed_post;
     public Boolean can_see_all_posts;//can_see_all_posts=false означает что стена закрыта
+    public Boolean is_admin;
+    public Integer admin_level;//1-moder, 2-editor, 3-admin
 
     public static Group parse(JSONObject o) throws JSONException{
         Group g=new Group();
@@ -57,6 +59,17 @@ public class Group implements Serializable {
 
         if(o.has("can_see_all_posts"))
             g.can_see_all_posts=o.optInt("can_see_all_posts", 1)==1;
+        
+        //if doesn't exist it means valuse is unknown
+        if(o.has("is_admin"))
+            //opt because there may be something unparseable
+            g.is_admin=o.optInt("is_admin", 0)==1;
+        
+        //if doesn't exist it means valuse is unknown
+        if(o.has("admin_level"))
+            //opt because there may be something unparseable
+            g.admin_level=o.optInt("admin_level", 1);
+        
         return g;
     }
     
