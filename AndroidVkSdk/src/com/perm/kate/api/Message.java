@@ -24,7 +24,7 @@ public class Message implements Serializable {
     public static Message parse(JSONObject o, boolean from_history, long history_uid, boolean from_chat, long me) throws NumberFormatException, JSONException{
         Message m = new Message();
         if(from_chat){
-            long from_id=o.getLong("from_id");
+            long from_id=o.getLong("user_id");
             m.uid = from_id;
             m.is_out=(from_id==me);
         }else if(from_history){
@@ -33,10 +33,10 @@ public class Message implements Serializable {
             m.is_out=!(from_id==history_uid);
         }else{
             //тут не очень, потому что при получении списка диалогов если есть моё сообщение, которое я написал в беседу, то в нём uid будет мой. Хотя в других случайх uid всегда собеседника.
-            m.uid = o.getLong("uid");
+            m.uid = o.getLong("user_id");
             m.is_out = o.optInt("out")==1;
         }
-        m.mid = o.optLong("mid");
+        m.mid = o.optLong("id");
         m.date = o.optLong("date");
         m.title = Api.unescape(o.optString("title"));
         m.body = Api.unescapeWithSmiles(o.optString("body"));
@@ -122,7 +122,7 @@ public class Message implements Serializable {
                 } else if (type.equals("chat")) {
                     item.type = SDIType.CHAT;
                     Message m = new Message();
-                    m.chat_id = o.getLong("chat_id");
+                    m.chat_id = o.getLong("id");
                     m.admin_id = o.getLong("admin_id");
                     m.title = o.getString("title");
                     JSONArray users = o.optJSONArray("users");

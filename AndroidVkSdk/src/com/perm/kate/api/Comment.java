@@ -24,14 +24,18 @@ public class Comment implements Serializable {
 
     public static Comment parse(JSONObject o) throws NumberFormatException, JSONException{
         Comment comment=new Comment();
-        comment.cid = Long.parseLong(o.getString("cid"));
-        comment.from_id = Long.parseLong(o.getString("from_id"));
+        comment.cid = o.optLong("id");
+        //в newsfeed.getComments комментарии приходят по-старому - баг в API
+        if(!o.has("id") && o.has("cid"))
+            comment.cid = o.optLong("cid");
+        
+        comment.from_id = o.optLong("from_id");
         comment.date = o.optLong("date");
         comment.message = Api.unescape(o.optString("text"));
-        String reply_to_uid = o.optString("reply_to_uid");
+        String reply_to_uid = o.optString("reply_to_user");
         if (reply_to_uid != null && !reply_to_uid.equals(""))
             comment.reply_to_uid = Long.parseLong(reply_to_uid);
-        String reply_to_cid = o.optString("reply_to_cid");
+        String reply_to_cid = o.optString("reply_to_comment");
         if (reply_to_cid != null && !reply_to_cid.equals(""))
             comment.reply_to_cid = Long.parseLong(reply_to_cid);
         parseLikes(o, comment);
@@ -78,14 +82,11 @@ public class Comment implements Serializable {
     
     public static Comment parseNotificationComment(JSONObject o, boolean parse_post) throws NumberFormatException, JSONException{
         Comment comment = new Comment();
-        if(o.has("id"))
-            comment.cid = o.getLong("id");
-        else
-            comment.cid = o.getLong("cid");//fix for reply_comment и comment_post, поле feedback
+        comment.cid = o.getLong("id");
         if(o.has("owner_id"))
             comment.from_id = o.getLong("owner_id");
         else
-            comment.from_id = o.getLong("from_id");//or uid. fix for reply_comment и comment_post, поле feedback
+            comment.from_id = o.getLong("from_id");//or uid. fix for reply_comment и comment_post, поле feedback. Баг в API.
         comment.date = o.getLong("date");
         comment.message = Api.unescape(o.getString("text"));
         if (o.has("likes")){

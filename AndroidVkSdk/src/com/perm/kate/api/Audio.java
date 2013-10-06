@@ -16,12 +16,9 @@ public class Audio implements Serializable {
 
     public static Audio parse(JSONObject o) throws NumberFormatException, JSONException{
         Audio audio = new Audio();
-        audio.aid = Long.parseLong(o.getString("aid"));
+        audio.aid = Long.parseLong(o.getString("id"));
         audio.owner_id = Long.parseLong(o.getString("owner_id"));
-        if(o.has("performer"))
-            audio.artist = Api.unescape(o.optString("performer"));
-        else if(o.has("artist"))
-            audio.artist = Api.unescape(o.optString("artist"));
+        audio.artist = Api.unescape(o.optString("artist"));
         audio.title = Api.unescape(o.optString("title"));
         audio.duration = Long.parseLong(o.getString("duration"));
         audio.url = o.optString("url", null);

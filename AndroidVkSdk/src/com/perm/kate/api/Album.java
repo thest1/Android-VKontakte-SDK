@@ -19,7 +19,7 @@ public class Album {
     public static Album parse(JSONObject o) throws JSONException {
         Album a = new Album();
         a.title = Api.unescape(o.optString("title"));
-        a.aid = Long.parseLong(o.getString("aid"));
+        a.aid = Long.parseLong(o.getString("id"));
         a.owner_id = Long.parseLong(o.getString("owner_id"));
         String description = o.optString("description");
         if (description != null && !description.equals("") && !description.equals("null"))

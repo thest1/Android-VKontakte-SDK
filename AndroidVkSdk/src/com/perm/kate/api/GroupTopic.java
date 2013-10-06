@@ -19,7 +19,7 @@ public class GroupTopic implements Serializable {
     
     public static GroupTopic parse(JSONObject o) throws NumberFormatException, JSONException {
         GroupTopic topic = new GroupTopic();
-        topic.tid = o.getLong("tid");
+        topic.tid = o.getLong("id");
         topic.title = Api.unescape(o.getString("title"));
         topic.created = o.optLong("created");
         topic.created_by = o.optLong("created_by");

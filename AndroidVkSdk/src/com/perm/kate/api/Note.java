@@ -14,22 +14,23 @@ public class Note implements Serializable {
     public long ncom=-1;
     //public long read_ncom=-1;
 
-    public static Note parse(JSONObject o, boolean is_get) throws NumberFormatException, JSONException{
+    public static Note parse(JSONObject o) throws NumberFormatException, JSONException{
         Note note = new Note();
-        if(is_get)
-            note.nid = o.getLong("nid");
-        else
-            note.nid = Long.parseLong(o.optString("nid"));
-        if(is_get)
-            note.owner_id = Long.parseLong(o.getString("uid"));
-        else
-            note.owner_id = o.getLong("owner_id");
+        note.nid = o.optLong("id");
+        
+        //в новости "добавил заметку" заметка приходит по-старому - баг в API
+        if(!o.has("id") && o.has("nid"))
+            note.nid = o.optLong("nid");
+        
+        note.owner_id = o.getLong("owner_id");
         note.title = Api.unescape(o.getString("title"));
-        if(is_get)
-            note.ncom = Long.parseLong(o.optString("ncom"));
-        else
+        note.ncom = o.optLong("comments");
+        
+        //в новости "добавил заметку" заметка приходит по-старому - баг в API
+        if(!o.has("comments") && o.has("ncom"))
             note.ncom = o.optLong("ncom");
-        //note.read_ncom = o.optLong("read_ncom");
+        
+        //note.read_ncom = o.optLong("read_comments");
         note.text=o.optString("text");
         note.date = o.optLong("date");
         return note;

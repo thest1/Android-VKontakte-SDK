@@ -85,18 +85,20 @@ public class NewsItem {
             newsitem.user_reposted = jlikes.optInt("user_reposted")==1;
         }
         if (jitem.has(NewsJTags.PHOTO_TAGS)){
-            JSONArray jphoto_tags = jitem.getJSONArray(NewsJTags.PHOTO_TAGS);
+            JSONObject response=jitem.optJSONObject(NewsJTags.PHOTO_TAGS);
+            JSONArray jphoto_tags=response.optJSONArray("items");
             newsitem.photo_tags = new ArrayList<Photo>();
-            for(int j = 1; j < jphoto_tags.length(); j++) {
+            for(int j = 0; j < jphoto_tags.length(); j++) {
                 JSONObject jphoto_tag = (JSONObject)jphoto_tags.get(j);
                 Photo photo = Photo.parse(jphoto_tag);
                 newsitem.photo_tags.add(photo);
             }
         }
         if (jitem.has(NewsJTags.PHOTOS)){
-            JSONArray jphotos = jitem.getJSONArray(NewsJTags.PHOTOS);
+            JSONObject response=jitem.optJSONObject(NewsJTags.PHOTOS);
+            JSONArray jphotos=response.optJSONArray("items");
             newsitem.photos = new ArrayList<Photo>();
-            for(int j = 1; j < jphotos.length(); j++) {
+            for(int j = 0; j < jphotos.length(); j++) {
                 JSONObject jphoto = (JSONObject)jphotos.get(j);
                 Photo photo = Photo.parse(jphoto);
                 newsitem.photos.add(photo);
@@ -110,20 +112,22 @@ public class NewsItem {
         }
         if (jitem.has(NewsJTags.FRIENDS))
         {
-            JSONArray jfriends = jitem.getJSONArray(NewsJTags.FRIENDS);
+            JSONObject response=jitem.optJSONObject(NewsJTags.FRIENDS);
+            JSONArray jfriends=response.optJSONArray("items");
             newsitem.friends = new ArrayList<String>();
-            for(int j = 1; j < jfriends.length(); ++j) {
+            for(int j = 0; j < jfriends.length(); ++j) {
                 JSONObject jfriend = (JSONObject)jfriends.get(j);
                 newsitem.friends.add(jfriend.getString("uid"));
             }
         }
         if (jitem.has(NewsJTags.NOTES))
         {
-            JSONArray jnotes = jitem.getJSONArray(NewsJTags.NOTES);
+            JSONObject response=jitem.optJSONObject(NewsJTags.NOTES);
+            JSONArray jnotes=response.optJSONArray("items");
             newsitem.notes = new ArrayList<Note>();
-            for(int j = 1; j < jnotes.length(); ++j) {
+            for(int j = 0; j < jnotes.length(); ++j) {
                 JSONObject jnote = (JSONObject)jnotes.get(j);
-                Note note = Note.parse(jnote, false);
+                Note note = Note.parse(jnote);
                 newsitem.notes.add(note);
             }
         }

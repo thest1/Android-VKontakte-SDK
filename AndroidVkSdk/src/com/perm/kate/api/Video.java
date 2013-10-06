@@ -14,6 +14,7 @@ public class Video implements Serializable{
     public String link1;
     public String image;//130*120
     public String image_big;//320*240
+    //public String photo_640;
     public long date;
     public String player;
     //files
@@ -28,19 +29,20 @@ public class Video implements Serializable{
     
     public static Video parse(JSONObject o) throws NumberFormatException, JSONException{
         Video v = new Video();
-        if(o.has("vid"))
-            v.vid = o.getLong("vid");
-        if(o.has("id"))//video.getUserVideos
-            v.vid = Long.parseLong(o.getString("id"));
+        v.vid = o.getLong("id");
         v.owner_id = o.getLong("owner_id");
         v.title = Api.unescape(o.optString("title"));
         v.duration = o.optLong("duration");
         v.description = Api.unescape(o.optString("description"));
-        if(o.has("image"))
-            v.image = o.optString("image");
-        v.image_big = o.optString("image_medium");
-        if(o.has("thumb"))//video.getUserVideos
+        v.image = o.optString("photo_130");
+        //video.getUserVideos возвращает видео по-старому - баг в API
+        if(!o.has("photo_130") && o.has("thumb"))
             v.image = o.optString("thumb");
+        
+        v.image_big = o.optString("photo_320");
+        //video.getUserVideos возвращает видео по-старому - баг в API
+        if(!o.has("photo_320") && o.has("image_medium"))
+            v.image_big = o.optString("image_medium");
         v.date = o.optLong("date");
         v.player = o.optString("player");
         
@@ -58,10 +60,7 @@ public class Video implements Serializable{
     
     public static Video parseForAttachments(JSONObject o) throws NumberFormatException, JSONException{
         Video v = new Video();
-        if(o.has("vid"))
-            v.vid = o.getLong("vid");
-        if(o.has("id"))//video.getUserVideos
-            v.vid = Long.parseLong(o.getString("id"));
+        v.vid = o.getLong("id");
         v.owner_id = o.getLong("owner_id");
         v.title = Api.unescape(o.getString("title"));
         v.duration = o.getLong("duration");

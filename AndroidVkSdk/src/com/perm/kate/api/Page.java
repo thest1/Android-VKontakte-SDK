@@ -17,8 +17,8 @@ public class Page implements Serializable{
     public static Page parseFromAttachment(JSONObject o) throws NumberFormatException, JSONException{
         Page page = new Page();
         page.title = Api.unescape(o.optString("title"));
-        page.id = o.optLong("pid");
-        page.group_id = o.optLong("gid");
+        page.id = o.optLong("id");
+        page.group_id = o.optLong("group_id");
         return page;
     }
 }

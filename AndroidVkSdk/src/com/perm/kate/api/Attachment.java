@@ -49,7 +49,7 @@ public class Attachment implements Serializable {
                 else if(attachment.type.equals("audio"))
                     attachment.audio=Audio.parse(json_attachment.getJSONObject("audio"));
                 else if(attachment.type.equals("note"))
-                    attachment.note=Note.parse(json_attachment.getJSONObject("note"), false);
+                    attachment.note=Note.parse(json_attachment.getJSONObject("note"));
                 else if(attachment.type.equals("video"))
                     attachment.video=Video.parseForAttachments(json_attachment.getJSONObject("video"));
                 else if(attachment.type.equals("poll")){

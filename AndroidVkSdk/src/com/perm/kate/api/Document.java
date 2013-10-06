@@ -21,14 +21,14 @@ public class Document implements Serializable {
     
     public static Document parse(JSONObject o) throws JSONException {
         Document d = new Document();
-        d.id = o.optLong("did");
+        d.id = o.optLong("id");
         d.owner_id = o.optLong("owner_id");
         d.title = o.getString("title");
         d.url = o.optString("url");
         d.size = o.optLong("size");
         d.ext = o.optString("ext");
-        d.thumb = o.optString("thumb", null);
-        d.thumb_s = o.optString("thumb_s", null);
+        d.thumb = o.optString("photo_130", null);
+        d.thumb_s = o.optString("photo_100", null);
         d.access_key = o.optString("access_key", null);
         return d;
     }

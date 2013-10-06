@@ -14,7 +14,6 @@ public class WallMessage implements Serializable {
     public long date; 
     public String text;
     public long id;
-    public String online;
     public ArrayList<Attachment> attachments;
     public long comment_count;
     public boolean comment_can_post;
@@ -48,7 +47,6 @@ public class WallMessage implements Serializable {
             //in copy_history owner_id is used
             wm.to_id = o.getLong("owner_id");
         wm.date = o.optLong("date");
-        wm.online = o.optString("online");
         wm.text = Api.unescape(o.optString("text"));
         if (o.has("likes")){
             JSONObject jlikes = o.getJSONObject(NewsJTags.LIKES);

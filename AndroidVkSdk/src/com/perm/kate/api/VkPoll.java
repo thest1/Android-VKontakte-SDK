@@ -21,7 +21,7 @@ public class VkPoll implements Serializable {
     
     public static VkPoll parse(JSONObject o) throws NumberFormatException, JSONException{
         VkPoll v = new VkPoll();
-        v.id = o.getLong("poll_id");
+        v.id = o.getLong("id");
         v.question = Api.unescape(o.getString("question"));
         if(o.has("owner_id"))
             v.owner_id = o.getLong("owner_id");

@@ -18,11 +18,10 @@ public class User implements Serializable {
     public Boolean online=null;
     public Boolean online_mobile=null;
     public String birthdate; //bdate
-    public String photo;//the same as photo_rec
-    public String photo_big;
-    public String photo_200;//квадратная 200*200
-    public String photo_medium;
-    public String photo_medium_rec;
+    public String photo;//photo_50
+    public String photo_big;//photo_200_orig
+    public String photo_200;//photo_200 квадратная
+    public String photo_medium_rec;//photo_100 квадратная
     public Integer city=null;
     public Integer country=null;
     public Integer timezone=null;
@@ -76,15 +75,15 @@ public class User implements Serializable {
     
     public static User parse(JSONObject o) throws JSONException {
         User u = new User();
-        u.uid = Long.parseLong(o.getString("uid"));
+        u.uid = Long.parseLong(o.getString("id"));
         if(!o.isNull("first_name"))
             u.first_name = Api.unescape(o.getString("first_name"));
         if(!o.isNull("last_name"))
             u.last_name = Api.unescape(o.getString("last_name"));
         if(!o.isNull("nickname"))
             u.nickname = Api.unescape(o.optString("nickname"));
-        if(!o.isNull("domain"))
-            u.domain = o.optString("domain");
+        if(!o.isNull("screen_name"))
+            u.domain = o.optString("screen_name");
         if(!o.isNull("online"))
             u.online = o.optInt("online")==1;
         if(!o.isNull("online_mobile"))
@@ -104,14 +103,12 @@ public class User implements Serializable {
         }catch(NumberFormatException ex){}
         if(!o.isNull("timezone"))
             u.timezone = o.optInt("timezone");
-        if(!o.isNull("photo"))
-            u.photo = o.optString("photo");
-        if(!o.isNull("photo_medium"))
-            u.photo_medium = o.optString("photo_medium");
-        if(!o.isNull("photo_medium_rec"))
-            u.photo_medium_rec = o.optString("photo_medium_rec");
-        if(!o.isNull("photo_big"))
-            u.photo_big = o.optString("photo_big");
+        if(!o.isNull("photo_50"))
+            u.photo = o.optString("photo_50");
+        if(!o.isNull("photo_100"))
+            u.photo_medium_rec = o.optString("photo_100");
+        if(!o.isNull("photo_200_orig"))
+            u.photo_big = o.optString("photo_200_orig");
         if(!o.isNull("photo_200"))
             u.photo_200 = o.optString("photo_200");
         if(!o.isNull("has_mobile"))
@@ -208,10 +205,20 @@ public class User implements Serializable {
 
     public static User parseFromNews(JSONObject jprofile) throws JSONException {
         User m = new User();
-        m.uid = jprofile.getLong("uid");
+        m.uid = jprofile.getLong("id");
         m.first_name = Api.unescape(jprofile.optString("first_name"));
         m.last_name = Api.unescape(jprofile.optString("last_name"));
-        m.photo = jprofile.optString("photo");
+        
+        m.photo = jprofile.optString("photo");//старое название поля - баг в API
+        //запас на будущее когда исправят
+        if(jprofile.has("photo_50"))
+            m.photo = jprofile.optString("photo_50");
+        
+        m.photo_medium_rec = jprofile.optString("photo_medium_rec");//старое название поля - баг в API
+        //запас на будущее когда исправят
+        if(jprofile.has("photo_100"))
+            m.photo_medium_rec = jprofile.optString("photo_100");
+        
         try{
             m.sex = Integer.parseInt(jprofile.optString("sex"));
         }catch(NumberFormatException ex){
@@ -225,7 +232,7 @@ public class User implements Serializable {
     
     public static User parseFromGetByPhones(JSONObject o) throws JSONException {
         User u = new User();
-        u.uid = o.getLong("uid");
+        u.uid = o.getLong("id");
         u.first_name = Api.unescape(o.optString("first_name"));
         u.last_name = Api.unescape(o.optString("last_name"));
         u.phone = o.optString("phone");
@@ -233,6 +240,10 @@ public class User implements Serializable {
     }
     
     public static ArrayList<User> parseUsers(JSONArray array) throws JSONException {
+        return parseUsers(array, false);
+    }
+    
+    public static ArrayList<User> parseUsers(JSONArray array, boolean from_notifications) throws JSONException {
         ArrayList<User> users=new ArrayList<User>();
         //it may be null if no users returned
         //no users may be returned if we request users that are already removed
@@ -240,10 +251,12 @@ public class User implements Serializable {
             return users;
         int category_count=array.length();
         for(int i=0; i<category_count; ++i){
-            if(array.get(i)==null || ((array.get(i) instanceof JSONObject)==false))
-                continue;
             JSONObject o = (JSONObject)array.get(i);
-            User u = User.parse(o);
+            User u;
+            if(from_notifications)
+                u = User.parseFromNotifications(o);
+            else
+                u = User.parse(o);
             users.add(u);
         }
         return users;
@@ -266,13 +279,12 @@ public class User implements Serializable {
         return users;
     }
     
-    //TODO why it duplicates parse() method
     public static User parseFromFave(JSONObject jprofile) throws JSONException {
         User m = new User();
-        m.uid = Long.parseLong(jprofile.getString("uid"));
+        m.uid = Long.parseLong(jprofile.getString("id"));
         m.first_name = Api.unescape(jprofile.optString("first_name"));
         m.last_name = Api.unescape(jprofile.optString("last_name"));
-        m.photo_medium_rec = jprofile.optString("photo_medium_rec");
+        m.photo_medium_rec = jprofile.optString("photo_100");
         if(!jprofile.isNull("online"))
             m.online = jprofile.optInt("online")==1;
         if(!jprofile.isNull("online_mobile"))
@@ -280,6 +292,25 @@ public class User implements Serializable {
         else
             //if it's not there it means false
             m.online_mobile=false;
+        return m;
+    }
+    
+    public static User parseFromNotifications(JSONObject jprofile) throws JSONException {
+        User m = new User();
+        m.uid = jprofile.getLong("id");
+        m.first_name = Api.unescape(jprofile.optString("first_name"));
+        m.last_name = Api.unescape(jprofile.optString("last_name"));
+        
+        m.photo_medium_rec = jprofile.optString("photo_medium_rec");//старое название поля - баг в API
+        //запас на будущее когда исправят
+        if(jprofile.has("photo_100"))
+            m.photo_medium_rec = jprofile.optString("photo_100");
+        
+        m.photo = jprofile.optString("photo");//старое название поля - баг в API
+        //запас на будущее когда исправят
+        if(jprofile.has("photo_50"))
+            m.photo = jprofile.optString("photo_50");
+        
         return m;
     }
 }

@@ -18,7 +18,6 @@ public class Group implements Serializable {
     
     //это новые поля, которых у нас пока нет в базе
     //public String screen_name;
-    //public Boolean is_admin;
     public String photo_medium;//100*100
     public String photo_big;//200*200
     public String description;
@@ -31,11 +30,11 @@ public class Group implements Serializable {
 
     public static Group parse(JSONObject o) throws JSONException{
         Group g=new Group();
-        g.gid = o.getLong("gid");
+        g.gid = o.getLong("id");
         g.name = Api.unescape(o.getString("name"));
-        g.photo = o.optString("photo");
-        g.photo_medium = o.optString("photo_medium");
-        g.photo_big = o.optString("photo_big");
+        g.photo = o.optString("photo_50");
+        g.photo_medium = o.optString("photo_100");
+        g.photo_big = o.optString("photo_200");
         String is_closed = o.optString("is_closed");
         if(is_closed != null)
             g.is_closed = is_closed.equals("1");
@@ -52,21 +51,16 @@ public class Group implements Serializable {
         
         //это новые поля, которых у нас пока нет в базе
         //g.screen_name=o.optString("screen_name");
-        //String is_admin=o.optString("is_admin");
-        //if(is_admin!=null)
-        //    g.is_admin=is_admin.equals("1");
-        //g.photo_medium = o.getString("photo_medium");
-        //g.photo_big = o.getString("photo_big");
 
         if(o.has("can_see_all_posts"))
             g.can_see_all_posts=o.optInt("can_see_all_posts", 1)==1;
         
-        //if doesn't exist it means valuse is unknown
+        //if doesn't exist it means value is unknown
         if(o.has("is_admin"))
             //opt because there may be something unparseable
             g.is_admin=o.optInt("is_admin", 0)==1;
         
-        //if doesn't exist it means valuse is unknown
+        //if doesn't exist it means value is unknown
         if(o.has("admin_level"))
             //opt because there may be something unparseable
             g.admin_level=o.optInt("admin_level", 1);
@@ -96,15 +90,5 @@ public class Group implements Serializable {
             groups.add(group);
         }
         return groups;
-    }
-    
-    public static Group parseFaveGroup(JSONObject o) throws JSONException{
-        Group g = new Group();
-        String url = o.optString("url");
-        g.gid = Long.parseLong(url.replace("/club", ""));
-        g.name = Api.unescape(o.optString("title"));
-        g.photo_medium = o.optString("image_src");
-        g.description = Api.unescape(o.optString("description", null));
-        return g;
     }
 }

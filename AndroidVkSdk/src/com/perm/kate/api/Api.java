@@ -20,7 +20,7 @@ public class Api {
     static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
-    public static final String API_VERSION="4.104";
+    public static final String API_VERSION="5.0";
     
     public Api(String access_token, String api_id){
         this.access_token=access_token;
@@ -150,9 +150,9 @@ public class Api {
     public static String unescape(String text){
         if(text==null)
             return null;
-        return text.replace("&amp;", "&").replace("&quot;", "\"").replace("<br>", "\n").replace("&gt;", ">").replace("&lt;", "<")
-        .replace("&#39;", "'").replace("<br/>", "\n").replace("&ndash;","-").replace("&#33;", "!").trim();
-        //возможно тут могут быть любые коды после &#, например были: 092 - backslash \
+        return text.replace("&amp;", "&").replace("<br>", "\n").replace("&gt;", ">").replace("&lt;", "<")
+        .replace("<br/>", "\n").replace("&ndash;","-").trim();
+        //amp встречается в сообщении, br в Ответах тип comment_photo, gt lt на стене - баг API, ndash в статусе когда аудио транслируется
     }
     
     public static String unescapeWithSmiles(String text){
@@ -203,7 +203,8 @@ public class Api {
         params.put("country_id", country);
         params.put("q", q);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<City> cities = new ArrayList<City>(); 
         if (array != null) {
             for (int i=0; i<array.length(); i++){
@@ -254,7 +255,8 @@ public class Api {
         if (need_full != null && need_full == 1)
             params.put("count", 1000);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.getJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Country> countries = new ArrayList<Country>(); 
         int category_count = array.length();
         for (int i=0; i<category_count; i++) {
@@ -293,13 +295,10 @@ public class Api {
             return null;
         Params params = new Params("users.get");
         if (uids != null && uids.size() > 0)
-            params.put("uids",arrayToString(uids));
+            params.put("user_ids",arrayToString(uids));
         if (domains != null && domains.size() > 0)
-            params.put("uids",arrayToString(domains));
-        if (fields == null)
-            params.put("fields","uid,first_name,last_name,nickname,domain,sex,bdate,city,country,timezone,photo,photo_medium_rec,photo_big,has_mobile,rate,contacts,education,online");
-        else
-            params.put("fields",fields);
+            params.put("user_ids",arrayToString(domains));
+        params.put("fields",fields);
         params.put("name_case",name_case);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
@@ -311,11 +310,9 @@ public class Api {
     //http://vk.com/dev/friends.get
     public ArrayList<User> getFriends(Long user_id, String fields, Integer lid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("friends.get");
-        if(fields==null)
-            fields="first_name,last_name,photo_medium,online";
         params.put("fields",fields);
-        params.put("uid",user_id);
-        params.put("lid", lid);
+        params.put("user_id",user_id);
+        params.put("list_id", lid);
         
         //сортировка по популярности не даёт запросить друзей из списка
         if(lid==null)
@@ -324,7 +321,8 @@ public class Api {
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         ArrayList<User> users=new ArrayList<User>();
-        JSONArray array=root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         //if there are no friends "response" will not be array
         if(array==null)
             return users;
@@ -340,7 +338,7 @@ public class Api {
     //http://vk.com/dev/friends.getOnline
     public ArrayList<Long> getOnlineFriends(Long uid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("friends.getOnline");
-        params.put("uid",uid);
+        params.put("user_id",uid);
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         ArrayList<Long> users=new ArrayList<Long>();
@@ -400,18 +398,19 @@ public class Api {
     //http://vk.com/dev/photos.getAlbums
     public ArrayList<Album> getAlbums(Long oid, Collection<Long> aids, Integer need_system, Integer need_covers, Integer photo_sizes) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getAlbums");
-        params.put("oid", oid);
-        params.put("aids", arrayToString(aids));
+        params.put("owner_id", oid);
+        params.put("album_ids", arrayToString(aids));
         params.put("need_system", need_system);
         params.put("need_covers", need_covers);
         params.put("photo_sizes", photo_sizes);
         JSONObject root = sendRequest(params);
         ArrayList<Album> albums=new ArrayList<Album>();
-        JSONArray array=root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         if (array == null)
             return albums;
         int category_count=array.length(); 
-        for (int i=1; i<category_count; ++i) {
+        for (int i=0; i<category_count; ++i) {
             JSONObject o = (JSONObject)array.get(i);
             Album a = Album.parse(o);
             if (a.title.equals("DELETED"))
@@ -424,16 +423,14 @@ public class Api {
     //http://vk.com/dev/photos.get
     public ArrayList<Photo> getPhotos(Long uid, Long aid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.get");
-        if(uid>0)
-            params.put("uid", uid);
-        else
-            params.put("gid", -uid);
-        params.put("aid", aid);
+        params.put("owner_id", uid);
+        params.put("album_id", aid);
         params.put("extended", "1");
         params.put("offset",offset);
         params.put("limit",count);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         if (array == null)
             return new ArrayList<Photo>(); 
         ArrayList<Photo> photos = parsePhotos(array);
@@ -443,13 +440,14 @@ public class Api {
     //http://vk.com/dev/photos.getUserPhotos
     public ArrayList<Photo> getUserPhotos(Long uid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getUserPhotos");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         params.put("sort","0");
         params.put("count",count);
         params.put("offset",offset);
         params.put("extended",1);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         if (array == null)
             return new ArrayList<Photo>(); 
         ArrayList<Photo> photos = parsePhotos(array);
@@ -464,7 +462,8 @@ public class Api {
         params.put("count",count);
         params.put("extended",extended?1:0);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         if (array == null)
             return new ArrayList<Photo>(); 
         ArrayList<Photo> photos = parsePhotos(array);
@@ -474,7 +473,7 @@ public class Api {
     //http://vk.com/dev/photos.getComments
     public CommentList getPhotoComments(Long pid, Long owner_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getComments");
-        params.put("pid", pid);
+        params.put("photo_id", pid);
         params.put("owner_id", owner_id);
         if (count > 0)
             params.put("count", count);
@@ -483,31 +482,15 @@ public class Api {
         params.put("sort", "asc");
         params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
-        Object x=root.get("response");
         CommentList commnets = new CommentList();
-        //TODO remove later
-        //parse for v=4.99
-        if(x instanceof JSONArray){
-            JSONArray array = (JSONArray)x;
-            commnets.count=array.getInt(0);
-            int category_count = array.length();
-            for(int i = 1; i<category_count; ++i) { //get(0) is integer, it is comments count
-                JSONObject o = (JSONObject)array.get(i);
-                Comment comment = Comment.parse(o);
-                commnets.comments.add(comment);
-            }
-        }
-        //parse for v=5.0
-        if(x instanceof JSONObject){
-            JSONObject y=(JSONObject)x;
-            JSONArray array = y.getJSONArray("items");
-            commnets.count=y.getInt("count");
-            int category_count = array.length();
-            for(int i = 0; i<category_count; ++i) { //get(0) is integer, it is comments count
-                JSONObject o = (JSONObject)array.get(i);
-                Comment comment = Comment.parse(o);
-                commnets.comments.add(comment);
-            }
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
+        commnets.count=response.getInt("count");
+        int category_count = array.length();
+        for(int i = 0; i<category_count; ++i) {
+            JSONObject o = (JSONObject)array.get(i);
+            Comment comment = Comment.parse(o);
+            commnets.comments.add(comment);
         }
         return commnets;
     }
@@ -515,18 +498,19 @@ public class Api {
     //http://vk.com/dev/notes.getComments
     public CommentList getNoteComments(Long nid, Long owner_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("notes.getComments");
-        params.put("nid", nid);
+        params.put("note_id", nid);
         params.put("owner_id", owner_id);
         if (count > 0)
             params.put("count", count);
         if (offset > 0)
             params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.getJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         CommentList commnets = new CommentList();
-        commnets.count=array.getInt(0);
+        commnets.count=response.getInt("count");
         int category_count = array.length();
-        for(int i = 1; i<category_count; ++i) { //get(0) is integer, it is comments count
+        for(int i = 0; i<category_count; ++i) {
             JSONObject o = (JSONObject)array.get(i);
             Comment comment = Comment.parseNoteComment(o);
             commnets.comments.add(comment);
@@ -537,7 +521,7 @@ public class Api {
     //http://vk.com/dev/video.getComments
     public CommentList getVideoComments(long video_id, Long owner_id, int offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.getComments");
-        params.put("vid", video_id);
+        params.put("video_id", video_id);
         params.put("owner_id", owner_id);
         if (count > 0)
             params.put("count", count);
@@ -545,31 +529,15 @@ public class Api {
             params.put("offset", offset);
         params.put("need_likes", "1");
         JSONObject root = sendRequest(params);
-        Object x=root.get("response");
         CommentList commnets = new CommentList();
-        //TODO remove later
-        //parse for v=4.99
-        if(x instanceof JSONArray){
-            JSONArray array = (JSONArray)x;
-            commnets.count=array.getInt(0);
-            int category_count = array.length();
-            for(int i = 1; i<category_count; ++i) { //get(0) is integer, it is comments count
-                JSONObject o = (JSONObject)array.get(i);
-                Comment comment = Comment.parse(o);
-                commnets.comments.add(comment);
-            }
-        }
-        //parse for v=5.0
-        if(x instanceof JSONObject){
-            JSONObject y=(JSONObject)x;
-            JSONArray array = y.getJSONArray("items");
-            commnets.count=y.getInt("count");
-            int category_count = array.length();
-            for(int i = 0; i<category_count; ++i) { //get(0) is integer, it is comments count
-                JSONObject o = (JSONObject)array.get(i);
-                Comment comment = Comment.parse(o);
-                commnets.comments.add(comment);
-            }
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
+        commnets.count=response.getInt("count");
+        int category_count = array.length();
+        for(int i = 0; i<category_count; ++i) {
+            JSONObject o = (JSONObject)array.get(i);
+            Comment comment = Comment.parse(o);
+            commnets.comments.add(comment);
         }
         return commnets;
     }
@@ -594,7 +562,7 @@ public class Api {
         //for(int i = 0; i<category_count; ++i) {
         //    JSONObject o = (JSONObject)array.get(i);
         //    Comment comment = new Comment();
-        //    comment.cid = Long.parseLong(o.getString("cid"));
+        //    comment.cid = Long.parseLong(o.getString("comment_id"));
         //    comment.from_id = Long.parseLong(o.getString("from_id"));
         //    comment.date = Long.parseLong(o.getString("date"));
         //    comment.message = unescape(o.getString("message"));
@@ -606,11 +574,11 @@ public class Api {
     //http://vk.com/dev/photos.createComment
     public long createPhotoComment(Long pid, Long owner_id, String message, Long reply_to_cid, Collection<String> attachments, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.createComment");
-        params.put("pid",pid);
+        params.put("photo_id",pid);
         params.put("owner_id",owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message",message);
-        params.put("reply_to_cid", reply_to_cid);
+        params.put("reply_to_comment", reply_to_cid);
         params.put("attachments", arrayToString(attachments));
         if (from_group)
             params.put("from_group", "1");
@@ -622,8 +590,8 @@ public class Api {
     //http://vk.com/dev/photos.editComment
     public boolean editPhotoComment(long cid, long pid, Long owner_id, String message, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.editComment");
-        params.put("cid", cid);
-        params.put("pid", pid);
+        params.put("comment_id", cid);
+        params.put("photo_id", pid);//probably not reqiured - missing in docs
         params.put("owner_id", owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message", message);
@@ -636,7 +604,7 @@ public class Api {
     //http://vk.com/dev/notes.createComment
     public long createNoteComment(Long nid, Long owner_id, String message, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("notes.createComment");
-        params.put("nid",nid);
+        params.put("note_id",nid);
         params.put("owner_id",owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message",message);
@@ -650,7 +618,7 @@ public class Api {
     //http://vk.com/dev/notes.editComment
     public boolean editNoteComment(long cid, Long owner_id, String message, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("notes.editComment");
-        params.put("cid", cid);
+        params.put("comment_id", cid);
         params.put("owner_id", owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message", message);
@@ -662,7 +630,7 @@ public class Api {
     //http://vk.com/dev/video.createComment
     public long createVideoComment(Long video_id, Long owner_id, String message, Collection<String> attachments, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.createComment");
-        params.put("vid",video_id);
+        params.put("video_id",video_id);
         params.put("owner_id",owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message",message);
@@ -677,7 +645,7 @@ public class Api {
     //http://vk.com/dev/video.editComment
     public boolean editVideoComment(long cid, Long owner_id, String message, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.editComment");
-        params.put("cid", cid);
+        params.put("comment_id", cid);
         params.put("owner_id", owner_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         params.put("message", message);
@@ -705,7 +673,8 @@ public class Api {
             params.put("count", count);
         params.put("preview_length","0");
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
         return messages;
     }
@@ -714,14 +683,15 @@ public class Api {
     public ArrayList<Message> getMessagesHistory(long uid, long chat_id, long me, Long offset, int count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getHistory");
         if(chat_id<=0)
-            params.put("uid",uid);
+            params.put("user_id",uid);
         else
             params.put("chat_id",chat_id);
         params.put("offset", offset);
         if (count != 0)
             params.put("count", count);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Message> messages = parseMessages(array, chat_id<=0, uid, chat_id>0, me);
         return messages;
     }
@@ -736,7 +706,8 @@ public class Api {
         params.put("preview_length","0");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Message> messages = parseMessages(array, false, 0, false ,0);
         return messages;
     }
@@ -745,8 +716,8 @@ public class Api {
         ArrayList<Message> messages = new ArrayList<Message>();
         if (array != null) {
             int category_count = array.length();
-            for(int i = 1; i < category_count; ++i) {
-                JSONObject o = (JSONObject)array.get(i);
+            for(int i = 0; i < category_count; ++i) {
+                JSONObject o = array.getJSONObject(i);
                 Message m = Message.parse(o, from_history, history_uid, from_chat, me);
                 messages.add(m);
             }
@@ -758,7 +729,7 @@ public class Api {
     public String sendMessage(Long uid, long chat_id, String message, String title, String type, Collection<String> attachments, ArrayList<Long> forward_messages, String lat, String lon, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.send");
         if(chat_id<=0)
-            params.put("uid", uid);
+            params.put("user_id", uid);
         else
             params.put("chat_id", chat_id);
         params.put("message", message);
@@ -786,7 +757,7 @@ public class Api {
             params = new Params("messages.markAsRead");
         else
             params = new Params("messages.markAsNew");
-        params.put("mids", arrayToString(mids));
+        params.put("message_ids", arrayToString(mids));
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
@@ -797,13 +768,9 @@ public class Api {
     //http://vk.com/dev/messages.delete
     public String deleteMessage(Long mid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.delete");
-        //TODO устаревший параметр, временно оставил его для подстраховки, удалить.
-        params.put("mid", mid);
         params.put("message_ids", mid);
-        JSONObject root = sendRequest(params);
-        Object response_code = root.opt("response");
-        if (response_code != null)
-            return String.valueOf(response_code);
+        sendRequest(params);
+        //не парсим ответ - там приходят отдельные флаги для каждого удалённого сообщения
         return null;
     }
     
@@ -811,7 +778,7 @@ public class Api {
     //http://vk.com/dev/status.get
     public VkStatus getStatus(Long uid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("status.get");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         JSONObject root = sendRequest(params);
         JSONObject obj = root.optJSONObject("response");
         VkStatus status = new VkStatus();
@@ -846,10 +813,11 @@ public class Api {
         params.put("offset", offset);
         params.put("filter", filter); //owner, others, all - default
         JSONObject root = sendRequest(params);
-        JSONArray array = root.getJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<WallMessage> wmessages = new ArrayList<WallMessage>();
         int category_count = array.length();
-        for(int i = 1; i < category_count; ++i) {
+        for(int i = 0; i < category_count; ++i) {
             JSONObject o = (JSONObject)array.get(i);
             WallMessage wm = WallMessage.parse(o);
             wmessages.add(wm);
@@ -889,14 +857,17 @@ public class Api {
     //http://vk.com/dev/audio.get
     public ArrayList<Audio> getAudio(Long uid, Long gid, Long album_id, Collection<Long> aids, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.get");
-        params.put("uid", uid);
-        params.put("gid", gid);
-        params.put("aids", arrayToString(aids));
+        if(uid!=null)
+            params.put("owner_id", uid);
+        if(gid!=null)
+            params.put("owner_id", -gid);
+        params.put("audio_ids", arrayToString(aids));//не документировано - возможно уже не работает - возможно нужно использовать audio.getById
         params.put("album_id", album_id);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
-        return parseAudioList(array, 1);
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
+        return parseAudioList(array);
     }
     
     //http://vk.com/dev/audio.getById
@@ -905,8 +876,9 @@ public class Api {
         params.put("audios", audios);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
-        return parseAudioList(array, 0);
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
+        return parseAudioList(array);
     }
     
     //http://vk.com/dev/audio.getLyrics
@@ -923,22 +895,18 @@ public class Api {
     public ArrayList<Video> getVideo(String videos, Long owner_id, Long album_id, String width, Long count, Long offset, String access_key) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.get");
         params.put("videos", videos);
-        if (owner_id != null){
-            if(owner_id>0)
-                params.put("uid", owner_id);
-            else
-                params.put("gid", -owner_id);
-        }
+        params.put("owner_id", owner_id);
         params.put("width", width);
         params.put("count", count);
         params.put("offset", offset);
-        params.put("aid", album_id);
+        params.put("album_id", album_id);
         params.put("access_key", access_key);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Video> videoss = new ArrayList<Video>();
         if (array != null) {
-            for(int i = 1; i<array.length(); ++i) {
+            for(int i = 0; i<array.length(); ++i) {
                 JSONObject o = (JSONObject)array.get(i);
                 Video video = Video.parse(o);
                 videoss.add(video);
@@ -950,13 +918,14 @@ public class Api {
     //http://vk.com/dev/video.getUserVideos
     public ArrayList<Video> getUserVideo(Long user_id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.getUserVideos");
-        params.put("uid", user_id);
+        params.put("user_id", user_id);
         params.put("count", "50");
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Video> videos = new ArrayList<Video>();
         if (array != null) {
-            for(int i = 1; i<array.length(); ++i) {
+            for(int i = 0; i<array.length(); ++i) {
                 JSONObject o = (JSONObject)array.get(i); 
                 videos.add(Video.parse(o));
             }
@@ -969,7 +938,7 @@ public class Api {
     public Album createAlbum(String title, Long gid, String privacy, String comment_privacy, String description) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.createAlbum");
         params.put("title", title);
-        params.put("gid", gid);
+        params.put("group_id", gid);
         params.put("privacy", privacy);
         params.put("comment_privacy", comment_privacy);
         params.put("description", description);
@@ -983,8 +952,8 @@ public class Api {
     //http://vk.com/dev/photos.editAlbum
     public String editAlbum(long aid, Long oid, String title, String privacy, String comment_privacy, String description) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.editAlbum");
-        params.put("aid", String.valueOf(aid));
-        params.put("oid", oid);
+        params.put("album_id", String.valueOf(aid));
+        params.put("owner_id", oid);
         params.put("title", title);
         params.put("privacy", privacy);
         params.put("comment_privacy", comment_privacy);
@@ -1000,18 +969,19 @@ public class Api {
     //http://vk.com/dev/notes.get
     public ArrayList<Note> getNotes(Long uid, Collection<Long> nids, String sort, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("notes.get");
-        params.put("uid", uid);
-        params.put("nids", arrayToString(nids));
+        params.put("user_id", uid);
+        params.put("note_ids", arrayToString(nids));
         params.put("sort", sort);
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Note> notes = new ArrayList<Note>();
         if (array != null) {
-            for(int i = 1; i<array.length(); ++i) {
+            for(int i = 0; i<array.length(); ++i) {
                 JSONObject o = (JSONObject)array.get(i);
-                Note note = Note.parse(o, true);
+                Note note = Note.parse(o);
                 notes.add(note);
             }
         }
@@ -1021,7 +991,7 @@ public class Api {
     //http://vk.com/dev/notes.delete
     public String deleteNote(Long nid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("notes.delete");
-        params.put("nid", nid);
+        params.put("note_id", nid);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
@@ -1032,8 +1002,8 @@ public class Api {
     //http://vk.com/dev/photos.getUploadServer
     public String photosGetUploadServer(long album_id, Long group_id) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.getUploadServer");
-        params.put("aid",album_id);
-        params.put("gid",group_id);
+        params.put("album_id",album_id);
+        params.put("group_id",group_id);
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
         return response.getString("upload_url");
@@ -1042,8 +1012,8 @@ public class Api {
     //http://vk.com/dev/photos.getWallUploadServer
     public String photosGetWallUploadServer(Long user_id, Long group_id) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.getWallUploadServer");
-        params.put("uid",user_id);
-        params.put("gid",group_id);
+        params.put("user_id",user_id);
+        params.put("group_id",group_id);
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
         return response.getString("upload_url");
@@ -1078,8 +1048,8 @@ public class Api {
         Params params = new Params("photos.save");
         params.put("server",server);
         params.put("photos_list",photos_list);
-        params.put("aid",aid);
-        params.put("gid",group_id);
+        params.put("album_id",aid);
+        params.put("group_id",group_id);
         params.put("hash",hash);
         params.put("caption",caption);
         JSONObject root = sendRequest(params);
@@ -1094,8 +1064,8 @@ public class Api {
         params.put("server",server);
         params.put("photo",photo);
         params.put("hash",hash);
-        params.put("uid",user_id);
-        params.put("gid",group_id);
+        params.put("user_id",user_id);
+        params.put("group_id",group_id);
         JSONObject root = sendRequest(params);
         JSONArray array=root.getJSONArray("response");
         ArrayList<Photo> photos = parsePhotos(array);
@@ -1145,9 +1115,6 @@ public class Api {
         ArrayList<Photo> photos=new ArrayList<Photo>(); 
         int category_count=array.length(); 
         for(int i=0; i<category_count; ++i){
-            //in getUserPhotos first element is integer
-            if(array.get(i) instanceof JSONObject == false)
-                continue;
             JSONObject o = (JSONObject)array.get(i);
             Photo p = Photo.parse(o);
             photos.add(p);
@@ -1161,14 +1128,14 @@ public class Api {
         params.put("owner_id", owner_id);
         params.put("post_id", post_id);
         params.put("text", text);
-        params.put("reply_to_cid", reply_to_cid);
+        params.put("reply_to_comment", reply_to_cid);
         params.put("attachments", arrayToString(attachments));
         if (from_group)
             params.put("from_group","1");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params, true);
         JSONObject response = root.getJSONObject("response");
-        long cid = response.optLong("cid");
+        long cid = response.optLong("comment_id");
         return cid;
     }
     
@@ -1211,7 +1178,7 @@ public class Api {
     //http://vk.com/dev/wall.repost
     public WallMessage repostWallPost(String object, String message, Long gid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.repost");
-        params.put("gid", gid);
+        params.put("group_id", gid);
         params.put("message", message);
         params.put("object", object);
         addCaptchaParams(captcha_key, captcha_sid, params);
@@ -1244,11 +1211,12 @@ public class Api {
         if(reverse_order)
             params.put("sort", "desc");
         JSONObject root = sendRequest(params);
-        JSONArray array = root.getJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         CommentList commnets = new CommentList();
-        commnets.count=array.getInt(0);
+        commnets.count=response.getInt("count");
         int category_count = array.length();
-        for(int i = 1; i<category_count; ++i) //get(0) is integer, it is comments count
+        for(int i = 0; i<category_count; ++i)
             commnets.comments.add(Comment.parse((JSONObject)array.get(i)));
         return commnets;
     }
@@ -1264,15 +1232,16 @@ public class Api {
         params.put("auto_complete", "1");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
-        return parseAudioList(array, 1);
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
+        return parseAudioList(array);
     }
 
-    private ArrayList<Audio> parseAudioList(JSONArray array, int type_array) //type_array must be 0 or 1
+    private ArrayList<Audio> parseAudioList(JSONArray array)
             throws JSONException {
         ArrayList<Audio> audios = new ArrayList<Audio>();
         if (array != null) {
-            for(int i = type_array; i<array.length(); ++i) { //get(0) is integer, it is audio count
+            for(int i = 0; i<array.length(); ++i) { //get(0) is integer, it is audio count
                 JSONObject o = (JSONObject)array.get(i);
                 audios.add(Audio.parse(o));
             }
@@ -1283,8 +1252,8 @@ public class Api {
     //http://vk.com/dev/audio.delete
     public String deleteAudio(Long aid, Long oid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.delete");
-        params.put("aid", aid);
-        params.put("oid", oid);
+        params.put("audio_id", aid);
+        params.put("owner_id", oid);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
@@ -1295,9 +1264,9 @@ public class Api {
     //http://vk.com/dev/audio.add
     public String addAudio(Long aid, Long oid, Long gid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.add");
-        params.put("aid", aid);
-        params.put("oid", oid);
-        params.put("gid", gid);
+        params.put("audio_id", aid);
+        params.put("owner_id", oid);
+        params.put("group_id", gid);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
@@ -1351,7 +1320,8 @@ public class Api {
         params.put("extended", extended);
         params.put("photo_sizes", photo_sizes);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         if (array == null)
             return new ArrayList<Photo>(); 
         ArrayList<Photo> photos1 = parsePhotos(array);
@@ -1360,7 +1330,7 @@ public class Api {
     
     public Photo getPhotoCountsByIdWithExecute(String photo, boolean get_user_id) throws MalformedURLException, IOException, JSONException, KException {
         String b = (get_user_id) ? ",\"user_id\":p@.user_id" : "";
-        String code = "var p=API.photos.getById({\"photos\":\"" + photo + "\",\"extended\":1}); return {\"pid\":p@.pid,\"likes\":p@.likes,\"comments\":p@.comments,\"can_comment\":p@.can_comment,\"tags\":p@.tags" + b + "};";
+        String code = "var p=API.photos.getById({\"photos\":\"" + photo + "\",\"extended\":1}); return {\"pid\":p@.id,\"likes\":p@.likes,\"comments\":p@.comments,\"can_comment\":p@.can_comment,\"tags\":p@.tags" + b + "};";
         Params params = new Params("execute");
         params.put("code", code);
         JSONObject root = sendRequest(params);
@@ -1374,10 +1344,11 @@ public class Api {
     public ArrayList<Group> getUserGroups(Long user_id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("groups.get");
         params.put("extended","1");
-        params.put("uid",user_id);
+        params.put("user_id",user_id);
         JSONObject root = sendRequest(params);
         ArrayList<Group> groups=new ArrayList<Group>();
-        JSONArray array=root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         //if there are no groups "response" will not be array
         if(array==null)
             return groups;
@@ -1399,7 +1370,7 @@ public class Api {
     public Boolean deleteWallComment(Long wall_owner_id, long comment_id) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("wall.deleteComment");
         params.put("owner_id", wall_owner_id);
-        params.put("cid", comment_id);
+        params.put("comment_id", comment_id);
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -1409,7 +1380,7 @@ public class Api {
     public Boolean deleteNoteComment(Long note_owner_id, long comment_id) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("notes.deleteComment");
         params.put("owner_id", note_owner_id);
-        params.put("cid", comment_id);
+        params.put("comment_id", comment_id);
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -1419,7 +1390,7 @@ public class Api {
     public Boolean deleteVideoComment(Long video_owner_id, long comment_id) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("video.deleteComment");
         params.put("owner_id", video_owner_id);
-        params.put("cid", comment_id);
+        params.put("comment_id", comment_id);
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -1429,8 +1400,8 @@ public class Api {
     public Boolean deletePhotoComment(long photo_id, Long photo_owner_id, long comment_id) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.deleteComment");
         params.put("owner_id", photo_owner_id);
-        params.put("cid", comment_id);
-        params.put("pid", photo_id);
+        params.put("comment_id", comment_id);
+        params.put("photo_id", photo_id);
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -1445,10 +1416,11 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Video> videoss = new ArrayList<Video>();
         if (array != null) {
-            for(int i = 1; i<array.length(); ++i) {
+            for(int i = 0; i<array.length(); ++i) {
                 JSONObject o = (JSONObject)array.get(i);
                 Video video = Video.parse(o);
                 videoss.add(video);
@@ -1517,9 +1489,10 @@ public class Api {
         if (position != null && position.length() > 0)
             params.put("position", position);
         if (gid != null && gid > 0)
-            params.put("gid", gid);
+            params.put("group_id", gid);
         JSONObject root = sendRequest(params);
-        JSONArray array=root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         return User.parseUsers(array);
     }
     
@@ -1550,8 +1523,8 @@ public class Api {
     //http://vk.com/dev/video.delete
     public String deleteVideo(Long vid, Long oid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("video.delete");
-        params.put("vid", vid);
-        params.put("oid", oid);
+        params.put("video_id", vid);
+        params.put("owner_id", oid);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
@@ -1579,8 +1552,7 @@ public class Api {
         params.put("privacy", "0");
         params.put("comment_privacy", "0");
         JSONObject root = sendRequest(params, true);
-        JSONObject response = root.getJSONObject("response");
-        long note_id = response.optLong("nid");
+        long note_id = root.getLong("response");
         return note_id;
     }
     
@@ -1606,7 +1578,7 @@ public class Api {
     //http://vk.com/dev/friends.add
     public long addFriend(Long uid, String text, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("friends.add");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         params.put("text", text);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
@@ -1616,7 +1588,7 @@ public class Api {
     //http://vk.com/dev/friends.delete
     public long deleteFriend(Long uid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("friends.delete");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         JSONObject root = sendRequest(params);
         return root.optLong("response");
     }
@@ -1627,14 +1599,15 @@ public class Api {
         params.put("need_messages", "1");
         params.put("out", out);
         JSONObject root = sendRequest(params);
-        JSONArray array=root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Object[]> users=new ArrayList<Object[]>();
         if (array != null) {
             int category_count=array.length();
             for(int i=0; i<category_count; ++i) {
                 JSONObject item = array.optJSONObject(i);
                 if (item != null) {
-                    Long id = item.optLong("uid", -1);
+                    Long id = item.optLong("user_id", -1);
                     if (id!=-1) {
                         Object[] u = new Object[2];
                         u[0] = id;
@@ -1650,7 +1623,7 @@ public class Api {
     //http://vk.com/dev/users.getSubscriptions
     public ArrayList<Long> getSubscriptions(Long uid, int offset, int count, Integer extended) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("users.getSubscriptions");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         //params.put("extended", extended); //TODO
         if (offset>0)
             params.put("offset", offset);
@@ -1675,13 +1648,14 @@ public class Api {
     //http://vk.com/dev/users.getFollowers
     public ArrayList<User> getFollowers(Long uid, int offset, int count, String fields, String name_case) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("users.getFollowers");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         if (offset > 0)
             params.put("offset", offset);
         if (count > 0)
             params.put("count", count);
+        //if this method is called without fields it will return just ids in wrong format
         if (fields == null)
-            fields = "first_name,last_name,photo_medium_rec,online";
+            fields = "first_name,last_name,photo_100,online";
         params.put("fields", fields);
         params.put("name_case", name_case);
         JSONObject root = sendRequest(params);
@@ -1693,7 +1667,7 @@ public class Api {
     //http://vk.com/dev/messages.deleteDialog
     public int deleteMessageThread(Long uid, Long chatId) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("messages.deleteDialog");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         params.put("chat_id", chatId);
         JSONObject root = sendRequest(params);
         return root.getInt("response");
@@ -1709,8 +1683,8 @@ public class Api {
     //http://vk.com/dev/photos.delete
     public boolean deletePhoto(Long owner_id, Long photo_id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.delete");
-        params.put("oid", owner_id);
-        params.put("pid", photo_id);
+        params.put("owner_id", owner_id);
+        params.put("photo_id", photo_id);
         JSONObject root = sendRequest(params);
         long response = root.optLong("response", -1);
         return response==1;
@@ -1765,11 +1739,12 @@ public class Api {
         params.put("offset", offset);
         params.put("fields", fields);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
-        JSONObject object = (JSONObject)array.get(0);
-        JSONArray array2 = object.optJSONArray("users");
+        JSONArray response=root.optJSONArray("response");//массив ответов
+        JSONObject object = (JSONObject)response.get(0);
+        JSONObject array2 = object.optJSONObject("users");
+        JSONArray array=array2.optJSONArray("items");
         //TODO for others answer_ids
-        return User.parseUsers(array2);
+        return User.parseUsers(array);
     }
     
     //http://vk.com/dev/friends.getLists
@@ -1793,7 +1768,7 @@ public class Api {
         Params params = new Params("video.save");
         params.put("name", name);
         params.put("description", description);
-        params.put("gid", gid);
+        params.put("group_id", gid);
         if (privacy_view > 0)
             params.put("privacy_view", privacy_view);
         if (privacy_comment > 0)
@@ -1806,8 +1781,8 @@ public class Api {
     //http://vk.com/dev/photos.deleteAlbum
     public String deleteAlbum(Long aid, Long gid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.deleteAlbum");
-        params.put("aid", aid);
-        params.put("gid", gid);
+        params.put("album_id", aid);
+        params.put("group_id", gid);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
@@ -1819,9 +1794,9 @@ public class Api {
     public ArrayList<PhotoTag> getPhotoTagsById(Long pid, Long owner_id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.getTags");
         params.put("owner_id", owner_id);
-        params.put("pid", pid);
+        params.put("photo_id", pid);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONArray array=root.optJSONArray("response");
         if (array == null)
             return new ArrayList<PhotoTag>(); 
         ArrayList<PhotoTag> photo_tags = parsePhotoTags(array, pid, owner_id);
@@ -1832,9 +1807,6 @@ public class Api {
         ArrayList<PhotoTag> photo_tags=new ArrayList<PhotoTag>(); 
         int category_count=array.length(); 
         for(int i=0; i<category_count; ++i){
-            //in getUserPhotos first element is integer
-            if(array.get(i) instanceof JSONObject == false)
-                continue;
             JSONObject o = (JSONObject)array.get(i);
             PhotoTag p = PhotoTag.parse(o);
             photo_tags.add(p);
@@ -1852,8 +1824,8 @@ public class Api {
             return null;
         Params params = new Params("photos.putTag");
         params.put("owner_id", ptag.owner_id);
-        params.put("pid", ptag.pid);
-        params.put("uid", ptag.uid);
+        params.put("photo_id", ptag.pid);
+        params.put("user_id", ptag.uid);
         params.putDouble("x", ptag.x);
         params.putDouble("x2", ptag.x2);
         params.putDouble("y", ptag.y);
@@ -1870,7 +1842,7 @@ public class Api {
     //http://vk.com/dev/board.getTopics
     public ArrayList<GroupTopic> getGroupTopics(long gid, Integer order, int extended, int count, int offset) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.getTopics");
-        params.put("gid", gid);
+        params.put("group_id", gid);
         params.put("order", order);
         if (extended == 1)
             params.put("extended", "1"); //for profiles
@@ -1882,9 +1854,9 @@ public class Api {
         ArrayList<GroupTopic> result = new ArrayList<GroupTopic>();
         JSONObject response = root.optJSONObject("response");
         if (response != null) {
-            JSONArray topics = response.optJSONArray("topics");
+            JSONArray topics = response.optJSONArray("items");
             if (topics != null) {
-                for (int i=1; i<topics.length(); ++i) {
+                for (int i=0; i<topics.length(); ++i) {
                     JSONObject o = topics.getJSONObject(i);
                     GroupTopic gt = GroupTopic.parse(o);
                     gt.gid = gid;
@@ -1898,8 +1870,8 @@ public class Api {
     //http://vk.com/dev/board.getComments
     public CommentList getGroupTopicComments(long gid, long tid, int photo_sizes, int extended, int count, int offset, boolean reverse_order) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("board.getComments");
-        params.put("gid", gid);
-        params.put("tid", tid);
+        params.put("group_id", gid);
+        params.put("topic_id", tid);
         if (photo_sizes == 1)
             params.put("photo_sizes", "1");
         if (extended == 1)
@@ -1915,10 +1887,10 @@ public class Api {
         JSONObject response = root.optJSONObject("response");
         CommentList result = new CommentList();
         if (response != null) {
-            JSONArray comments = response.optJSONArray("comments");
+            JSONArray comments = response.optJSONArray("items");
             int category_count = comments.length();
-            result.count=comments.getInt(0);
-            for (int i=1; i<category_count; ++i) { //get(0) is integer, it is comments count
+            result.count=response.getInt("count");
+            for (int i=0; i<category_count; ++i) {
                 JSONObject o = comments.getJSONObject(i);
                 Comment c = Comment.parseTopicComment(o);
                 result.comments.add(c);
@@ -1944,8 +1916,8 @@ public class Api {
     //http://vk.com/dev/board.addComment
     public long createGroupTopicComment(long gid, long tid, String text, Collection<String> attachments, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.addComment");
-        params.put("gid", gid);
-        params.put("tid", tid);
+        params.put("group_id", gid);
+        params.put("topic_id", tid);
         params.put("text", text);
         params.put("attachments", arrayToString(attachments));
         if (from_group)
@@ -1959,9 +1931,9 @@ public class Api {
     //http://vk.com/dev/board.editComment
     public boolean editGroupTopicComment(long cid, long gid, long tid, String text, Collection<String> attachments, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.editComment");
-        params.put("cid", cid);
-        params.put("gid", gid);
-        params.put("tid", tid);
+        params.put("comment_id", cid);
+        params.put("group_id", gid);
+        params.put("topic_id", tid);
         params.put("text", text);
         params.put("attachments", arrayToString(attachments));
         addCaptchaParams(captcha_key, captcha_sid, params);
@@ -1973,9 +1945,9 @@ public class Api {
     //http://vk.com/dev/board.deleteComment
     public Boolean deleteGroupTopicComment(long gid, long tid, long cid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.deleteComment");
-        params.put("gid", gid);
-        params.put("tid", tid);
-        params.put("cid", cid);
+        params.put("group_id", gid);
+        params.put("topic_id", tid);
+        params.put("comment_id", cid);
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -1984,7 +1956,7 @@ public class Api {
     //http://vk.com/dev/board.addTopic
     public long createGroupTopic(long gid, String title, String text, boolean from_group, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.addTopic");
-        params.put("gid", gid);
+        params.put("group_id", gid);
         params.put("title", title);
         params.put("text", text);
         if (from_group)
@@ -1998,8 +1970,8 @@ public class Api {
     //http://vk.com/dev/board.deleteTopic
     public Boolean deleteGroupTopic(long gid, long tid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("board.deleteTopic");
-        params.put("gid", gid);
-        params.put("tid", tid);
+        params.put("group_id", gid);
+        params.put("topic_id", tid);
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -2018,8 +1990,8 @@ public class Api {
             str_uids=arrayToString(uids);
         else
             str_uids = domain;
-        params.put("gids", str_uids);
-        params.put("fields", fields); //Possible values: place,wiki_page,city,country,description,start_date,finish_date,site,fixed_post,contacts
+        params.put("group_ids", str_uids);
+        params.put("fields", fields);
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         return Group.parseGroups(array);
@@ -2028,7 +2000,7 @@ public class Api {
     //http://vk.com/dev/groups.join
     public String joinGroup(long gid, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("groups.join");
-        params.put("gid", gid);
+        params.put("group_id", gid);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
@@ -2040,7 +2012,7 @@ public class Api {
     //http://vk.com/dev/groups.leave
     public String leaveGroup(long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("groups.leave");
-        params.put("gid", gid);
+        params.put("group_id", gid);
         JSONObject root = sendRequest(params);
         Object response_code = root.opt("response");
         if (response_code != null)
@@ -2055,7 +2027,8 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array=root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Group> groups = new ArrayList<Group>();  
         //if there are no groups "response" will not be array
         if (array==null)
@@ -2101,9 +2074,10 @@ public class Api {
     //http://vk.com/dev/messages.getById
     public ArrayList<Message> getMessagesById(ArrayList<Long> message_ids) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getById");
-        params.put("mids", arrayToString(message_ids));
+        params.put("message_ids", arrayToString(message_ids));
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
         return messages;
     }
@@ -2121,21 +2095,17 @@ public class Api {
     //http://vk.com/dev/fave.getUsers
     public ArrayList<User> getFaveUsers(String fields, Integer count, Integer offset) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("fave.getUsers");
-        if(fields==null)
-            fields="photo_medium,online";
         params.put("fields",fields);
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
         ArrayList<User> users=new ArrayList<User>();
-        JSONArray array=root.optJSONArray("response");
-        //if there are no friends "response" will not be array
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         if(array==null)
             return users;
         int category_count=array.length();
         for(int i=0; i<category_count; ++i) {
-            if(array.get(i)==null || ((array.get(i) instanceof JSONObject)==false))
-                continue;
             JSONObject o = (JSONObject)array.get(i);
             User u = User.parseFromFave(o);
             users.add(u);
@@ -2149,7 +2119,8 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         if (array == null)
             return new ArrayList<Photo>(); 
         ArrayList<Photo> photos = parsePhotos(array);
@@ -2162,10 +2133,11 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Video> videos = new ArrayList<Video>();
         if (array != null) {
-            for(int i = 1; i<array.length(); ++i) {
+            for(int i = 0; i<array.length(); ++i) {
                 JSONObject o = (JSONObject)array.get(i);
                 Video video = Video.parse(o);
                 videos.add(video);
@@ -2181,7 +2153,8 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         //JSONArray array = response.optJSONArray("wall");
         //JSONArray profiles_array = response.optJSONArray("profiles");
         //JSONArray groups_array = response.optJSONArray("groups");
@@ -2189,7 +2162,7 @@ public class Api {
         if (array == null)
             return wmessages;
         int category_count = array.length();
-        for(int i = 1; i < category_count; ++i) {
+        for(int i = 0; i < category_count; ++i) {
             JSONObject o = (JSONObject)array.get(i);
             WallMessage wm = WallMessage.parse(o);
             wmessages.add(wm);
@@ -2204,13 +2177,11 @@ public class Api {
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
         ArrayList<Link> groups=new ArrayList<Link>();
-        JSONArray array=root.optJSONArray("response");
-        //if there are no groups "response" will not be array
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         if(array==null)
             return groups;
         for(int i = 0; i < array.length(); i++) {
-            if(!(array.get(i) instanceof JSONObject))
-                continue;
             JSONObject jlink = (JSONObject)array.get(i);
             Link link = Link.parse(jlink);
             groups.add(link);
@@ -2228,7 +2199,7 @@ public class Api {
         String str_uids = String.valueOf(uids.get(0));
         for (int i=1; i<uids.size(); i++)
             str_uids += "," + String.valueOf(uids.get(i));
-        params.put("uids", str_uids);
+        params.put("user_ids", str_uids);
         params.put("title", title);
         JSONObject root = sendRequest(params);
         return root.optLong("response");
@@ -2257,7 +2228,7 @@ public class Api {
     public Integer addUserToChat(long chat_id, long uid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("messages.addChatUser");
         params.put("chat_id", chat_id);
-        params.put("uid", uid);
+        params.put("user_id", uid);
         JSONObject root = sendRequest(params);
         return root.optInt("response");
     }
@@ -2266,7 +2237,7 @@ public class Api {
     public Integer removeUserFromChat(long chat_id, long uid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("messages.removeChatUser");
         params.put("chat_id", chat_id);
-        params.put("uid", uid);
+        params.put("user_id", uid);
         JSONObject root = sendRequest(params);
         return root.optInt("response");
     }
@@ -2309,7 +2280,8 @@ public class Api {
         params.put("offset", offset);
         params.put("preview_length", preview_length);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
         return messages;
     }
@@ -2321,14 +2293,14 @@ public class Api {
         params.put("fields", fields);
         params.put("limit", limit);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONArray array=root.optJSONArray("response");
         return Message.parseSearchedDialogs(array);
     }
     
     //http://vk.com/dev/messages.getLastActivity
     public LastActivity getLastActivity(long user_id) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getLastActivity");
-        params.put("uid", user_id);
+        params.put("user_id", user_id);
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
         return LastActivity.parse(response);
@@ -2337,7 +2309,7 @@ public class Api {
     //http://vk.com/dev/groups.getMembers
     public ArrayList<Long> getGroupsMembers(long gid, Integer count, Integer offset, String sort) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("groups.getMembers");
-        params.put("gid", gid);
+        params.put("group_id", gid);
         params.put("count", count);
         params.put("offset", offset);
         params.put("sort", sort); //id_asc, id_desc, time_asc, time_desc
@@ -2359,7 +2331,7 @@ public class Api {
     //http://vk.com/dev/groups.getMembers
     public Long getGroupsMembersCount(long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("groups.getMembers");
-        params.put("gid", gid);
+        params.put("group_id", gid);
         params.put("count", 10);
         JSONObject root = sendRequest(params);
         JSONObject response=root.getJSONObject("response");
@@ -2386,12 +2358,15 @@ public class Api {
     //http://vk.com/dev/audio.getAlbums
     public ArrayList<AudioAlbum> getAudioAlbums(Long uid, Long gid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.getAlbums");
-        params.put("uid", uid);
-        params.put("gid", gid);
+        if(uid!=null)
+            params.put("owner_id", uid);
+        if(gid!=null)
+            params.put("owner_id", gid);
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<AudioAlbum> albums = AudioAlbum.parseAlbums(array);
         return albums;
     }
@@ -2400,8 +2375,9 @@ public class Api {
     public ArrayList<Audio> getAudioRecommendations() throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("audio.getRecommendations");
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
-        return parseAudioList(array, 0);
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
+        return parseAudioList(array);
     }
     
     //http://vk.com/dev/audio.getPopular
@@ -2412,19 +2388,23 @@ public class Api {
         //params.put("count", count);
         //params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
-        return parseAudioList(array, 0);
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
+        return parseAudioList(array);
     }
     
     //http://vk.com/dev/video.getAlbums
     public ArrayList<AudioAlbum> getVideoAlbums(Long uid, Long gid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("video.getAlbums");
-        params.put("uid", uid);
-        params.put("gid", gid);
+        if(uid!=null)
+            params.put("owner_id", uid);
+        if(gid!=null)
+            params.put("owner_id", gid);
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         ArrayList<AudioAlbum> albums = AudioAlbum.parseAlbums(array);
         return albums;
     }
@@ -2432,7 +2412,7 @@ public class Api {
     //http://vk.com/dev/messages.setActivity
     public Integer setMessageActivity(Long uid, Long chat_id, boolean typing) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("messages.setActivity");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         params.put("chat_id", chat_id);
         if (typing)
             params.put("type", "typing");
@@ -2459,7 +2439,7 @@ public class Api {
     public Integer photoEdit(Long owner_id, long pid, String caption) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.edit");
         params.put("owner_id", owner_id);
-        params.put("pid", pid);
+        params.put("photo_id", pid);
         params.put("caption", caption);
         JSONObject root = sendRequest(params);
         return root.optInt("response");
@@ -2468,11 +2448,12 @@ public class Api {
     //http://vk.com/dev/docs.get
     public ArrayList<Document> getDocs(Long owner_id, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("docs.get");
-        params.put("oid", owner_id);
+        params.put("owner_id", owner_id);
         params.put("count", count);
         params.put("offset", offset);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         return Document.parseDocs(array);
     }
     
@@ -2497,8 +2478,8 @@ public class Api {
     //http://vk.com/dev/docs.delete
     public Boolean deleteDoc(Long doc_id, long owner_id) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("docs.delete");
-        params.put("oid", owner_id);
-        params.put("did", doc_id);
+        params.put("owner_id", owner_id);
+        params.put("doc_id", doc_id);
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -2547,6 +2528,7 @@ public class Api {
         return response==1;
     }
     
+    //http://vk.com/dev/audio.getBroadcast
     //gets status of broadcasting user current audio to his page
     public boolean audioGetBroadcast() throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("audio.getBroadcast");
@@ -2570,7 +2552,7 @@ public class Api {
     public Long addAudioAlbum(String title, Long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("audio.addAlbum");
         params.put("title", title);
-        params.put("gid", gid);
+        params.put("group_id", gid);
         JSONObject root = sendRequest(params);
         JSONObject obj = root.getJSONObject("response");
         return obj.optLong("album_id");
@@ -2581,7 +2563,7 @@ public class Api {
         Params params = new Params("audio.editAlbum");
         params.put("title", title);
         params.put("album_id", album_id);
-        params.put("gid", gid);
+        params.put("group_id", gid);
         JSONObject root = sendRequest(params);
         return root.optInt("response");
     }
@@ -2590,7 +2572,7 @@ public class Api {
     public Integer deleteAudioAlbum(long album_id, Long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("audio.deleteAlbum");
         params.put("album_id", album_id);
-        params.put("gid", gid);
+        params.put("group_id", gid);
         JSONObject root = sendRequest(params);
         return root.optInt("response");
     }
@@ -2598,9 +2580,9 @@ public class Api {
     //http://vk.com/dev/audio.moveToAlbum
     public Integer moveToAudioAlbum(Collection<Long> aids, long album_id, Long gid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("audio.moveToAlbum");
-        params.put("aids", arrayToString(aids));
+        params.put("audio_ids", arrayToString(aids));
         params.put("album_id", album_id);
-        params.put("gid", gid);
+        params.put("group_id", gid);
         JSONObject root = sendRequest(params);
         return root.optInt("response");
     }
@@ -2634,19 +2616,20 @@ public class Api {
     //http://vk.com/dev/account.getBanned
     public ArrayList<User> getBlackList(Long offset, Long count) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("account.getBanned");
-        String fields="first_name,last_name,photo_medium,online";
+        String fields="first_name,last_name,photo_100,online";
         params.put("fields", fields);
         params.put("offset", offset);
         params.put("count", count);
         JSONObject root = sendRequest(params);
-        JSONArray array = root.optJSONArray("response");
+        JSONObject response=root.optJSONObject("response");
+        JSONArray array=response.optJSONArray("items");
         return User.parseUsers(array);
     }
     
     //http://vk.com/dev/account.banUser
     public Boolean addToBlackList(long uid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("account.banUser");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -2655,7 +2638,7 @@ public class Api {
     //http://vk.com/dev/account.unbanUser
     public Boolean deleteFromBlackList(long uid) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("account.unbanUser");
-        params.put("uid", uid);
+        params.put("user_id", uid);
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -2664,8 +2647,8 @@ public class Api {
     //http://vk.com/dev/docs.add
     public Long docsAdd(long owner_id, long document_id, String access_key) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("docs.add");
-        params.put("did", document_id);
-        params.put("oid", owner_id);
+        params.put("doc_id", document_id);
+        params.put("owner_id", owner_id);
         params.put("access_key", access_key);
         JSONObject root = sendRequest(params);
         //returns new document_id
@@ -2701,16 +2684,10 @@ public class Api {
         //not documented
         params.put("fields", "photo_100");
         //
-        params.put("v", "5.0");
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
-        if (response != null) {
-            JSONArray array = response.optJSONArray("items"); 
-            return GroupBanItem.parseAll(array);
-        } else {
-            JSONArray array = root.optJSONArray("response");
-            return GroupBanItem.parseAll(array);
-        }
+        JSONArray array = response.optJSONArray("items"); 
+        return GroupBanItem.parseAll(array);
     }
     
     //http://vk.com/dev/groups.banUser
@@ -2723,7 +2700,6 @@ public class Api {
         params.put("comment", comment);
         if (comment_visible)
             params.put("comment_visible", "1");
-        params.put("v", "5.0");
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -2734,7 +2710,6 @@ public class Api {
         Params params = new Params("groups.unbanUser");
         params.put("group_id", group_id);
         params.put("user_id", user_id);
-        params.put("v", "5.0");
         JSONObject root = sendRequest(params);
         int response = root.optInt("response");
         return response==1;
@@ -2745,7 +2720,6 @@ public class Api {
         Params params = new Params("photos.copy");
         params.put("owner_id", owner_id);
         params.put("photo_id", photo_id);
-        params.put("v", "5.0");
         JSONObject root = sendRequest(params);
         Long response = root.optLong("response");
         return response;
@@ -2754,7 +2728,6 @@ public class Api {
     //http://vk.com/dev/account.setOffline
     public Long setOffline() throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("account.setOffline");
-        params.put("v", "5.0");
         JSONObject root = sendRequest(params);
         Long response = root.optLong("response");
         return response;

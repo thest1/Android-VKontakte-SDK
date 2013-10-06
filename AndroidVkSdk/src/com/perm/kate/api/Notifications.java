@@ -24,7 +24,7 @@ public class Notifications implements Serializable {
         if (array==null)
             return full_notifications;
         if (profiles_array != null)
-            full_notifications.profiles = User.parseUsers(profiles_array);
+            full_notifications.profiles = User.parseUsers(profiles_array, true);
         if (groups_array != null)
             full_notifications.groups = Group.parseGroups(groups_array);
         full_notifications.notifications = Notification.parseNotifications(array);

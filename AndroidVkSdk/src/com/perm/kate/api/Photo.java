@@ -11,12 +11,12 @@ public class Photo implements Serializable {
     public long pid;
     public long aid;
     public String owner_id;
-    public String src;
-    public String src_small;//not used for now because in newsfeed it's empty
-    public String src_big;
-    public String src_xbig;
-    public String src_xxbig;
-    public String src_xxxbig;
+    public String src;//photo_130
+    public String src_small;//photo_75
+    public String src_big;//photo_604
+    public String src_xbig;//photo_807
+    public String src_xxbig;//photo_1280
+    public String src_xxxbig;//photo_2560
     public String phototext;
     public long created;
     public Integer like_count;
@@ -31,15 +31,15 @@ public class Photo implements Serializable {
 
     public static Photo parse(JSONObject o) throws NumberFormatException, JSONException{
         Photo p = new Photo();
-        p.pid = o.getLong("pid");
-        p.aid = o.optLong("aid");
+        p.pid = o.getLong("id");
+        p.aid = o.optLong("album_id");
         p.owner_id = o.getString("owner_id");
-        p.src = o.optString("src");
-        p.src_small = o.optString("src_small");
-        p.src_big = o.optString("src_big");
-        p.src_xbig = o.optString("src_xbig");
-        p.src_xxbig = o.optString("src_xxbig");
-        p.src_xxxbig = o.optString("src_xxxbig");
+        p.src = o.optString("photo_130");
+        p.src_small = o.optString("photo_75");
+        p.src_big = o.optString("photo_604");
+        p.src_xbig = o.optString("photo_807");
+        p.src_xxbig = o.optString("photo_1280");
+        p.src_xxxbig = o.optString("photo_2560");
         p.phototext = Api.unescape(o.optString("text"));
         p.created = o.optLong("created");
         p.user_id = o.optString("user_id");
