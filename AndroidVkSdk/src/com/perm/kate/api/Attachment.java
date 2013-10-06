@@ -24,6 +24,7 @@ public class Attachment implements Serializable {
     public Message message;
     public WallMessage wallMessage;
     public Page page;
+    public Gift gift;
 
     public static ArrayList<Attachment> parseAttachments(JSONArray attachments, long from_id, long copy_owner_id, JSONObject geo_json) throws JSONException {
         ArrayList<Attachment> attachments_arr=new ArrayList<Attachment>();
@@ -66,6 +67,8 @@ public class Attachment implements Serializable {
                     attachment.wallMessage=WallMessage.parse(json_attachment.getJSONObject("wall"));
                 else if(attachment.type.equals("page"))
                     attachment.page=Page.parseFromAttachment(json_attachment.getJSONObject("page"));
+                else if(attachment.type.equals("gift"))
+                    attachment.gift=Gift.parse(json_attachment.getJSONObject("gift"));
                 attachments_arr.add(attachment);
             }
         }
