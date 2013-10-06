@@ -25,6 +25,7 @@ public class Video implements Serializable{
     public String mp4_720;
     public String flv_320;
     public String access_key;//used when private video attached to message
+    public int views;
     
     
     public static Video parse(JSONObject o) throws NumberFormatException, JSONException{
@@ -38,6 +39,8 @@ public class Video implements Serializable{
         v.image_big = o.optString("photo_320");
         v.date = o.optLong("date");
         v.player = o.optString("player");
+        if (o.has("views"))
+            v.views = o.getInt("views");
         
         JSONObject files=o.optJSONObject("files");
         if(files!=null){
