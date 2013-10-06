@@ -20,6 +20,7 @@ public class Api {
     static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
+    public static final String API_VERSION="4.4";
     
     public Api(String access_token, String api_id){
         this.access_token=access_token;
@@ -136,6 +137,8 @@ public class Api {
     
     private String getSignedUrl(Params params, boolean is_post) {
         params.put("access_token", access_token);
+        if(!params.contains("v"))
+            params.put("v", API_VERSION);
         
         String args = "";
         if(!is_post)
@@ -429,7 +432,6 @@ public class Api {
         params.put("extended", "1");
         params.put("offset",offset);
         params.put("limit",count);
-        params.put("v","4.1");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         if (array == null)
@@ -704,7 +706,6 @@ public class Api {
         if (count != 0)
             params.put("count", count);
         params.put("preview_length","0");
-        params.put("v","4.2");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
@@ -735,7 +736,6 @@ public class Api {
         if (count != 0)
             params.put("count", count);
         params.put("preview_length","0");
-        params.put("v","4.2");
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
@@ -884,7 +884,6 @@ public class Api {
         Params params = new Params("newsfeed.getComments");
         params.put("last_comments","1");
         params.put("count","50");
-        params.put("v","4.4");
         JSONObject root = sendRequest(params);
         return Newsfeed.parse(root, true);
     }
@@ -1245,7 +1244,6 @@ public class Api {
             params.put("count", count);
         params.put("preview_length", "0");
         params.put("need_likes", "1");
-        params.put("v", "4.4");
         if(reverse_order)
             params.put("sort", "desc");
         JSONObject root = sendRequest(params);
@@ -2109,7 +2107,6 @@ public class Api {
     public ArrayList<Message> getMessagesById(ArrayList<Long> message_ids) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.getById");
         params.put("mids", arrayToString(message_ids));
-        params.put("v","4.2");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);
@@ -2316,7 +2313,6 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         params.put("preview_length", preview_length);
-        params.put("v","4.2");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         ArrayList<Message> messages = parseMessages(array, false, 0, false, 0);

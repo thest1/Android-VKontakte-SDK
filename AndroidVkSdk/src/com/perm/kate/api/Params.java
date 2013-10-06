@@ -7,11 +7,15 @@ import java.util.Map.Entry;
 
 public class Params {
     //TreeMap нужен был чтобы сортировать параметры по имени, сейчас это уже не важно, главно подписывать и передавать параметры в одном и тотм же порядке
-    TreeMap<String, String> args = new TreeMap<String, String>();
+    private TreeMap<String, String> args = new TreeMap<String, String>();
     String method_name;
     
     public Params(String method_name){
         this.method_name=method_name;
+    }
+    
+    public boolean contains(String name){
+        return args.containsKey(name);
     }
 
     public void put(String param_name, String param_value) {
