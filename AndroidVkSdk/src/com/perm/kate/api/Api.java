@@ -846,16 +846,14 @@ public class Api {
     }
     
     //http://vk.com/dev/newsfeed.getRecommended
-    public Newsfeed getRecommendedNews(Long start_time, long count, Long end_time, Integer offset, String from, String source_ids, String filters, Integer max_photos, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public Newsfeed getRecommendedNews(Long start_time, long count, Long end_time, Integer offset, String from, Integer max_photos, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("newsfeed.getRecommended");
-        params.put("filters",filters);
         params.put("start_time",start_time);
         params.put("end_time",end_time);
         if(count!=0)
             params.put("count",count);
         params.put("offset",offset);
         params.put("from",from);
-        params.put("source_ids",source_ids);
         params.put("max_photos",max_photos);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
