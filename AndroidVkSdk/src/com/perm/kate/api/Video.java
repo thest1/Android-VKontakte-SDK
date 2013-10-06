@@ -65,11 +65,8 @@ public class Video implements Serializable{
         v.title = Api.unescape(o.getString("title"));
         v.duration = o.getLong("duration");
         v.description = Api.unescape(o.optString("description"));
-        if(o.has("image"))
-            v.image = o.optString("image");
-        v.image_big = o.optString("image_big");
-        if(o.has("thumb"))//video.getUserVideos
-            v.image = o.optString("thumb");
+        v.image = o.optString("photo_130");
+        v.image_big = o.optString("photo_320");
         v.date = o.optLong("date");
         v.player = o.optString("player");
         v.access_key = o.optString("access_key");
