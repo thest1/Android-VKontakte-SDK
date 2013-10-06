@@ -1526,8 +1526,8 @@ public class Api {
         if (uids != null && uids.length() > 0 && (offset == null || offset == 0)) {
             Log.i(TAG, "Search with uid = " + uids);
             String code = "var a=API.users.search({\"q\":\"" + q + "\",\"count\":" + count + ",\"count\":" + offset + ",\"fields\":\"" + fields + "\"});";
-            code += "var b=API.getProfiles({\"uids\":" + uids +",\"fields\":\"" + fields + "\"});";
-            code += "return b+a;";
+            code += "var b=API.users.get({\"user_ids\":" + uids +",\"fields\":\"" + fields + "\"});";
+            code += "return b+a.items;";
             Params params = new Params("execute");
             params.put("code", code);
             JSONObject root = sendRequest(params);
@@ -2350,8 +2350,8 @@ public class Api {
     }
     
     public ArrayList<User> getGroupsMembersWithExecute(long gid, Integer count, Integer offset, String sort, String fields) throws MalformedURLException, IOException, JSONException, KException {
-        //String code = "return API.getProfiles({\"uids\":API.groups.getMembers({\"gid\":" + String.valueOf(gid) + ",\"count\":" + String.valueOf(count) + ",\"offset\":" + String.valueOf(offset) + ",\"sort\":\"id_asc\"}),\"fields\":\"" + fields + "\"});";
-        String code = "var members=API.groups.getMembers({\"gid\":" + gid + "}); var u=members[1]; return API.getProfiles({\"uids\":u,\"fields\":\"" + fields + "\"});";
+        //String code = "return API.users.get({\"user_ids\":API.groups.getMembers({\"gid\":" + String.valueOf(gid) + ",\"count\":" + String.valueOf(count) + ",\"offset\":" + String.valueOf(offset) + ",\"sort\":\"id_asc\"}),\"fields\":\"" + fields + "\"});";
+        String code = "var members=API.groups.getMembers({\"gid\":" + gid + "}); var u=members[1]; return API.users.get({\"user_ids\":u,\"fields\":\"" + fields + "\"});";
         Params params = new Params("execute");
         params.put("code", code);
         JSONObject root = sendRequest(params);
