@@ -78,9 +78,9 @@ public class Comment implements Serializable {
     
     public static Comment parseNotificationComment(JSONObject o, boolean parse_post) throws NumberFormatException, JSONException{
         Comment comment = new Comment();
-        comment.cid = Long.parseLong(o.getString("id"));
-        comment.from_id = Long.parseLong(o.getString("owner_id"));
-        comment.date = Long.parseLong(o.getString("date"));
+        comment.cid = o.getLong("id");
+        comment.from_id = o.getLong("owner_id");
+        comment.date = o.getLong("date");
         comment.message = Api.unescape(o.getString("text"));
         if (o.has("likes")){
             JSONObject jlikes = o.getJSONObject("likes");
