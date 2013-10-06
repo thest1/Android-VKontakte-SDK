@@ -2696,4 +2696,47 @@ public class Api {
         JSONObject root = sendRequest(params);
         return Newsfeed.parseFromSearch(root);
     }
+    
+    //http://vk.com/dev/groups.getBanned
+    public ArrayList<GroupBanItem> getGroupBannedUsers(long group_id, Long offset, Long count) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("groups.getBanned");
+        params.put("group_id", group_id);
+        params.put("offset", offset);
+        params.put("count", count);
+        //not documented
+        params.put("fields", "photo_100");
+        //
+        params.put("v", "5.0");
+        JSONObject root = sendRequest(params);
+        JSONObject response = root.optJSONObject("response");
+        JSONArray array = response.optJSONArray("items"); 
+        return GroupBanItem.parseAll(array);
+    }
+    
+    //http://vk.com/dev/groups.banUser
+    public Boolean addGroupBanUser(long group_id, long user_id, Long end_date, Integer reason, String comment, boolean comment_visible) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("groups.banUser");
+        params.put("group_id", group_id);
+        params.put("user_id", user_id);
+        params.put("end_date", end_date);
+        params.put("reason", reason);
+        params.put("comment", comment);
+        if (comment_visible)
+            params.put("comment_visible", "1");
+        params.put("v", "5.0");
+        JSONObject root = sendRequest(params);
+        int response = root.optInt("response");
+        return response==1;
+    }
+    
+    //http://vk.com/dev/groups.unbanUser
+    public Boolean deleteGroupBanUser(long group_id, long user_id) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("groups.unbanUser");
+        params.put("group_id", group_id);
+        params.put("user_id", user_id);
+        params.put("v", "5.0");
+        JSONObject root = sendRequest(params);
+        int response = root.optInt("response");
+        return response==1;
+    }
 }
