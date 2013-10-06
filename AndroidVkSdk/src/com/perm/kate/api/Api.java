@@ -2711,8 +2711,13 @@ public class Api {
         params.put("v", "5.0");
         JSONObject root = sendRequest(params);
         JSONObject response = root.optJSONObject("response");
-        JSONArray array = response.optJSONArray("items"); 
-        return GroupBanItem.parseAll(array);
+        if (response != null) {
+            JSONArray array = response.optJSONArray("items"); 
+            return GroupBanItem.parseAll(array);
+        } else {
+            JSONArray array = root.optJSONArray("response");
+            return GroupBanItem.parseAll(array);
+        }
     }
     
     //http://vk.com/dev/groups.banUser
