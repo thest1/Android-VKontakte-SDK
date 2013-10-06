@@ -27,6 +27,7 @@ public class Group implements Serializable {
     public Boolean can_see_all_posts;//can_see_all_posts=false означает что стена закрыта
     public Boolean is_admin;
     public Integer admin_level;//1-moder, 2-editor, 3-admin
+    public ArrayList<Contact> contacts; 
 
     public static Group parse(JSONObject o) throws JSONException{
         Group g=new Group();
@@ -70,6 +71,17 @@ public class Group implements Serializable {
             //opt because there may be something unparseable
             g.admin_level=o.optInt("admin_level", 1);
         
+        JSONArray jcontacts = o.optJSONArray("contacts");
+        if (jcontacts != null) {
+            g.contacts = new ArrayList<Contact>();
+            for (int i = 0; i < jcontacts.length(); i++) {
+                JSONObject jcontact = (JSONObject)jcontacts.get(i);
+                Contact contact = Contact.parse(jcontact);
+                if (contact != null)
+                    g.contacts.add(contact);
+            }
+        }
+            
         return g;
     }
     

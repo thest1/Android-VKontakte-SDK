@@ -2022,7 +2022,7 @@ public class Api {
         else
             str_uids = domain;
         params.put("gids", str_uids);
-        params.put("fields", fields); //Possible values: place,wiki_page,city,country,description,start_date,finish_date,site,fixed_post
+        params.put("fields", fields); //Possible values: place,wiki_page,city,country,description,start_date,finish_date,site,fixed_post,contacts
         JSONObject root = sendRequest(params);
         JSONArray array=root.optJSONArray("response");
         return Group.parseGroups(array);
