@@ -1347,13 +1347,10 @@ public class Api {
         params.put("extended", extended);
         params.put("photo_sizes", photo_sizes);
         JSONObject root = sendRequest(params);
-        JSONObject response=root.optJSONObject("response");
+        JSONArray response=root.optJSONArray("response");
         if(response==null)
             return new ArrayList<Photo>();
-        JSONArray array=response.optJSONArray("items");
-        if (array == null)
-            return new ArrayList<Photo>(); 
-        ArrayList<Photo> photos1 = parsePhotos(array);
+        ArrayList<Photo> photos1 = parsePhotos(response);
         return photos1;
     }
     
