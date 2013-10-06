@@ -829,9 +829,9 @@ public class Api {
      * @throws KException ***/
     //http://vk.com/dev/newsfeed.get
     //always returns about 33-35 items
-    public Newsfeed getNews(Long start_time, long count, Long end_time, Integer offset, String from, String source_ids, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public Newsfeed getNews(Long start_time, long count, Long end_time, Integer offset, String from, String source_ids, String filters, Integer max_photos, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("newsfeed.get");
-        params.put("filters","post,photo,photo_tag,friend,note");
+        params.put("filters",filters);
         params.put("start_time",start_time);
         params.put("end_time",end_time);
         if(count!=0)
@@ -839,6 +839,7 @@ public class Api {
         params.put("offset",offset);
         params.put("from",from);
         params.put("source_ids",source_ids);
+        params.put("max_photos",max_photos);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
         return Newsfeed.parse(root, false);
