@@ -2719,10 +2719,11 @@ public class Api {
     }
     
     //http://vk.com/dev/photos.copy
-    public Long photoCopy(long owner_id, long photo_id) throws MalformedURLException, IOException, JSONException, KException {
+    public Long photoCopy(long owner_id, long photo_id, String access_key) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("photos.copy");
         params.put("owner_id", owner_id);
         params.put("photo_id", photo_id);
+        params.put("access_key", access_key);
         JSONObject root = sendRequest(params);
         Long response = root.optLong("response");
         return response;
