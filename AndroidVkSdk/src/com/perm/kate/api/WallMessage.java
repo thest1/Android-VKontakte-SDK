@@ -12,6 +12,7 @@ public class WallMessage implements Serializable {
     public long from_id;
     public long to_id;
     public long date; 
+    public int post_type; //where -1 - undefined 0 - post, 1 - copy, 2 - postpone 
     public String text;
     public long id;
     public ArrayList<Attachment> attachments;
@@ -47,6 +48,7 @@ public class WallMessage implements Serializable {
             //in copy_history owner_id is used
             wm.to_id = o.getLong("owner_id");
         wm.date = o.optLong("date");
+        wm.post_type = getPostType(o);
         wm.text = Api.unescape(o.optString("text"));
         if (o.has("likes")){
             JSONObject jlikes = o.getJSONObject(NewsJTags.LIKES);
@@ -84,6 +86,7 @@ public class WallMessage implements Serializable {
         wm.id = o.getLong("id");
         wm.from_id = o.getLong("owner_id");
         wm.to_id = o.optLong("to_id");
+        wm.post_type = getPostType(o);
         wm.text = Api.unescape(o.getString("text"));
         //likes is there but I don't parse it because I don't need it
         //if (o.has("likes")){
@@ -97,5 +100,19 @@ public class WallMessage implements Serializable {
         JSONObject geo_json=o.optJSONObject("geo");
         wm.attachments=Attachment.parseAttachments(attachments, wm.to_id, wm.copy_owner_id, geo_json);
         return wm;
+    }
+    
+    public static int getPostType(JSONObject o) {
+        int post_type = -1;
+        if (o.has("post_type")) {
+            String _post_type = o.optString("post_type");
+            if ("post".equals(_post_type))
+                post_type = 0;
+            else if ("copy".equals(_post_type))
+                post_type = 1;
+            else if ("postpone".equals(_post_type))
+                post_type = 2;
+        }
+        return post_type;
     }
 }

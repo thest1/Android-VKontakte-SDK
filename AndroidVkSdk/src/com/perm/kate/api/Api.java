@@ -2422,7 +2422,7 @@ public class Api {
     }
     
     //http://vk.com/dev/wall.edit
-    public int editWallPost(long owner_id, long post_id, String text, Collection<String> attachments, String lat, String lon, long place_id, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
+    public int editWallPost(long owner_id, long post_id, String text, Collection<String> attachments, String lat, String lon, long place_id, Long publish_date, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("wall.edit");
         params.put("owner_id", owner_id);
         params.put("post_id", post_id);
@@ -2431,6 +2431,7 @@ public class Api {
         params.put("lat", lat);
         params.put("long", lon);
         params.put("place_id", place_id);
+        params.put("publish_date", publish_date);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params, true);
         return root.optInt("response");
