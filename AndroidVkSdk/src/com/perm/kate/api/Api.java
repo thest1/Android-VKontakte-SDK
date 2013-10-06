@@ -20,7 +20,7 @@ public class Api {
     static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
-    public static final String API_VERSION="4.95";
+    public static final String API_VERSION="4.96";
     
     public Api(String access_token, String api_id){
         this.access_token=access_token;
@@ -1451,7 +1451,7 @@ public class Api {
         JSONArray array = root.optJSONArray("response");
         ArrayList<Video> videoss = new ArrayList<Video>();
         if (array != null) {
-            for(int i = 0; i<array.length(); ++i) {
+            for(int i = 1; i<array.length(); ++i) {
                 JSONObject o = (JSONObject)array.get(i);
                 Video video = Video.parse(o);
                 videoss.add(video);
