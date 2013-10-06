@@ -892,8 +892,7 @@ public class Api {
         params.put("audios", audios);
         addCaptchaParams(captcha_key, captcha_sid, params);
         JSONObject root = sendRequest(params);
-        JSONObject response=root.optJSONObject("response");
-        JSONArray array=response.optJSONArray("items");
+        JSONArray array=root.optJSONArray("response");
         return parseAudioList(array);
     }
     
