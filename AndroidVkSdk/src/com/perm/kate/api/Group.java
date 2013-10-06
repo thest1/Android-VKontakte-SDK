@@ -27,6 +27,7 @@ public class Group implements Serializable {
     public Boolean is_admin;
     public Integer admin_level;//1-moder, 2-editor, 3-admin
     public ArrayList<Contact> contacts; 
+    public Integer members_count;
 
     public static Group parse(JSONObject o) throws JSONException{
         Group g=new Group();
@@ -75,6 +76,11 @@ public class Group implements Serializable {
                     g.contacts.add(contact);
             }
         }
+        
+        //if doesn't exist it means value is unknown
+        if(o.has("members_count"))
+            //opt because there may be something unparseable
+            g.members_count=o.optInt("members_count", 0);
             
         return g;
     }

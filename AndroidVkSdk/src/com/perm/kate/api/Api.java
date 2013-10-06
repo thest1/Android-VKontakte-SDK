@@ -2344,16 +2344,6 @@ public class Api {
         return users;
     }
     
-    //http://vk.com/dev/groups.getMembers
-    public Long getGroupsMembersCount(long gid) throws MalformedURLException, IOException, JSONException, KException {
-        Params params = new Params("groups.getMembers");
-        params.put("group_id", gid);
-        params.put("count", 10);
-        JSONObject root = sendRequest(params);
-        JSONObject response=root.getJSONObject("response");
-        return response.optLong("count");
-    }
-    
     public ArrayList<User> getGroupsMembersWithExecute(long gid, Integer count, Integer offset, String sort, String fields) throws MalformedURLException, IOException, JSONException, KException {
         //String code = "return API.getProfiles({\"uids\":API.groups.getMembers({\"gid\":" + String.valueOf(gid) + ",\"count\":" + String.valueOf(count) + ",\"offset\":" + String.valueOf(offset) + ",\"sort\":\"id_asc\"}),\"fields\":\"" + fields + "\"});";
         String code = "var members=API.groups.getMembers({\"gid\":" + gid + "}); var u=members[1]; return API.getProfiles({\"uids\":u,\"fields\":\"" + fields + "\"});";
