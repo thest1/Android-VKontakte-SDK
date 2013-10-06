@@ -20,7 +20,7 @@ public class Api {
     static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
-    public static final String API_VERSION="4.97";
+    public static final String API_VERSION="4.98";
     
     public Api(String access_token, String api_id){
         this.access_token=access_token;
@@ -411,7 +411,7 @@ public class Api {
         if (array == null)
             return albums;
         int category_count=array.length(); 
-        for (int i=0; i<category_count; ++i) {
+        for (int i=1; i<category_count; ++i) {
             JSONObject o = (JSONObject)array.get(i);
             Album a = Album.parse(o);
             if (a.title.equals("DELETED"))
