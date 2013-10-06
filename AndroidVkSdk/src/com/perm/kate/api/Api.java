@@ -20,7 +20,7 @@ public class Api {
     static final String TAG="Kate.Api";
     
     public static final String BASE_URL="https://api.vk.com/method/";
-    public static final String API_VERSION="4.5";
+    public static final String API_VERSION="4.6";
     
     public Api(String access_token, String api_id){
         this.access_token=access_token;
@@ -1726,7 +1726,6 @@ public class Api {
         params.put("poll_id", poll_id);
         if(topic_id!=0)
             params.put("board", topic_id);
-        params.put("v", "4.6");
         JSONObject root = sendRequest(params);
         JSONObject response = root.getJSONObject("response");
         return VkPoll.parse(response);
@@ -1768,7 +1767,6 @@ public class Api {
         params.put("count", count);
         params.put("offset", offset);
         params.put("fields", fields);
-        params.put("v", "4.6");
         JSONObject root = sendRequest(params);
         JSONArray array = root.optJSONArray("response");
         JSONObject object = (JSONObject)array.get(0);
