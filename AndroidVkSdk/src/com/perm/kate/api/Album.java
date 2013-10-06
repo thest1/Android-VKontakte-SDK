@@ -30,12 +30,37 @@ public class Album {
         String created = o.optString("created");
         if (created != null && !created.equals("") && !created.equals("null"))
             a.created = Long.parseLong(created);
-        String privacy = o.optString("privacy");
-        if (privacy != null && !privacy.equals("") && !privacy.equals("null"))
-            a.privacy = Long.parseLong(privacy);
-        String comment_privacy = o.optString("comment_privacy");
-        if (comment_privacy != null && !comment_privacy.equals("") && !comment_privacy.equals("null"))
-            a.comment_privacy = Long.parseLong(comment_privacy);
+        
+        JSONObject privacy=o.optJSONObject("privacy_view");
+        if(privacy!=null){
+            String type = privacy.optString("type");
+            if("all".equals(type))
+                a.privacy=0;
+            else if("friends".equals(type))
+                a.privacy=1;
+            else if("friends_of_friends".equals(type))
+                a.privacy=2;
+            else if("nobody".equals(type))
+                a.privacy=3;
+            else if("users".equals(type))
+                a.privacy=4;
+        }
+        
+        JSONObject privacy_comment=o.optJSONObject("privacy_comment");
+        if(privacy_comment!=null){
+            String type = privacy_comment.optString("type");
+            if("all".equals(type))
+                a.comment_privacy=0;
+            else if("friends".equals(type))
+                a.comment_privacy=1;
+            else if("friends_of_friends".equals(type))
+                a.comment_privacy=2;
+            else if("nobody".equals(type))
+                a.comment_privacy=3;
+            else if("users".equals(type))
+                a.comment_privacy=4;
+        }
+        
         a.size = o.optLong("size");
         String updated = o.optString("updated");
         if (updated != null && !updated.equals("") && !updated.equals("null"))
