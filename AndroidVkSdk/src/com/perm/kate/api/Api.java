@@ -158,9 +158,11 @@ public class Api {
     public static String unescape(String text){
         if(text==null)
             return null;
-        return text.replace("&amp;", "&").replace("<br>", "\n").replace("&gt;", ">").replace("&lt;", "<")
+        return text.replace("&amp;", "&").replace("&quot;", "\"").replace("<br>", "\n").replace("&gt;", ">").replace("&lt;", "<")
         .replace("<br/>", "\n").replace("&ndash;","-").trim();
+        //Баг в API
         //amp встречается в сообщении, br в Ответах тип comment_photo, gt lt на стене - баг API, ndash в статусе когда аудио транслируется
+        //quot в тексте сообщения из LongPoll - то есть в уведомлении
     }
     
     public static String unescapeWithSmiles(String text){
