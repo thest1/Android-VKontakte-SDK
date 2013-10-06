@@ -766,9 +766,9 @@ public class Api {
     }
 
     //http://vk.com/dev/messages.delete
-    public String deleteMessage(Long mid) throws MalformedURLException, IOException, JSONException, KException{
+    public String deleteMessage(Collection<Long> message_ids) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("messages.delete");
-        params.put("message_ids", mid);
+        params.put("message_ids", arrayToString(message_ids));
         sendRequest(params);
         //не парсим ответ - там приходят отдельные флаги для каждого удалённого сообщения
         return null;
