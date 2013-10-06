@@ -94,6 +94,7 @@ public class NewsItem {
                 newsitem.photo_tags.add(photo);
             }
         }
+        //for types photo and wall_photo
         if (jitem.has(NewsJTags.PHOTOS)){
             JSONObject response=jitem.optJSONObject(NewsJTags.PHOTOS);
             JSONArray jphotos=response.optJSONArray("items");
