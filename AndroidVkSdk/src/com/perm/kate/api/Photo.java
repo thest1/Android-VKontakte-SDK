@@ -27,6 +27,7 @@ public class Photo implements Serializable {
     public int width;//0 means value is unknown
     public int height;//0 means value is unknown
     public String access_key;
+    public String user_id; //for group
 
     public static Photo parse(JSONObject o) throws NumberFormatException, JSONException{
         Photo p = new Photo();
@@ -41,6 +42,7 @@ public class Photo implements Serializable {
         p.src_xxxbig = o.optString("src_xxxbig");
         p.phototext = Api.unescape(o.optString("text"));
         p.created = o.optLong("created");
+        p.user_id = o.optString("user_id");
         
         if (o.has("likes")) {
             JSONObject jlikes = o.getJSONObject("likes");
@@ -98,6 +100,10 @@ public class Photo implements Serializable {
         JSONArray can_comment_array = o.optJSONArray("can_comment");
         if (can_comment_array != null && can_comment_array.length() > 0) {
             p.can_comment = can_comment_array.getInt(0)==1;
+        }
+        JSONArray user_id_array = o.optJSONArray("user_id");
+        if (user_id_array != null && user_id_array.length() > 0) {
+            p.user_id = user_id_array.getString(0);
         }
         return p;
     }

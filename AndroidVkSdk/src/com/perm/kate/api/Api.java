@@ -1363,8 +1363,9 @@ public class Api {
         return photos1;
     }
     
-    public Photo getPhotoCountsByIdWithExecute(String photo) throws MalformedURLException, IOException, JSONException, KException {
-        String code = "var p=API.photos.getById({\"photos\":\"" + photo + "\",\"extended\":1}); return {\"pid\":p@.pid,\"likes\":p@.likes,\"comments\":p@.comments,\"can_comment\":p@.can_comment,\"tags\":p@.tags};";
+    public Photo getPhotoCountsByIdWithExecute(String photo, boolean get_user_id) throws MalformedURLException, IOException, JSONException, KException {
+        String b = (get_user_id) ? ",\"user_id\":p@.user_id" : "";
+        String code = "var p=API.photos.getById({\"photos\":\"" + photo + "\",\"extended\":1}); return {\"pid\":p@.pid,\"likes\":p@.likes,\"comments\":p@.comments,\"can_comment\":p@.can_comment,\"tags\":p@.tags" + b + "};";
         Params params = new Params("execute");
         params.put("code", code);
         JSONObject root = sendRequest(params);
