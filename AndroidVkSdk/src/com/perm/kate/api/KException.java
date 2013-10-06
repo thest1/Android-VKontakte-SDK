@@ -13,4 +13,7 @@ public class KException extends Exception{
     //for captcha
     public String captcha_img;
     public String captcha_sid;
+    
+    //for "Validation required" error
+    public String redirect_uri;
 }

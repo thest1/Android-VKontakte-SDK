@@ -27,6 +27,10 @@ public class Api {
         this.api_id=api_id;
     }
     
+    public void setAccessToken(String access_token){
+        this.access_token=access_token;
+    }
+    
     String access_token;
     String api_id;
     
@@ -44,6 +48,8 @@ public class Api {
                 e.captcha_img = error.optString("captcha_img");
                 e.captcha_sid = error.optString("captcha_sid");
             }
+            if (code==17)
+                e.redirect_uri = error.optString("redirect_uri");
             throw e;
         }
         if(!root.isNull("execute_errors")){
@@ -59,6 +65,8 @@ public class Api {
                 e.captcha_img = error.optString("captcha_img");
                 e.captcha_sid = error.optString("captcha_sid");
             }
+            if (code==17)
+                e.redirect_uri = error.optString("redirect_uri");
             throw e;
         }
     }
