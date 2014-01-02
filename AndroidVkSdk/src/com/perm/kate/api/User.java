@@ -22,6 +22,7 @@ public class User implements Serializable {
     public String photo_big;//photo_200_orig
     public String photo_200;//photo_200 квадратная. У многих её почему-то нет, похоже на баг в API.
     public String photo_medium_rec;//photo_100 квадратная
+    public String photo_400_orig;
     public Integer city=null;
     public Integer country=null;
     public Integer timezone=null;
@@ -111,6 +112,8 @@ public class User implements Serializable {
             u.photo_big = o.optString("photo_200_orig");
         if(!o.isNull("photo_200"))
             u.photo_200 = o.optString("photo_200");
+        if(!o.isNull("photo_400_orig"))
+            u.photo_400_orig = o.optString("photo_400_orig");
         if(!o.isNull("has_mobile"))
             u.has_mobile = o.optInt("has_mobile")==1;
         if(!o.isNull("home_phone"))
