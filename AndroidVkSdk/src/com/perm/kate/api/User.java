@@ -93,15 +93,13 @@ public class User implements Serializable {
             //if it's not there it means false
             u.online_mobile=false;
         if(!o.isNull("sex"))
-            u.sex = Integer.parseInt(o.optString("sex"));
+            u.sex = o.optInt("sex");
         if(!o.isNull("bdate"))
             u.birthdate = o.optString("bdate");
-        try{
-            u.city = Integer.parseInt(o.optString("city"));
-        }catch(NumberFormatException ex){}
-        try{            
-            u.country = Integer.parseInt(o.optString("country"));
-        }catch(NumberFormatException ex){}
+        if(o.has("city"))
+            u.city = o.optInt("city");
+        if(o.has("country"))
+            u.country = o.optInt("country");
         if(!o.isNull("timezone"))
             u.timezone = o.optInt("timezone");
         if(!o.isNull("photo_50"))
@@ -121,20 +119,17 @@ public class User implements Serializable {
         if(!o.isNull("mobile_phone"))
             u.mobile_phone = o.optString("mobile_phone");
         if(!o.isNull("rate"))
-            u.rate = Integer.parseInt(o.optString("rate"));
-        try{
-            u.faculty = Integer.parseInt(o.optString("faculty"));
-        }catch(NumberFormatException ex){}
+            u.rate = o.optInt("rate");
+        if(o.has("faculty"))
+            u.faculty = o.optInt("faculty");
         if(!o.isNull("faculty_name"))
             u.faculty_name = o.optString("faculty_name");
-        try{
-            u.university = Integer.parseInt(o.optString("university"));
-        }catch(NumberFormatException ex){}
+        if(o.has("university"))
+            u.university = o.optInt("university");
         if(!o.isNull("university_name"))
             u.university_name = o.optString("university_name");
-        try{
-            u.graduation = Integer.parseInt(o.optString("graduation"));
-        }catch(NumberFormatException ex){}
+        if(o.has("graduation"))
+            u.graduation = o.optInt("graduation");
         if(!o.isNull("activity"))
             u.status = Api.unescape(o.optString("activity"));
         if(!o.isNull("relation"))
@@ -213,12 +208,8 @@ public class User implements Serializable {
         m.last_name = Api.unescape(jprofile.optString("last_name"));
         m.photo = jprofile.optString("photo_50");
         m.photo_medium_rec = jprofile.optString("photo_100");
-        try{
-            m.sex = Integer.parseInt(jprofile.optString("sex"));
-        }catch(NumberFormatException ex){
-            //если там мусор, то мы это пропускаем
-            ex.printStackTrace();
-        }
+        if(jprofile.has("sex"))
+            m.sex = jprofile.optInt("sex");
         if(!jprofile.isNull("online"))
             m.online = jprofile.optInt("online")==1;
         return m;
