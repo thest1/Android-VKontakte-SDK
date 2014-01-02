@@ -2770,4 +2770,20 @@ public class Api {
         groups = Group.parseGroups(array);
         return groups;
     }
+    
+    //http://vk.com/dev/audio.edit 
+    public Long editAudio(long owner_id, long audio_id, String artist, String title, String text, Integer genre_id, Integer no_search, String captcha_key, String captcha_sid) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("audio.edit");
+        params.put("owner_id", owner_id);
+        params.put("audio_id", audio_id);
+        params.put("artist", artist);
+        params.put("title", title);
+        params.put("text", text);
+        params.put("genre_id", genre_id);
+        params.put("no_search", no_search);
+        addCaptchaParams(captcha_key, captcha_sid, params);
+        JSONObject root = sendRequest(params, true);
+        Long lyrics_id = root.optLong("response");
+        return lyrics_id;
+    }
 }
