@@ -47,12 +47,12 @@ public class Notification implements Serializable {
             n.type = o.getString("type");
             n.date = o.optLong("date");
             if (n.type.equals(FOLLOW)) {
-                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                JSONObject jfeedback = o.optJSONObject("feedback");//profiles
                 n.parent = null;//empty
                 if (jfeedback != null)
                     n.feedback = getProfiles(jfeedback);
             } else if (n.type.equals(FRIEND_ACCEPTED)) {
-                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                JSONObject jfeedback = o.optJSONObject("feedback");//profiles
                 n.parent = null;//empty
                 if (jfeedback != null)
                     n.feedback = getProfiles(jfeedback);
@@ -127,21 +127,21 @@ public class Notification implements Serializable {
                 }
             } else if (n.type.equals(LIKE_POST)) {
                 JSONObject jparent = o.optJSONObject("parent"); //post
-                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                JSONObject jfeedback = o.optJSONObject("feedback");//profiles
                 if (jparent != null && jfeedback != null) {
                     n.parent = WallMessage.parse(jparent);
                     n.feedback = getProfiles(jfeedback);
                 }
             } else if (n.type.equals(LIKE_COMMENT)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
-                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                JSONObject jfeedback = o.optJSONObject("feedback");//profiles
                 if (jparent != null && jfeedback != null) {
                     n.parent = Comment.parseNotificationComment(jparent, true);
                     n.feedback = getProfiles(jfeedback);
                 }
             } else if (n.type.equals(LIKE_COMMENT_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
-                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                JSONObject jfeedback = o.optJSONObject("feedback");//profiles
                 if (jparent != null && jfeedback != null) {
                     n.parent = Comment.parseNotificationComment(jparent, false);
                     n.feedback = getProfiles(jfeedback);
@@ -150,7 +150,7 @@ public class Notification implements Serializable {
                 }
             } else if (n.type.equals(LIKE_COMMENT_VIDEO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
-                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                JSONObject jfeedback = o.optJSONObject("feedback");//profiles
                 if (jparent != null && jfeedback != null) {
                     n.parent = Comment.parseNotificationComment(jparent, false);
                     n.feedback = getProfiles(jfeedback);
@@ -159,7 +159,7 @@ public class Notification implements Serializable {
                 }
             } else if (n.type.equals(LIKE_COMMENT_TOPIC)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
-                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                JSONObject jfeedback = o.optJSONObject("feedback");//profiles
                 if (jparent != null && jfeedback != null) {
                     n.parent = Comment.parseNotificationComment(jparent, false);
                     n.feedback = getProfiles(jfeedback);
@@ -169,14 +169,14 @@ public class Notification implements Serializable {
                 }
             } else if (n.type.equals(LIKE_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //photo
-                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                JSONObject jfeedback = o.optJSONObject("feedback");//profiles
                 if (jparent != null && jfeedback != null) {
                     n.parent = Photo.parse(jparent);
                     n.feedback = getProfiles(jfeedback);
                 }
             } else if (n.type.equals(LIKE_VIDEO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //video
-                JSONArray jfeedback = o.optJSONArray("feedback");//profiles
+                JSONObject jfeedback = o.optJSONObject("feedback");//profiles
                 if (jparent != null && jfeedback != null) {
                     n.parent = Video.parse(jparent);
                     n.feedback = getProfiles(jfeedback);
@@ -226,12 +226,15 @@ public class Notification implements Serializable {
         return notifications;
     }
     
-    public static ArrayList<Object> getProfiles(JSONArray jfeedback) throws JSONException {
+    public static ArrayList<Object> getProfiles(JSONObject jfeedback) throws JSONException {
         ArrayList<Object> ids = new ArrayList<Object>();
-        for (int i = 0; i < jfeedback.length(); i++) {
-            if(!(jfeedback.get(i) instanceof JSONObject))
+        JSONArray items=jfeedback.optJSONArray("items");
+        if(items==null)
+            return ids;
+        for (int i = 0; i < items.length(); i++) {
+            if(!(items.get(i) instanceof JSONObject))
                 continue;
-            JSONObject j_id = (JSONObject)jfeedback.get(i);
+            JSONObject j_id = (JSONObject)items.get(i);
             ids.add(j_id.optLong("from_id"));
         }
         return ids;
