@@ -43,6 +43,7 @@
 <a href="https://play.google.com/store/apps/details?id=com.perm.kate&hl=ru">Kate Mobile</a>  
 <a href="https://play.google.com/store/apps/details?id=com.jelzova.brandisor">Brandisor</a>  
 <a href="https://play.google.com/store/apps/details?id=ru.brorecipes">Бро Рецепты</a>  
+<a href="https://play.google.com/store/apps/details?id=com.isidroid.vk_albums">Vkontakte Playlist Downloader</a>  
 Напишите нам, чтобы добавить свой проект в этот список
 
 ## Лицензия
