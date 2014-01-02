@@ -12,7 +12,7 @@ public class WallMessage implements Serializable {
     public long from_id;
     public long to_id;
     public long date; 
-    public int post_type; //where -1 - undefined 0 - post, 1 - copy, 2 - postpone 
+    public int post_type; //where -1 - undefined 0 - post, 1 - copy, 2 - postpone, 3 - suggests
     public String text;
     public long id;
     public ArrayList<Attachment> attachments;
@@ -119,6 +119,8 @@ public class WallMessage implements Serializable {
                 post_type = 1;
             else if ("postpone".equals(_post_type))
                 post_type = 2;
+            else if ("suggest".equals(_post_type))
+                post_type = 3;
         }
         return post_type;
     }
