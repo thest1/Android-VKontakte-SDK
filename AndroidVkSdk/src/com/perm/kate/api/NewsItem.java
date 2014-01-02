@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.util.Log;
 
 public class NewsItem {
     public String type;
@@ -58,8 +59,16 @@ public class NewsItem {
         JSONArray copy_history_json=jitem.optJSONArray("copy_history");
         if(copy_history_json!=null){
             newsitem.copy_history=new ArrayList<WallMessage>();
-            for(int i=0;i<copy_history_json.length();++i)
-                newsitem.copy_history.add(WallMessage.parse(copy_history_json.getJSONObject(i)));
+            for(int i=0;i<copy_history_json.length();++i){
+                try{
+                    newsitem.copy_history.add(WallMessage.parse(copy_history_json.getJSONObject(i)));
+                }catch(Throwable th){
+                    th.printStackTrace();
+                    //unexpected null happens here in "id" and other fields
+                    //TODO should be reported to server
+                    Log.i("NewsItem", copy_history_json.toString());
+                }
+            }
         }
         
         newsitem.signer_id = jitem.optLong("signer_id");
