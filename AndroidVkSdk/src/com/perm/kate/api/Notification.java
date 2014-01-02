@@ -232,7 +232,7 @@ public class Notification implements Serializable {
             if(!(jfeedback.get(i) instanceof JSONObject))
                 continue;
             JSONObject j_id = (JSONObject)jfeedback.get(i);
-            Long id = j_id.optLong("owner_id");
+            Long id = j_id.optLong("from_id");
             if (id != null)
                 ids.add(id);
         }
