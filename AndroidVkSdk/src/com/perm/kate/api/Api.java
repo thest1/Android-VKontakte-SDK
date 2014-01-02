@@ -431,13 +431,15 @@ public class Api {
     }
     
     //http://vk.com/dev/photos.get
-    public ArrayList<Photo> getPhotos(Long uid, Long aid, Integer offset, Integer count) throws MalformedURLException, IOException, JSONException, KException{
+    public ArrayList<Photo> getPhotos(Long uid, Long aid, Integer offset, Integer count, boolean rev) throws MalformedURLException, IOException, JSONException, KException{
         Params params = new Params("photos.get");
         params.put("owner_id", uid);
         params.put("album_id", aid);
         params.put("extended", "1");
         params.put("offset",offset);
         params.put("limit",count);
+        if(rev)
+            params.put("rev",1);
         JSONObject root = sendRequest(params);
         JSONObject response=root.optJSONObject("response");
         JSONArray array=response.optJSONArray("items");
