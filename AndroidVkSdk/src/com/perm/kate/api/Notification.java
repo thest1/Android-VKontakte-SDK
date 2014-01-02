@@ -183,21 +183,21 @@ public class Notification implements Serializable {
                 }
             } else if (n.type.equals(COPY_POST)) {
                 JSONObject jparent = o.optJSONObject("parent"); //wall
-                JSONArray jfeedback = o.optJSONArray("feedback");//copy
+                JSONObject jfeedback = o.optJSONObject("feedback");//copy
                 if (jparent != null && jfeedback != null) {
                     n.parent = WallMessage.parse(jparent);
                     n.feedback = getCopies(jfeedback);
                 }
             } else if (n.type.equals(COPY_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //photo
-                JSONArray jfeedback = o.optJSONArray("feedback");//copy
+                JSONObject jfeedback = o.optJSONObject("feedback");//copy
                 if (jparent != null && jfeedback != null) {
                     n.parent = Photo.parse(jparent);
                     n.feedback = getCopies(jfeedback);
                 }
             } else if (n.type.equals(COPY_VIDEO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //video
-                JSONArray jfeedback = o.optJSONArray("feedback");//copy
+                JSONObject jfeedback = o.optJSONObject("feedback");//copy
                 if (jparent != null && jfeedback != null) {
                     n.parent = Video.parse(jparent);
                     n.feedback = getCopies(jfeedback);
@@ -239,12 +239,15 @@ public class Notification implements Serializable {
         return ids;
     }
     
-    public static ArrayList<Object> getCopies(JSONArray jfeedback) throws JSONException {
+    public static ArrayList<Object> getCopies(JSONObject jfeedback) throws JSONException {
         ArrayList<Object> ids = new ArrayList<Object>();
-        for (int i = 0; i < jfeedback.length(); i++) {
-            if(!(jfeedback.get(i) instanceof JSONObject))
+        JSONArray items=jfeedback.optJSONArray("items");
+        if(items==null)
+            return ids;
+        for (int i = 0; i < items.length(); i++) {
+            JSONObject j_id = items.optJSONObject(i);
+            if(j_id==null)
                 continue;
-            JSONObject j_id = (JSONObject)jfeedback.get(i);
             Long id = j_id.optLong("id");
             Long owner_id = j_id.optLong("from_id");
             if (id != null && owner_id != null) {
