@@ -2749,4 +2749,20 @@ public class Api {
         Long response = root.optLong("response");
         return response;
     }
+    
+    //http://vk.com/dev/groups.getInvites
+    public ArrayList<Group> getGroupsInvites(Long offset, Long count) throws MalformedURLException, IOException, JSONException, KException {
+        Params params = new Params("groups.getInvites");
+        params.put("offset", offset);
+        params.put("count", count);
+        JSONObject root = sendRequest(params);
+        ArrayList<Group> groups = new ArrayList<Group>();
+        JSONObject response = root.optJSONObject("response");
+        JSONArray array = response.optJSONArray("items");
+        //if there are no groups "response" will not be array
+        if(array==null)
+            return groups;
+        groups = Group.parseGroups(array);
+        return groups;
+    }
 }
