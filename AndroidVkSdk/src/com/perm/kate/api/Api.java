@@ -1436,13 +1436,15 @@ public class Api {
     }
     
     //http://vk.com/dev/video.search
-    public ArrayList<Video> searchVideo(String q, String sort, String hd, Long count, Long offset) throws MalformedURLException, IOException, JSONException, KException {
+    public ArrayList<Video> searchVideo(String q, String sort, String hd, Long count, Long offset, Integer adult, String filters) throws MalformedURLException, IOException, JSONException, KException {
         Params params = new Params("video.search");
         params.put("q", q);
         params.put("sort", sort);
         params.put("hd", hd);
         params.put("count", count);
         params.put("offset", offset);
+        params.put("adult", adult);     //safe search: 1 - disabled, 0 - enabled
+        params.put("filters", filters); //mp4, youtube, vimeo, short, long
         JSONObject root = sendRequest(params);
         JSONObject response=root.optJSONObject("response");
         JSONArray array=response.optJSONArray("items");
