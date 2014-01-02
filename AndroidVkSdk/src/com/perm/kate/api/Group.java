@@ -28,6 +28,7 @@ public class Group implements Serializable {
     public Integer admin_level;//1-moder, 2-editor, 3-admin
     public ArrayList<Contact> contacts; 
     public Integer members_count;
+    public Integer type; //0 - group, 1 - page, 2 - event    
 
     public static Group parse(JSONObject o) throws JSONException{
         Group g=new Group();
@@ -81,7 +82,15 @@ public class Group implements Serializable {
         if(o.has("members_count"))
             //opt because there may be something unparseable
             g.members_count=o.optInt("members_count", 0);
-            
+        if (o.has("type")) {
+            String str_type = o.optString("type");
+            if ("group".equals(str_type))
+                g.type = 0;
+            else if ("page".equals(str_type))
+                g.type = 1;
+            else if ("event".equals(str_type))
+                g.type = 2;
+        }
         return g;
     }
     
