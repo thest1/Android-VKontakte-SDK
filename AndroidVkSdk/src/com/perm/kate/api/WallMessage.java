@@ -91,7 +91,7 @@ public class WallMessage implements Serializable {
     public static WallMessage parseForNotifications(JSONObject o) throws JSONException {
         WallMessage wm = new WallMessage();
         wm.id = o.getLong("id");
-        wm.from_id = o.getLong("owner_id");
+        wm.from_id = o.getLong("from_id");
         wm.to_id = o.optLong("to_id");
         wm.post_type = getPostType(o);
         wm.text = Api.unescape(o.getString("text"));
