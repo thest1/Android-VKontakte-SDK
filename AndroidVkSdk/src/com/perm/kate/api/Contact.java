@@ -16,7 +16,8 @@ public class Contact  implements Serializable {
     
     public static Contact parse(JSONObject o) throws JSONException {
         Contact c = new Contact();
-        c.user_id = o.optLong("user_id");
+        if(o.has("user_id"))
+            c.user_id = o.optLong("user_id");
         c.desc = o.optString("desc");
         c.email = o.optString("email");
         c.phone = o.optString("phone");
