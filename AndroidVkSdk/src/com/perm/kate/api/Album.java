@@ -68,4 +68,12 @@ public class Album {
         a.thumb_src = o.optString("thumb_src");
         return a;
     }
+    
+    public static Album parseFromAttachment(JSONObject o) throws JSONException {
+        Album a = new Album();
+        a.title = Api.unescape(o.optString("title"));
+        a.aid = Long.parseLong(o.getString("id"));
+        a.owner_id = Long.parseLong(o.getString("owner_id"));
+        return a;
+    }
 }

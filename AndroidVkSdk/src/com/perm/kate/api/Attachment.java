@@ -9,7 +9,7 @@ import org.json.JSONObject;
 public class Attachment implements Serializable {
     private static final long serialVersionUID = 1L;
     public long id;//used only for wall post attached to message
-    public String type; //photo,posted_photo,video,audio,link,note,app,poll,doc,geo,message,page
+    public String type; //photo,posted_photo,video,audio,link,note,app,poll,doc,geo,message,page,album
     public Photo photo; 
     //public Photo posted_photo; 
     public Video video; 
@@ -25,6 +25,7 @@ public class Attachment implements Serializable {
     public WallMessage wallMessage;
     public Page page;
     public Gift gift;
+    public Album album;
 
     public static ArrayList<Attachment> parseAttachments(JSONArray attachments, long from_id, long copy_owner_id, JSONObject geo_json) throws JSONException {
         ArrayList<Attachment> attachments_arr=new ArrayList<Attachment>();
@@ -70,6 +71,8 @@ public class Attachment implements Serializable {
                     attachment.page=Page.parseFromAttachment(json_attachment.getJSONObject("page"));
                 else if(attachment.type.equals("gift"))
                     attachment.gift=Gift.parse(json_attachment.getJSONObject("gift"));
+                else if(attachment.type.equals("album"))
+                    attachment.album=Album.parseFromAttachment(json_attachment.getJSONObject("album"));
                 attachments_arr.add(attachment);
             }
         }
