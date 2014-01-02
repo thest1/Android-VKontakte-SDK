@@ -64,10 +64,10 @@ public class Notification implements Serializable {
             } else if (n.type.equals(MENTION_COMMENTS)) {
                 JSONObject jparent = o.optJSONObject("parent"); //post
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = WallMessage.parse(jparent);
-                    n.feedback = Comment.parseNotificationComment(jfeedback, false); 
-                }
+                if(jfeedback != null)
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
             } else if (n.type.equals(WALL)) {
                 JSONObject jfeedback = o.optJSONObject("feedback");//post
                 if (jfeedback != null)
@@ -75,133 +75,138 @@ public class Notification implements Serializable {
             } else if (n.type.equals(COMMENT_POST)) {
                 JSONObject jparent = o.optJSONObject("parent"); //post
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = WallMessage.parse(jparent);
-                    n.feedback = Comment.parseNotificationComment(jfeedback, false); 
-                }
+                if(jfeedback != null)
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
             } else if (n.type.equals(COMMENT_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //photo
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = Photo.parse(jparent);
+                if(jfeedback != null)
                     n.feedback = Comment.parseNotificationComment(jfeedback, false);
-                }
             } else if (n.type.equals(COMMENT_VIDEO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //video
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = Video.parse(jparent);
+                if(jfeedback != null)
                     n.feedback = Comment.parseNotificationComment(jfeedback, false);
-                }
             } else if (n.type.equals(REPLY_COMMENT)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = Comment.parseNotificationComment(jparent, true);
+                if(jfeedback != null)
                     n.feedback = Comment.parseNotificationComment(jfeedback, false);
-                }
             } else if (n.type.equals(REPLY_COMMENT_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null) {
                     n.parent = Comment.parseNotificationComment(jparent, false);
-                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
                     if(jparent.has("photo"))
                         n.photo=Photo.parse(jparent.optJSONObject("photo"));
                 }
+                if(jfeedback != null)
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
             } else if (n.type.equals(REPLY_COMMENT_VIDEO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null) {
                     n.parent = Comment.parseNotificationComment(jparent, false);
-                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
                     if(jparent.has("video"))
                         n.video=Video.parse(jparent.optJSONObject("video"));
                 }
+                if(jfeedback != null)
+                    n.feedback = Comment.parseNotificationComment(jfeedback, false);
             } else if (n.type.equals(REPLY_TOPIC)) {
                 JSONObject jparent = o.optJSONObject("parent"); //topic
                 JSONObject jfeedback = o.optJSONObject("feedback");//comment
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = GroupTopic.parseForNotifications(jparent);
+                if(jfeedback != null)
                     n.feedback = Comment.parseNotificationComment(jfeedback, false);
-                }
             } else if (n.type.equals(LIKE_POST)) {
                 JSONObject jparent = o.optJSONObject("parent"); //post
                 JSONObject jfeedback = o.optJSONObject("feedback");//profiles
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = WallMessage.parse(jparent);
+                if(jfeedback != null)
                     n.feedback = getProfiles(jfeedback);
-                }
             } else if (n.type.equals(LIKE_COMMENT)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONObject jfeedback = o.optJSONObject("feedback");//profiles
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = Comment.parseNotificationComment(jparent, true);
+                if(jfeedback != null)
                     n.feedback = getProfiles(jfeedback);
-                }
             } else if (n.type.equals(LIKE_COMMENT_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONObject jfeedback = o.optJSONObject("feedback");//profiles
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null) {
                     n.parent = Comment.parseNotificationComment(jparent, false);
-                    n.feedback = getProfiles(jfeedback);
                     if(jparent.has("photo"))
                         n.photo=Photo.parse(jparent.optJSONObject("photo"));
                 }
+                if(jfeedback != null)
+                    n.feedback = getProfiles(jfeedback);
             } else if (n.type.equals(LIKE_COMMENT_VIDEO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONObject jfeedback = o.optJSONObject("feedback");//profiles
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null) {
                     n.parent = Comment.parseNotificationComment(jparent, false);
-                    n.feedback = getProfiles(jfeedback);
                     if(jparent.has("video"))
                         n.video=Video.parse(jparent.optJSONObject("video"));
                 }
+                if(jfeedback != null)
+                    n.feedback = getProfiles(jfeedback);
             } else if (n.type.equals(LIKE_COMMENT_TOPIC)) {
                 JSONObject jparent = o.optJSONObject("parent"); //comment
                 JSONObject jfeedback = o.optJSONObject("feedback");//profiles
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null) {
                     n.parent = Comment.parseNotificationComment(jparent, false);
-                    n.feedback = getProfiles(jfeedback);
                     //TODO
                     //if(jparent.has("topic"))
                     //    n.xxx=Xxx.parse(jparent.optJSONObject("topic"));
                 }
+                if(jfeedback != null)
+                    n.feedback = getProfiles(jfeedback);
             } else if (n.type.equals(LIKE_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //photo
                 JSONObject jfeedback = o.optJSONObject("feedback");//profiles
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = Photo.parse(jparent);
+                if(jfeedback != null)
                     n.feedback = getProfiles(jfeedback);
-                }
             } else if (n.type.equals(LIKE_VIDEO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //video
                 JSONObject jfeedback = o.optJSONObject("feedback");//profiles
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = Video.parse(jparent);
+                if(jfeedback != null)
                     n.feedback = getProfiles(jfeedback);
-                }
             } else if (n.type.equals(COPY_POST)) {
                 JSONObject jparent = o.optJSONObject("parent"); //wall
                 JSONObject jfeedback = o.optJSONObject("feedback");//copy
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = WallMessage.parse(jparent);
+                if(jfeedback != null)
                     n.feedback = getCopies(jfeedback);
-                }
             } else if (n.type.equals(COPY_PHOTO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //photo
                 JSONObject jfeedback = o.optJSONObject("feedback");//copy
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = Photo.parse(jparent);
+                if(jfeedback != null)
                     n.feedback = getCopies(jfeedback);
-                }
             } else if (n.type.equals(COPY_VIDEO)) {
                 JSONObject jparent = o.optJSONObject("parent"); //video
                 JSONObject jfeedback = o.optJSONObject("feedback");//copy
-                if (jparent != null && jfeedback != null) {
+                if (jparent != null)
                     n.parent = Video.parse(jparent);
+                if(jfeedback != null)
                     n.feedback = getCopies(jfeedback);
-                }
             }        
             JSONObject jreply = o.optJSONObject("reply");
             if (jreply != null)
