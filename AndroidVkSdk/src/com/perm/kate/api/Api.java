@@ -2080,6 +2080,7 @@ public class Api {
         params.put("system_version", system_version);
         params.put("no_text", no_text);
         params.put("subscribe", subscribe);
+        //params.put("gcm", 1);
         JSONObject root = sendRequest(params);
         return root.getString("response");
     }
