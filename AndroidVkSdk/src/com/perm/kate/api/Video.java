@@ -12,7 +12,7 @@ public class Video implements Serializable{
     public String description;
     public long duration;
     public String link1;
-    public String image;//130*120
+    public String image;//130*97
     public String image_big;//320*240
     //public String photo_640;
     public long date;
