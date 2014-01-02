@@ -19,4 +19,13 @@ public class Link implements Serializable {
         link.image_src = o.optString("image_src");
         return link;
     }
+    
+    public static Link parseFromGroup(JSONObject o) throws NumberFormatException, JSONException {
+        Link link = new Link();
+        link.url = o.optString("url");
+        link.title = Api.unescape(o.optString("name"));
+        link.description = Api.unescape(o.optString("desc"));
+        link.image_src = o.optString("photo_100");
+        return link;
+    }
 }

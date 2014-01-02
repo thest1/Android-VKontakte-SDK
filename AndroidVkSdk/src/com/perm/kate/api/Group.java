@@ -29,6 +29,7 @@ public class Group implements Serializable {
     public ArrayList<Contact> contacts; 
     public Integer members_count;
     public Integer type; //0 - group, 1 - page, 2 - event    
+    public ArrayList<Link> links;
 
     public static Group parse(JSONObject o) throws JSONException{
         Group g=new Group();
@@ -90,6 +91,17 @@ public class Group implements Serializable {
                 g.type = 1;
             else if ("event".equals(str_type))
                 g.type = 2;
+        }
+        
+        JSONArray jlinks = o.optJSONArray("links");
+        if (jlinks != null) {
+            g.links = new ArrayList<Link>();
+            for (int i = 0; i < jlinks.length(); i++) {
+                JSONObject jlink = (JSONObject)jlinks.get(i);
+                Link link = Link.parseFromGroup(jlink);
+                if (link != null)
+                    g.links.add(link);
+            }
         }
         return g;
     }
