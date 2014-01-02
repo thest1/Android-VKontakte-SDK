@@ -211,17 +211,8 @@ public class User implements Serializable {
         m.uid = jprofile.getLong("id");
         m.first_name = Api.unescape(jprofile.optString("first_name"));
         m.last_name = Api.unescape(jprofile.optString("last_name"));
-        
-        m.photo = jprofile.optString("photo");//старое название поля - баг в API
-        //запас на будущее когда исправят
-        if(jprofile.has("photo_50"))
-            m.photo = jprofile.optString("photo_50");
-        
-        m.photo_medium_rec = jprofile.optString("photo_medium_rec");//старое название поля - баг в API
-        //запас на будущее когда исправят
-        if(jprofile.has("photo_100"))
-            m.photo_medium_rec = jprofile.optString("photo_100");
-        
+        m.photo = jprofile.optString("photo_50");
+        m.photo_medium_rec = jprofile.optString("photo_100");
         try{
             m.sex = Integer.parseInt(jprofile.optString("sex"));
         }catch(NumberFormatException ex){
@@ -303,17 +294,8 @@ public class User implements Serializable {
         m.uid = jprofile.getLong("id");
         m.first_name = Api.unescape(jprofile.optString("first_name"));
         m.last_name = Api.unescape(jprofile.optString("last_name"));
-        
-        m.photo_medium_rec = jprofile.optString("photo_medium_rec");//старое название поля - баг в API
-        //запас на будущее когда исправят
-        if(jprofile.has("photo_100"))
-            m.photo_medium_rec = jprofile.optString("photo_100");
-        
-        m.photo = jprofile.optString("photo");//старое название поля - баг в API
-        //запас на будущее когда исправят
-        if(jprofile.has("photo_50"))
-            m.photo = jprofile.optString("photo_50");
-        
+        m.photo_medium_rec = jprofile.optString("photo_100");
+        m.photo = jprofile.optString("photo_50");
         return m;
     }
 }
