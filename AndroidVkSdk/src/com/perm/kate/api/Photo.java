@@ -41,7 +41,7 @@ public class Photo implements Serializable {
         p.src_xxbig = o.optString("photo_1280");
         p.src_xxxbig = o.optString("photo_2560");
         p.phototext = Api.unescape(o.optString("text"));
-        p.created = o.optLong("created");
+        p.created = o.optLong("date"); //date instead created for api v 5.0 and higher
         p.user_id = o.optString("user_id");
         
         if (o.has("likes")) {
