@@ -2,8 +2,9 @@ package com.perm.kate.api;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.io.Serializable;
 
-public class Album {
+public class Album implements Serializable {
     public long aid;
     public long thumb_id;
     public long owner_id;
