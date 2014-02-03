@@ -141,11 +141,11 @@ public class User implements Serializable {
         if(!o.isNull("photo_200"))
             u.photo_200 = o.optString("photo_200");
         if(!o.isNull("photo_max"))
-        	u.photo_max = o.optString("photo_max");
+            u.photo_max = o.optString("photo_max");
         if(!o.isNull("photo_max_orig"))
-        	u.photo_max_orig = o.optString("photo_max_orig");
+            u.photo_max_orig = o.optString("photo_max_orig");
         if(!o.isNull("photo_400_orig"))
-        	u.photo_400_orig = o.optString("photo_400_orig");
+            u.photo_400_orig = o.optString("photo_400_orig");
         if(!o.isNull("has_mobile"))
             u.has_mobile = o.optInt("has_mobile")==1;
         if(!o.isNull("home_phone"))
