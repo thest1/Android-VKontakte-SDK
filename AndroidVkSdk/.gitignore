@@ -1,0 +1,11 @@
+/target
+/.settings
+
+#gradle
+.gradle/
+gradle/
+/build
+
+#IDEA or Android Studio files
+/.idea
+*.iml
