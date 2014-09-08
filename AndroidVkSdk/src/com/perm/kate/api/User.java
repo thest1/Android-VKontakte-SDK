@@ -18,11 +18,41 @@ public class User implements Serializable {
     public Boolean online=null;
     public Boolean online_mobile=null;
     public String birthdate; //bdate
-    public String photo;//photo_50
-    public String photo_big;//photo_200_orig
-    public String photo_200;//photo_200 квадратная. У многих её почему-то нет, похоже на баг в API.
-    public String photo_medium_rec;//photo_100 квадратная
-    public String photo_400_orig;
+    /**
+     * В запрос надо добваить photo_50
+     * URL квадратной фотографии 50х50
+     */
+    public String photo;			
+    /**
+     * В запрос надо добавить photo_200 
+     * URL необрезанной фотографии 200х200
+     */
+    public String photo_big;		//photo_200_orig
+    /**
+     * В запрос надо добавить photo_200 
+     * URL квадратной фотографии 200х200, <b>у некоторых пользователей, которые загружали фотографию давно её нет</b>
+     */
+    public String photo_200;	
+    /**
+     * <b>В запрос надо добавить photo_100</b>
+     * URL квадратной фотографии 100х100
+     */
+    public String photo_medium_rec;	//photo_100 квадратная
+    /** 
+     * В запрос надо добавить photo_max
+     * URL квадратной фотографии максимального формата, <b>у некоторых пользователей, которые загружали фотографию давно её нет</b>
+     */
+    public String photo_max;
+    /**
+     * В запрос надо добавить photo_max_orig
+     * URL необрезанной фотографии максимального формата
+     */
+    public String photo_max_orig; 	//photo_max_orig обычно квадратная, может быть не у всех
+    /**
+     * В запрос надо добавить photo_400_orig
+     * URL необрезанной фотографии формата 400х400
+     */
+    public String photo_400_orig;	
     public Integer city=null;
     public Integer country=null;
     public Integer timezone=null;
@@ -110,6 +140,10 @@ public class User implements Serializable {
             u.photo_big = o.optString("photo_200_orig");
         if(!o.isNull("photo_200"))
             u.photo_200 = o.optString("photo_200");
+        if(!o.isNull("photo_max"))
+            u.photo_max = o.optString("photo_max");
+        if(!o.isNull("photo_max_orig"))
+            u.photo_max_orig = o.optString("photo_max_orig");
         if(!o.isNull("photo_400_orig"))
             u.photo_400_orig = o.optString("photo_400_orig");
         if(!o.isNull("has_mobile"))
