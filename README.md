@@ -44,6 +44,7 @@
 <a href="https://play.google.com/store/apps/details?id=com.jelzova.brandisor">Brandisor</a>  
 <a href="https://play.google.com/store/apps/details?id=ru.brorecipes">Бро Рецепты</a>  
 <a href="https://play.google.com/store/apps/details?id=com.isidroid.vk_albums">Vkontakte Playlist Downloader</a>  
+<a href="https://play.google.com/store/apps/details?id=me.mill.vmuz">Загрузка музыки VK</a>  
 Напишите нам, чтобы добавить свой проект в этот список
 
 ## Лицензия
