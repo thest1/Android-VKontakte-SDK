@@ -16,7 +16,7 @@ public class Auth {
     }
     
     public static String getSettings(){
-        //http://vk.com/dev/permission
+        //http://vk.com/dev/permissions
         return "notify,friends,photos,audio,video,docs,status,notes,pages,wall,groups,messages,offline,notifications";
     }
     
